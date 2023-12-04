@@ -5,4 +5,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(mini_golf)
 
+set(SOURCES 
+    src/main.cpp
+)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
