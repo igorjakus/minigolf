@@ -30,3 +30,25 @@
 *.exe
 *.out
 *.app
+
+# Build directories
+build/
+out/
+cmake-build/
+
+# User specific settings
+CMakeLists.txt.user
+CMakeUserPresets.json
+
+# IDE files //-> Tu za pewne będzie trzeba dodać rzeczy związane z waszymi IDE
+.vs/
+.idea/
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.swp
+*~
+_ReSharper*
+*.log
