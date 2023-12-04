@@ -2,25 +2,32 @@
 	"version": 3,
 	"cmakeMinimumRequired": {
 		"major": 3,
-		"minor": 19,
+		"minor": 21,
 		"patch": 0
 	},
 	"configurePresets": [
 		{
-			"name": "windows-base",
+			"name": "common",
+			"description": "Common settings for all build configurations",
 			"hidden": true,
 			"generator": "Ninja",
-			"binaryDir": "${sourceDir}/out/build/${presetName}",
-			"installDir": "${sourceDir}/out/install/${presetName}",
-			"cacheVariables": {
-				"CMAKE_C_COMPILER": "cl.exe",
-				"CMAKE_CXX_COMPILER": "cl.exe"
-			},
+			"binaryDir": "${sourceDir}/build/${presetName}"
+			"installDir": "${sourceDir}/build/install/${presetName}"
+		},
+		{
+			"name": "windows-base",
+			"description": "Base configuration for Windows",
+			"hidden": true,
+			"inherits": "common",
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
 			}
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cl.exe",
+				"CMAKE_CXX_COMPILER": "cl.exe"
+			},
 		},
 		{
 			"name": "x64-debug",
@@ -31,15 +38,25 @@
 				"strategy": "external"
 			},
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Debug"
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl",
+				"CMAKE_BUILD_TYPE": "Debug",
+				"ENABLE_DEVELOPER_MODE": "ON"
 			}
 		},
 		{
 			"name": "x64-release",
 			"displayName": "x64 Release",
-			"inherits": "x64-debug",
+			"inherits": "windows-base",
+			"architecture": {
+				"value": "x64",
+				"strategy": "external"
+			},
 			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl",
 				"CMAKE_BUILD_TYPE": "Release"
+				"ENABLE_DEVELOPER_MODE": "OFF"
 			}
 		},
 		{
@@ -51,15 +68,25 @@
 				"strategy": "external"
 			},
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Debug"
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl",
+				"CMAKE_BUILD_TYPE": "Debug",
+				"ENABLE_DEVELOPER_MODE": "ON"
 			}
 		},
 		{
 			"name": "x86-release",
 			"displayName": "x86 Release",
-			"inherits": "x86-debug",
+			"inherits": "windows-base",
+			"architecture": {
+				"value": "x86",
+				"strategy": "external"
+			},
 			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl",
 				"CMAKE_BUILD_TYPE": "Release"
+				"ENABLE_DEVELOPER_MODE": "OFF"
 			}
 		}
 	]
