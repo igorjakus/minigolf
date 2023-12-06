@@ -5,6 +5,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(mini_golf)
 
+include(cmake/PreventInSourceBuild.cmake)
+
 set(SOURCES 
     src/main.cpp
 )
