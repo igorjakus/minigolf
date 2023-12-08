@@ -1,3 +1,6 @@
+include(CMakeDependentOption)
+include(CheckCXXCompilerFlag)
+
 macro(project_sanitizers_support)
 	if((CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*" OR CMAKE_CXX_COMPILER_ID MATCHES ".*GNU.*") AND NOT WIN32)
 		set(SUPPORTS_UBSAN ON)
@@ -30,11 +33,25 @@ endmacro()
 macro(project_local_options)
 	# standard project settings here
 
-	add_library(project_warnings INETRFACE)
-	add_library(project_options INETRFACE)
+	add_library(project_warnings INTERFACE)
+	add_library(project_options INTERFACE)
 
-	# compiler Warnings
+	include(cmake/CompilerWarnings.cmake)
+	set_project_warnings(
+		project_warnings
+		${project_WARNINGS_AS_ERRORS}
+		""
+		""
+		""
+		""
+	)
 
+	# user-selected linker
 
+	# satanizers
+
+	# set_properties()
+
+	# i tak dalej wszystko po kolei
 
 endmacro()

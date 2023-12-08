@@ -6,7 +6,6 @@ function(myproject_assure_out_of_source_builds)
 	# make sure the user doesn't play dirty with symlinks
 	get_filename_component(srcdir "${CMAKE_SOURCE_DIR}" REALPATH)
 	get_filename_component(bindir "${CMAKE_BINARY_DIR}" REALPATH)
-	message("Funkcja wywołana!")
 
 	# disallow in-source builds
 	if("${srcdir}" STREQUAL "${bindir}")

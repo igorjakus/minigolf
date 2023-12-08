@@ -7,6 +7,10 @@ project(mini_golf)
 
 include(cmake/PreventInSourceBuild.cmake)
 
+include(ProjectOptions.cmake)
+project_options_setup()
+project_local_options()
+
 set(SOURCES 
     src/main.cpp
 )
