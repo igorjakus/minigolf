@@ -86,21 +86,23 @@ function(
 	endif()
 
 	if(WARNINGS_AS_ERRORS)
-		message(TRACE "Warnings are treated as errors")
+		message("Warnings are treated as errors")
 		list(APPEND CLANG_WARNINGS -Werror)
 		list(APPEND GCC_WARNINGS -Werror)
 		list(APPEND MSVC_WARNINGS /WX)
 	endif()
 
 	if(MSVC)
-		message(TRACE "MSVC set")
+		message("MSVC set")
 		set(PROJECT_WARNINGS_CXX ${MSVC_WARNINGS})
 	elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+		message("CLANG set")
 		set(PROJECT_WARNINGS_CXX ${CLANG_WARNINGS})
 	elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		message("GNU set")
 		set(PROJECT_WARNINGS_CXX ${GCC_WARNINGS})
 	else()
-		message(AUTHOR_WARNING "No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
+		message("No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
 		# TODO support Intel compiler
 	endif()
 
