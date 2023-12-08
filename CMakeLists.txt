@@ -8,7 +8,14 @@ project(mini_golf)
 include(cmake/PreventInSourceBuild.cmake)
 
 set(SOURCES 
-    src/main.cpp
+
+	AGL/main.cpp
+	AGL/Core.cpp
+	AGL/Core.h
+	AGL/Shader.cpp
+	AGL/Shader.h
+	AGL/Window.cpp
+	AGL/Window.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
