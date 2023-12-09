@@ -12,9 +12,6 @@
 #include<map>
 #include<unordered_map>
 
-//windows API
-#include<Windows.h>
-
 //maths lib
 #include"glm/glm.hpp"
 #include"glm/gtc/type_ptr.hpp"

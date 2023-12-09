@@ -1,6 +1,6 @@
 #pragma once 
 #include"dtl.h"
-#include <glad/glad.h>
+#include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 
 extern bool Im_debug;
@@ -28,8 +28,8 @@ namespace GL
 		GLFWwindow* PassPointer();
 		bool getButtonPressed(int key);
 		glm::vec2 GetWindowSize();
-		std::string OpenFileDialogeBox(const char* filter = "");
-		std::string SaveFileDialogeBox(const char* filter = "");
+		//std::string OpenFileDialogeBox(const char* filter = "");
+		//std::string SaveFileDialogeBox(const char* filter = "");
 	};
 }
 

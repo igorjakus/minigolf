@@ -68,7 +68,7 @@ glm::vec2 GL::Window::GetWindowSize()
 	glfwGetWindowSize(m_ID, &w, &h);
 	return glm::vec2(w, h);
 }
-//TODO Implement file opening system
+/*
 std::string GL::Window::OpenFileDialogeBox(const char* filter)
 {
 	OPENFILENAMEA ofn;
@@ -106,6 +106,7 @@ std::string GL::Window::SaveFileDialogeBox(const char* filter)
 	}
 	return "";
 }
+*/
 
 bool GL::Window::getButtonPressed(int key)
 {

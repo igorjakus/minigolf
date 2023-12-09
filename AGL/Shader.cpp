@@ -63,6 +63,7 @@ GL::Shader::Shader(const std::string& FilePath)
 
 	std::ifstream shaderFile;
 	shaderFile.open(FilePath);
+	if (!shaderFile.is_open()) { dtl::Log.error("Couldn't open shader file. Path: {0}", FilePath); return; }
 	shaderType currType = none;
 	std::string currLine;
 	std::string vertexsrc;
@@ -104,7 +105,6 @@ GL::Shader::Shader(const std::string& FilePath)
 	{
 		if (!vertexsrc.size()) dtl::Log.error("Vertex shader not provided");
 		if (!fragmentsrc.size()) dtl::Log.error("Fragment shader not provided");
-		exit(EXIT_FAILURE);
 	}
 	//compiling and linking shader program
 	unsigned int vertexShaderId = GL::Shader::CompileShader(GL_VERTEX_SHADER, vertexsrc);
@@ -144,7 +144,7 @@ GL::Shader::Shader(const std::string& VertexFilePath, const std::string& Fragmen
 	unsigned int vertexShaderId = GL::Shader::CompileShader(GL_VERTEX_SHADER, VertexFilePath);
 	unsigned int fragmentShaderId = GL::Shader::CompileShader(GL_FRAGMENT_SHADER, FragmentFilePath);
 	unsigned int geometryShaderId = 0;
-	if (!VertexFilePath.size() || !FragmentFilePath.size()) exit(EXIT_FAILURE);
+	if (!VertexFilePath.size() || !FragmentFilePath.size()) { dtl::Log.error("Vertex or Fragment shader is incorrect. Shader compiling failed"); return; }
 	if (GeometryFilePath.size()) geometryShaderId = GL::Shader::CompileShader(GL_GEOMETRY_SHADER, GeometryFilePath);
 	m_ID = glCreateProgram();
 	glAttachShader(m_ID, vertexShaderId);

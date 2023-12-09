@@ -1,7 +1,7 @@
 #pragma once
 #include"dtl.h"
-#include"glad/glad.h"
-#include"glfw/glfw3.h"
+#include"GLAD/glad.h"
+#include"GLFW/glfw3.h"
 #include"Shader.h"
 #include"stb/stb_image.h"
 
