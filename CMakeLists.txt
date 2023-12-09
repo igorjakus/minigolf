@@ -20,8 +20,8 @@ set(SOURCES
 	DTL/dtl.h
 )
 
-add_subdirectory(AGL-Deps/glad)	
-add_subdirectory(AGL-Deps/glfw)	
+add_subdirectory(AGL-Deps/GLAD)	
+add_subdirectory(AGL-Deps/GLFW)	
 add_subdirectory(AGL-Deps/glm)	
 add_subdirectory(AGL-Deps/stb)	
 
