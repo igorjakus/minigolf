@@ -1,6 +1,6 @@
 #pragma once
 #include"dtl.h"
-#include<GLADD/glad.h>
+#include<GLAD/glad.h>
 #include<GLFW/glfw3.h>
 
 namespace GL
