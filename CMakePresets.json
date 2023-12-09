@@ -11,7 +11,7 @@
 			"description": "Common settings for all build configurations",
 			"hidden": true,
 			"generator": "Ninja",
-			"binaryDir": "${sourceDir}/build/${presetName}"
+			"binaryDir": "${sourceDir}/build/${presetName}",
 			"installDir": "${sourceDir}/build/install/${presetName}"
 		},
 		{
@@ -23,11 +23,11 @@
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
-			}
+			},
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl.exe",
 				"CMAKE_CXX_COMPILER": "cl.exe"
-			},
+			}
 		},
 		{
 			"name": "x64-debug",
@@ -55,7 +55,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
 				"CMAKE_CXX_COMPILER": "cl",
-				"CMAKE_BUILD_TYPE": "Release"
+				"CMAKE_BUILD_TYPE": "Release",
 				"ENABLE_DEVELOPER_MODE": "OFF"
 			}
 		},
@@ -85,7 +85,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
 				"CMAKE_CXX_COMPILER": "cl",
-				"CMAKE_BUILD_TYPE": "Release"
+				"CMAKE_BUILD_TYPE": "Release",
 				"ENABLE_DEVELOPER_MODE": "OFF"
 			}
 		}
