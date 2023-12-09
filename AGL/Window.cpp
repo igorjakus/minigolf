@@ -1,6 +1,5 @@
 #include"pch.h"
 #include"Window.h"
-#define GLFW_EXPOSE_NATIVE_WIN32
 #include<GLFW/glfw3native.h>
 
 GL::Window::Window(int width, int height, std::string title, GLFWmonitor* monitor)
@@ -68,45 +67,6 @@ glm::vec2 GL::Window::GetWindowSize()
 	glfwGetWindowSize(m_ID, &w, &h);
 	return glm::vec2(w, h);
 }
-/*
-std::string GL::Window::OpenFileDialogeBox(const char* filter)
-{
-	OPENFILENAMEA ofn;
-	CHAR szFile[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = glfwGetWin32Window(m_ID);
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-	if (GetOpenFileNameA(&ofn) == TRUE)
-	{
-		return ofn.lpstrFile;
-	}
-	return "";
-}
-//TODO Implement saveing system
-std::string GL::Window::SaveFileDialogeBox(const char* filter)
-{
-	OPENFILENAMEA ofn;
-	CHAR szFile[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = glfwGetWin32Window(m_ID);
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT;
-	if (GetSaveFileNameA(&ofn) == TRUE)
-	{
-		return ofn.lpstrFile;
-	}
-	return "";
-}
-*/
 
 bool GL::Window::getButtonPressed(int key)
 {

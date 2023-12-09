@@ -1,5 +1,5 @@
 #include"pch.h"
-#include"core.h"
+#include"Core.h"
 
 void agl::Init()
 {

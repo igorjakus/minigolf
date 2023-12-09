@@ -35,5 +35,5 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_precompile_headers(${PROJECT_NAME} PUBLIC pch/pch.h)
 
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw 
-	glad stb)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm GLFW 
+	GLAD stb)
