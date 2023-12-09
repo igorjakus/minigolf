@@ -1,3 +1,4 @@
+#include"pch.h"
 #include"Shader.h"
 
 unsigned int GL::Shader::sm_currBind = 0;
@@ -31,7 +32,7 @@ unsigned int GL::Shader::CompileShader(unsigned int type, const std::string& src
 				errorshadertype = "Geometry";
 				break;
 		}
-		Log.error("Compilaton of a shader with a type of \"{0}\" failed. Error message:\n{0}\n", errorshadertype, errorlog);
+		dtl::Log.error("Compilaton of a shader with a type of \"{0}\" failed. Error message:\n{0}\n", errorshadertype, errorlog);
 		delete[] message;
 		return 0;
 	}
@@ -46,7 +47,7 @@ bool GL::Shader::getUniformLoc(const std::string& varName, uint32_t id)
 
 		if (Id == -1)
 		{
-			Log.error("Shader uniform with a name of \"{0}\" wasn't found", varName);
+			dtl::Log.error("Shader uniform with a name of \"{0}\" wasn't found", varName);
 			glUseProgram(sm_currBind);
 			return true;
 		}
@@ -76,7 +77,7 @@ GL::Shader::Shader(const std::string& FilePath)
 			if (currLine.find(" vertex") != std::string::npos) currType = vertex;
 			else if (currLine.find(" fragment") != std::string::npos) currType = fragment;
 			else if (currLine.find(" geometry") != std::string::npos) currType = geometry;
-			else Log.error("Unsupported shader type in file \"{0}\"", FilePath);
+			else dtl::Log.error("Unsupported shader type in file \"{0}\"", FilePath);
 			continue;
 		}
 		if (currType == none) continue;
@@ -101,8 +102,8 @@ GL::Shader::Shader(const std::string& FilePath)
 	}
 	if (!vertexsrc.size() || !fragmentsrc.size())
 	{
-		if (!vertexsrc.size()) Log.error("Vertex shader not provided");
-		if (!fragmentsrc.size()) Log.error("Fragment shader not provided");
+		if (!vertexsrc.size()) dtl::Log.error("Vertex shader not provided");
+		if (!fragmentsrc.size()) dtl::Log.error("Fragment shader not provided");
 		exit(EXIT_FAILURE);
 	}
 	//compiling and linking shader program
@@ -127,7 +128,7 @@ GL::Shader::Shader(const std::string& FilePath)
 		char* message = new char[logLength];
 		glGetProgramInfoLog(m_ID, logLength, &logLength, message);
 		std::string errorlog(message);
-		Log.error("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
+		dtl::Log.error("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
 		delete[] message;
 	}
 	glDeleteShader(vertexShaderId);
@@ -161,7 +162,7 @@ GL::Shader::Shader(const std::string& VertexFilePath, const std::string& Fragmen
 		char* message = new char[logLength];
 		glGetProgramInfoLog(m_ID, logLength, &logLength, message);
 		std::string errorlog(message);
-		Log.error("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
+		dtl::Log.error("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
 		delete[] message;
 	}
 	glDeleteShader(vertexShaderId);

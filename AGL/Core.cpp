@@ -1,24 +1,18 @@
-#include"Precomps.h"
+#include"pch.h"
 #include"core.h"
 
 void agl::Init()
 {
 	//gfwd init
 	if (!glfwInit())
-	{ Log.error("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
-	//imgui init
-	if (!ImGui::CreateContext())
-	{ Log.error("Failed to initialize ImGui"); exit(EXIT_FAILURE); }
-	IMGUI_CHECKVERSION();
+	{ dtl::Log.error("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
+
 	//stb_image setup
 	stbi_set_flip_vertically_on_load(true);
 }
 void agl::Terminate()
 {
 	glfwTerminate();
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
 }
 //?data structures---------------------------------------------------------------------------------------------------------------------------------------
 Vertice::Vertice() :position({ 0.f, 0.f }), uv({0.0f, 0.0f}) {}
@@ -30,7 +24,7 @@ agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
 	:m_textureID(0), m_widthImg(0), m_heightImg(0), m_BPP(0), m_bytesData(nullptr)
 { 
 	m_bytesData = stbi_load(filepath.c_str(), &m_widthImg, &m_heightImg, &m_BPP, 4);
-	if(!m_bytesData) Log.error("Faild to load texture: \"{0}\"", filepath);
+	if(!m_bytesData) dtl::Log.error("Faild to load texture: \"{0}\"", filepath);
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
 

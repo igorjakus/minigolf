@@ -1,6 +1,7 @@
-#include "Window.h"
+#include"pch.h"
+#include"Window.h"
 #define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
+#include<GLFW/glfw3native.h>
 
 GL::Window::Window(int width, int height, std::string title, GLFWmonitor* monitor)
 	:m_isIGused(false),m_doIcone(false), m_ID(nullptr), m_w(width), m_h(height), m_t(title), m_moni(monitor)
@@ -19,7 +20,7 @@ void GL::Window::Create(bool Maximised, bool Resizible)
 	m_ID = glfwCreateWindow(m_w, m_h, m_t.c_str(), m_moni, NULL);
 	if (!m_ID)
 	{
-		Log.error("Error with creation of a window named \"{0}\"", m_t);
+		dtl::Log.error("Error with creation of a window named \"{0}\"", m_t);
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
@@ -27,7 +28,7 @@ void GL::Window::Create(bool Maximised, bool Resizible)
 	glfwSwapInterval(1);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		Log.error("Failed to initialize GLAD");
+		dtl::Log.error("Failed to initialize GLAD");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -45,11 +46,6 @@ void GL::Window::Close()
 
 void GL::Window::FEP()
 {
-	if (m_isIGused)
-	{
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
 	glfwSwapBuffers(m_ID);
 	glfwPollEvents();
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -65,18 +61,6 @@ GLFWwindow* GL::Window::PassPointer()
 	return m_ID;
 }
 
-void GL::Window::InitIG()
-{
-	m_isIGused = true;
-	ImGui_ImplGlfw_InitForOpenGL(m_ID, true);
-	ImGui_ImplOpenGL3_Init();
-}
-void GL::Window::IGNewFrame()
-{
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-}
 
 glm::vec2 GL::Window::GetWindowSize()
 {
@@ -121,41 +105,6 @@ std::string GL::Window::SaveFileDialogeBox(const char* filter)
 		return ofn.lpstrFile;
 	}
 	return "";
-}
-
-void GL::Window::ShortcutsProcessing()
-{
-	if (glfwGetKey(m_ID, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-	{
-		//Ctrl+S
-		if (glfwGetKey(m_ID, GLFW_KEY_S) == GLFW_PRESS)
-		{
-			SaveFileDialogeBox();
-		}
-		//Ctrl+O
-		if (glfwGetKey(m_ID, GLFW_KEY_O) == GLFW_PRESS)
-		{
-			OpenFileDialogeBox();
-		}
-		//Ctrl+Shift+S
-		if (glfwGetKey(m_ID, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		{
-			if (glfwGetKey(m_ID, GLFW_KEY_S) == GLFW_PRESS)
-			{
-				SaveFileDialogeBox();
-			}
-		}
-		//Ctrl+N
-		if (glfwGetKey(m_ID, GLFW_KEY_N) == GLFW_PRESS)
-		{
-
-		}
-		//Ctrl+D
-		if (glfwGetKey(m_ID, GLFW_KEY_D) == GLFW_PRESS)
-		{
-			Im_debug = true;
-		}
-	}
 }
 
 bool GL::Window::getButtonPressed(int key)

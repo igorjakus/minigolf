@@ -1,4 +1,5 @@
 #pragma once 
+#include"dtl.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -25,9 +26,6 @@ namespace GL
 		void FEP();
 		void SetIcone(const std::string& icon, const std::string& icon_small);
 		GLFWwindow* PassPointer();
-		void InitIG();
-		void IGNewFrame();
-		void ShortcutsProcessing();
 		bool getButtonPressed(int key);
 		glm::vec2 GetWindowSize();
 		std::string OpenFileDialogeBox(const char* filter = "");
