@@ -6,9 +6,6 @@ void agl::Init()
 	//gfwd init
 	if (!glfwInit())
 	{ dtl::Log.error("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
-
-	//stb_image setup
-	stbi_set_flip_vertically_on_load(true);
 }
 void agl::Terminate()
 {
@@ -23,6 +20,7 @@ Vertice::Vertice(glm::vec2 pos, glm::vec2 UV)
 agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
 	:m_textureID(0), m_widthImg(0), m_heightImg(0), m_BPP(0), m_bytesData(nullptr)
 { 
+	stbi_set_flip_vertically_on_load(1);
 	m_bytesData = stbi_load(filepath.c_str(), &m_widthImg, &m_heightImg, &m_BPP, 4);
 	if(!m_bytesData) dtl::Log.error("Faild to load texture: \"{0}\"", filepath);
 	glGenTextures(1, &m_textureID);
@@ -36,6 +34,7 @@ agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_widthImg, m_heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_bytesData);
 	
 	if(m_bytesData)	stbi_image_free(m_bytesData);
+	stbi_set_flip_vertically_on_load(0);
 }
 agl::Texture::~Texture() { glDeleteTextures(1, &m_textureID); }
 

@@ -9,16 +9,15 @@ namespace GL
 	{
 	private:
 		bool m_firstCon = true;
-		static unsigned int sm_currBind;
 		unsigned int m_ID;
-		unsigned int CompileShader(unsigned int type, const std::string& src);
+		static unsigned int sm_currBind;
 		std::unordered_map<std::string, int> uniformLocs;
-		bool getUniformLoc(const std::string& varName, uint32_t id);
-	private:
 		enum shaderType
 		{
 			vertex, fragment, geometry, none
 		};
+		bool getUniformLoc(const std::string& varName, uint32_t id);
+		unsigned int CompileShader(unsigned int type, const std::string& src);
 	public:
 		Shader(const Shader&) = delete;
 		Shader(const std::string& FilePath);
@@ -51,9 +50,12 @@ namespace GL
 		void setUniform3u(const std::string& varName, glm::uvec3 v0);
 		void setUniform4u(const std::string& varName, glm::uvec4 v0);
 		
-		void setUniform1fv(const std::string& varName, float* ptr, uint32_t size);
-		void setUniform1iv(const std::string& varName, int* ptr, uint32_t size);
-		void setUniform1uv(const std::string& varName, uint32_t* ptr, uint32_t size);
+		void setUniform1fv(const std::string& varName, float* ptr, size_t size);
+		void setUniform1iv(const std::string& varName, int* ptr, size_t size);
+		void setUniform1uv(const std::string& varName, uint32_t* ptr, size_t size);
+		void setUniform1fv(const std::string& varName, const std::vector<float>& arr);
+		void setUniform1iv(const std::string& varName, const std::vector<int>& arr);
+		void setUniform1uv(const std::string& varName, const std::vector<uint32_t>& arr);
 		
 		void setUniformMatrix3(const std::string& varName, glm::mat3 v0);
 		void setUniformMatrix4(const std::string& varName, glm::mat4 v0);

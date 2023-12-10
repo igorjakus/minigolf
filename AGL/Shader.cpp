@@ -32,7 +32,7 @@ unsigned int GL::Shader::CompileShader(unsigned int type, const std::string& src
 				errorshadertype = "Geometry";
 				break;
 		}
-		dtl::Log.error("Compilaton of a shader with a type of \"{0}\" failed. Error message:\n{0}\n", errorshadertype, errorlog);
+		DTL_ERR("Compilaton of a shader with a type of \"{0}\" failed. Error message:\n{0}\n", errorshadertype, errorlog);
 		delete[] message;
 		return 0;
 	}
@@ -47,7 +47,7 @@ bool GL::Shader::getUniformLoc(const std::string& varName, uint32_t id)
 
 		if (Id == -1)
 		{
-			dtl::Log.error("Shader uniform with a name of \"{0}\" wasn't found", varName);
+			DTL_ERR("Shader uniform with a name of \"{0}\" wasn't found", varName);
 			glUseProgram(sm_currBind);
 			return true;
 		}
@@ -57,13 +57,14 @@ bool GL::Shader::getUniformLoc(const std::string& varName, uint32_t id)
 }
 
 GL::Shader::Shader(const std::string& FilePath)
+	: m_firstCon(true), m_ID(0)
 {
 	//config blending
 	if (m_firstCon) { glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); m_firstCon = false; }
 
 	std::ifstream shaderFile;
 	shaderFile.open(FilePath);
-	if (!shaderFile.is_open()) { dtl::Log.error("Couldn't open shader file. Path: {0}", FilePath); return; }
+	if (!shaderFile.is_open()) { DTL_ERR("Couldn't open shader file. Path: {0}", FilePath); return; }
 	shaderType currType = none;
 	std::string currLine;
 	std::string vertexsrc;
@@ -78,7 +79,7 @@ GL::Shader::Shader(const std::string& FilePath)
 			if (currLine.find(" vertex") != std::string::npos) currType = vertex;
 			else if (currLine.find(" fragment") != std::string::npos) currType = fragment;
 			else if (currLine.find(" geometry") != std::string::npos) currType = geometry;
-			else dtl::Log.error("Unsupported shader type in file \"{0}\"", FilePath);
+			else DTL_ERR("Unsupported shader type in file \"{0}\"", FilePath);
 			continue;
 		}
 		if (currType == none) continue;
@@ -103,8 +104,8 @@ GL::Shader::Shader(const std::string& FilePath)
 	}
 	if (!vertexsrc.size() || !fragmentsrc.size())
 	{
-		if (!vertexsrc.size()) dtl::Log.error("Vertex shader not provided");
-		if (!fragmentsrc.size()) dtl::Log.error("Fragment shader not provided");
+		if (!vertexsrc.size()) DTL_ERR("Vertex shader not provided");
+		if (!fragmentsrc.size()) DTL_ERR("Fragment shader not provided");
 	}
 	//compiling and linking shader program
 	unsigned int vertexShaderId = GL::Shader::CompileShader(GL_VERTEX_SHADER, vertexsrc);
@@ -128,7 +129,7 @@ GL::Shader::Shader(const std::string& FilePath)
 		char* message = new char[logLength];
 		glGetProgramInfoLog(m_ID, logLength, &logLength, message);
 		std::string errorlog(message);
-		dtl::Log.error("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
+		DTL_ERR("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
 		delete[] message;
 	}
 	glDeleteShader(vertexShaderId);
@@ -137,6 +138,7 @@ GL::Shader::Shader(const std::string& FilePath)
 }
 
 GL::Shader::Shader(const std::string& VertexFilePath, const std::string& FragmentFilePath, const std::string& GeometryFilePath)
+	: m_firstCon(true), m_ID(0)
 {
 	//config blending
 	if (m_firstCon) { glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); m_firstCon = false; }
@@ -144,7 +146,7 @@ GL::Shader::Shader(const std::string& VertexFilePath, const std::string& Fragmen
 	unsigned int vertexShaderId = GL::Shader::CompileShader(GL_VERTEX_SHADER, VertexFilePath);
 	unsigned int fragmentShaderId = GL::Shader::CompileShader(GL_FRAGMENT_SHADER, FragmentFilePath);
 	unsigned int geometryShaderId = 0;
-	if (!VertexFilePath.size() || !FragmentFilePath.size()) { dtl::Log.error("Vertex or Fragment shader is incorrect. Shader compiling failed"); return; }
+	if (!VertexFilePath.size() || !FragmentFilePath.size()) { DTL_ERR("Vertex or Fragment shader is incorrect. Shader compiling failed"); return; }
 	if (GeometryFilePath.size()) geometryShaderId = GL::Shader::CompileShader(GL_GEOMETRY_SHADER, GeometryFilePath);
 	m_ID = glCreateProgram();
 	glAttachShader(m_ID, vertexShaderId);
@@ -162,7 +164,7 @@ GL::Shader::Shader(const std::string& VertexFilePath, const std::string& Fragmen
 		char* message = new char[logLength];
 		glGetProgramInfoLog(m_ID, logLength, &logLength, message);
 		std::string errorlog(message);
-		dtl::Log.error("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
+		DTL_ERR("Linking of a shader program failed. Error message:\n{0}\n", errorlog);
 		delete[] message;
 	}
 	glDeleteShader(vertexShaderId);
@@ -338,7 +340,7 @@ void GL::Shader::setUniform4u(const std::string& varName, glm::uvec4 v0)
 	glUseProgram(sm_currBind);
 }
 //-vecs
-void GL::Shader::setUniform1fv(const std::string& varName, float* ptr, uint32_t size)
+void GL::Shader::setUniform1fv(const std::string& varName, float* ptr, size_t size)
 {
 	glUseProgram(m_ID);
 	if (getUniformLoc(varName, m_ID)) return;
@@ -346,7 +348,7 @@ void GL::Shader::setUniform1fv(const std::string& varName, float* ptr, uint32_t 
 	glUseProgram(sm_currBind);
 }
 
-void GL::Shader::setUniform1iv(const std::string& varName, int* ptr, uint32_t size)
+void GL::Shader::setUniform1iv(const std::string& varName, int* ptr, size_t size)
 {
 	glUseProgram(m_ID);
 	if (getUniformLoc(varName, m_ID)) return;
@@ -354,11 +356,32 @@ void GL::Shader::setUniform1iv(const std::string& varName, int* ptr, uint32_t si
 	glUseProgram(sm_currBind);
 }
 
-void GL::Shader::setUniform1uv(const std::string& varName, uint32_t * ptr, uint32_t size)
+void GL::Shader::setUniform1uv(const std::string& varName, uint32_t * ptr, size_t size)
 {
 	glUseProgram(m_ID);
 	if (getUniformLoc(varName, m_ID)) return;
 	glUniform1uiv(uniformLocs[varName], size, ptr);
+	glUseProgram(sm_currBind);
+}
+void GL::Shader::setUniform1fv(const std::string& varName, const std::vector<float>& arr)
+{
+	glUseProgram(m_ID);
+	if (getUniformLoc(varName, m_ID)) return;
+	glUniform1fv(uniformLocs[varName], arr.size(), &arr[0]);
+	glUseProgram(sm_currBind);
+}
+void GL::Shader::setUniform1iv(const std::string& varName, const std::vector<int>& arr)
+{
+	glUseProgram(m_ID);
+	if (getUniformLoc(varName, m_ID)) return;
+	glUniform1iv(uniformLocs[varName], arr.size(), &arr[0]);
+	glUseProgram(sm_currBind);
+}
+void GL::Shader::setUniform1uv(const std::string& varName, const std::vector<uint32_t>& arr)
+{
+	glUseProgram(m_ID);
+	if (getUniformLoc(varName, m_ID)) return;
+	glUniform1uiv(uniformLocs[varName], arr.size(), &arr[0]);
 	glUseProgram(sm_currBind);
 }
 //-matrixes
