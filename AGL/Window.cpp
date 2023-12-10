@@ -156,7 +156,9 @@ bool GL::Window::GetButtonPressed(int key)
 glm::dvec2 GL::Window::GetMousePos()
 {
 	if (m_ID == nullptr)
-	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get mouse position."); return; }
+	{
+		DTL_ERR("Window hasn't yet been created. First create a window before trying to get mouse position."); return {0, 0};
+	}
 	glm::dvec2 mPos;
 	glfwGetCursorPos(m_ID, &mPos.x, &mPos.y);
 	return mPos;
