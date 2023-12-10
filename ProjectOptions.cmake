@@ -33,6 +33,8 @@ endmacro()
 macro(project_local_options)
 	# standard project settings here
 
+	set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 	add_library(project_warnings INTERFACE)
 	add_library(project_options INTERFACE)
 
