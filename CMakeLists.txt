@@ -12,7 +12,32 @@ project_options_setup()
 project_local_options()
 
 set(SOURCES 
-    src/main.cpp
+
+	App/App.cpp
+	AGL/Core.cpp
+	AGL/Core.h
+	AGL/Shader.cpp
+	AGL/Shader.h
+	AGL/Window.cpp
+	AGL/Window.h
+	DTL/dtl.cpp
+	DTL/dtl.h
 )
 
+add_subdirectory(AGL-Deps/GLAD)	
+add_subdirectory(AGL-Deps/GLFW)	
+add_subdirectory(AGL-Deps/glm)	
+add_subdirectory(AGL-Deps/stb)	
+
+include_directories(AGL-Deps/GLFW/include)
+include_directories(AGL-Deps/GLAD/include)
+include_directories(pch)
+include_directories(DTL)
+include_directories(AGL)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_precompile_headers(${PROJECT_NAME} PUBLIC pch/pch.h)
+
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw 
+	glad stb)
