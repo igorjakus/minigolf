@@ -11,7 +11,6 @@ int main()
 
 	int test;
 	test++;
-
 	DTL_INF("%d", test);
 
 	win1.Create();
