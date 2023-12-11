@@ -2,19 +2,16 @@
 #include"Window.h"
 #include<stb_image.h>
 
-GL::Window::Window(int width, int height, std::string title)
-	:m_doIcone(false), m_IsVSync(true), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icone{0, 0}, m_winPos(0, 0), m_winSize(width, height) {}
-
-GL::Window::~Window()
+agl::Window::Window(uint32_t width, uint32_t height, std::string title)
+	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icone{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height) {}
+agl::Window::~Window()
 { glfwDestroyWindow(m_ID); }
 
-void GL::Window::Create(bool Maximised, bool fullscreen, bool Resizible)
+void agl::Window::Create()
 {
 	m_monitor = glfwGetPrimaryMonitor();
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_MAXIMIZED, Maximised);
-	glfwWindowHint(GLFW_RESIZABLE, Resizible);
-	m_ID = glfwCreateWindow(m_winSize.x, m_winSize.y, m_title.c_str(), NULL, NULL);
+	m_ID = glfwCreateWindow(m_winSizeW, m_winSizeH, m_title.c_str(), NULL, NULL);
 	if (!m_ID)
 	{
 		DTL_ERR("Error with creation of a window named \"{0}\".", m_title);
@@ -29,59 +26,71 @@ void GL::Window::Create(bool Maximised, bool fullscreen, bool Resizible)
 		DTL_ERR("Failed to initialize GLAD.");
 		exit(EXIT_FAILURE);
 	}
-	SetFullscreen(fullscreen);
 }
 
-bool GL::Window::CloseCallBack()
+bool agl::Window::CloseCallBack()
 {
 	if (!m_ID) return false;
 	return !glfwWindowShouldClose(m_ID);
 }
 
-void GL::Window::Close()
+void agl::Window::Close()
 { if (m_ID == nullptr) { return; } glfwSetWindowShouldClose(m_ID, GLFW_TRUE); }
 
-void GL::Window::SetFullscreen(bool fullscreen)
+void agl::Window::SetFullscreen(bool fullscreen)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set fullscreen."); return; }
 	if (IsFullscreen() == fullscreen) return;
 	if (fullscreen)
 	{
-		glfwGetWindowPos(m_ID, &m_winPos.x, &m_winPos.y);
-		glfwGetWindowSize(m_ID, &m_winSize.x, &m_winSize.y);
+		glfwGetWindowPos(m_ID, &m_winPosX, &m_winPosY);
+		glfwGetWindowSize(m_ID, &m_winSizeW, &m_winSizeH);
 		const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
 		glfwSetWindowMonitor(m_ID, m_monitor, 0, 0, mode->width, mode->height, 0);
 	}
 	else
-	{ glfwSetWindowMonitor(m_ID, nullptr, m_winPos.x, m_winPos.y, m_winSize.x, m_winSize.y, 0); }
+	{ glfwSetWindowMonitor(m_ID, nullptr, m_winPosX, m_winPosY, m_winSizeW, m_winSizeH, 0); }
 }
 
-void GL::Window::SetVSync(bool vsync)
+void agl::Window::SetBorderless(bool borderless)
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set borderless."); return; }
+
+	if (IsBorderless() == borderless) return;
+	if (borderless)
+	{ glfwSetWindowAttrib(m_ID, GLFW_DECORATED, GLFW_FALSE); MaximizeWindow(true); }
+	else
+	{ MaximizeWindow(false); glfwSetWindowAttrib(m_ID, GLFW_DECORATED, GLFW_TRUE); }
+	m_isBorderless = borderless;
+}
+
+void agl::Window::SetVSync(bool vsync)
 { glfwSwapInterval(vsync); }
 
-void GL::Window::SetWindowSize(int width, int height)
+void agl::Window::SetWindowSize(uint32_t width, uint32_t height)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size."); return; }
 	glfwSetWindowSize(m_ID, width, height);
 }
 
-void GL::Window::SetWindowPos(int x, int y)
+void agl::Window::SetWindowPos(uint32_t x, uint32_t y)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set position."); return; }
 	glfwSetWindowPos(m_ID, x, y);
 }
 
-void GL::Window::SetSizeLimits(int minW, int minH, int maxW, int maxH)
+void agl::Window::SetSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH)
 { 
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size limits."); return; }
 	glfwSetWindowSizeLimits(m_ID, minW, minH, maxW, maxH); 
 }
 
-void GL::Window::SetTitle(std::string title)
+void agl::Window::SetTitle(std::string title)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set a title."); return; }
@@ -89,7 +98,7 @@ void GL::Window::SetTitle(std::string title)
 	m_title = title;
 }
 
-void GL::Window::FEP()
+void agl::Window::FEP()
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before setting a frame end point."); return; }
@@ -98,7 +107,7 @@ void GL::Window::FEP()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void GL::Window::SetIcon(std::string icon, std::string icon_small)
+void agl::Window::SetIcon(std::string icon, std::string icon_small)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set an icon."); return; }
@@ -116,55 +125,72 @@ void GL::Window::SetIcon(std::string icon, std::string icon_small)
 	stbi_set_flip_vertically_on_load(1);
 }
 
-bool GL::Window::IsFullscreen()
+void agl::Window::SetIcon()
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set an icon."); return; }
+	glfwSetWindowIcon(m_ID, 0, NULL);
+}
+
+void agl::Window::MaximizeWindow(bool maximize)
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's maximization."); return; }
+	if (maximize)
+	glfwMaximizeWindow(m_ID);
+	else
+	glfwRestoreWindow(m_ID);
+}
+
+void agl::Window::SetResizable(bool resizable)
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's resizing."); return; }
+	glfwSetWindowAttrib(m_ID, GLFW_RESIZABLE, resizable);
+}
+
+bool agl::Window::IsBorderless()
+{ return m_isBorderless; }
+
+bool agl::Window::IsFullscreen()
 { return (m_ID == nullptr) ? false : glfwGetWindowMonitor(m_ID) != nullptr; }
 
-std::string GL::Window::GetTitle()
+std::string agl::Window::GetTitle()
 { return m_title; }
 
-glm::ivec2 GL::Window::GetWindowSize()
+void agl::Window::GetWindowSize(int& width, int& height)
 {
 	if (m_ID == nullptr)
-	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window size."); return {0, 0}; }
-	int w, h;
-	glfwGetWindowSize(m_ID, &w, &h);
-	return glm::ivec2(w, h);
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window size."); return; }
+	glfwGetWindowSize(m_ID, &width, &height);
 }
 
-glm::ivec2 GL::Window::GetWindowPos()
+void agl::Window::GetWindowPos(int& x, int& y)
 {
 	if (m_ID == nullptr)
-	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window position."); return { 0, 0 }; }
-	int x, y;
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window position."); return; }
 	glfwGetWindowSize(m_ID, &x, &y);
-	return glm::ivec2(x, y);
 }
 
-bool GL::Window::GetVSync()
-{ return m_IsVSync; }
+void agl::Window::GetScreenResolution(int& width, int& height)
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get screen resolution."); return; }
+	const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
+	width = mode->width; height = mode->height;
+}
 
-GLFWwindow* GL::Window::PassPointer()
+bool agl::Window::GetVSync()
+{ return m_isVSync; }
+
+GLFWwindow* agl::Window::PassPointer()
 { return m_ID; }
 
-bool GL::Window::GetButtonPressed(int key)
+
+//temp
+bool agl::Window::IsKeyPressed(int key)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get button press callback."); return false; }
 	return glfwGetKey(m_ID, key);
-}
-
-glm::dvec2 GL::Window::GetMousePos()
-{
-	if (m_ID == nullptr)
-	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get mouse position."); return {0, 0}; }
-	glm::dvec2 mPos;
-	glfwGetCursorPos(m_ID, &mPos.x, &mPos.y);
-	return mPos;
-}
-
-bool GL::Window::GetMouseButtonPressed(int key)
-{
-	if (m_ID == nullptr)
-	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get mouse button press callback."); return false; }
-	return glfwGetMouseButton(m_ID, key);
 }

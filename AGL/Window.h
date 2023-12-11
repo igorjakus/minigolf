@@ -3,43 +3,48 @@
 #include<GLAD/glad.h>
 #include<GLFW/glfw3.h>
 
-namespace GL
+namespace agl
 {
 	class Window
 	{
 	private:
-		bool m_doIcone;
-		bool m_IsVSync;
+		bool m_isVSync;
+		bool m_isBorderless;
 		GLFWwindow* m_ID;
 		std::string m_title;
 		GLFWmonitor* m_monitor;
 		GLFWimage m_icone[2];
-		glm::ivec2 m_winPos;
-		glm::ivec2 m_winSize;
+		int m_winPosX, m_winPosY;
+		int m_winSizeW, m_winSizeH;
 	public:
 		Window(const Window&) = delete;
-		Window(int width, int height, std::string title);
+		Window(uint32_t width, uint32_t height, std::string title);
 		~Window();
-		void Create(bool Maximised = false, bool fullscreen = false, bool Resizible = true);
+		void Create();
 		bool CloseCallBack();
 		void Close();
 		void SetFullscreen(bool fullscreen);
+		//Not fully working as indended WIP
+		void SetBorderless(bool borderless);
 		void SetVSync(bool vsync);
-		void SetWindowSize(int width, int height);
-		void SetWindowPos(int x, int y);
-		void SetSizeLimits(int minW, int minH, int maxW, int maxH);
+		void SetWindowSize(uint32_t width, uint32_t height);
+		void SetWindowPos(uint32_t x, uint32_t y);
+		void SetSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH);
 		void SetTitle(std::string title);
 		void SetIcon(std::string icon, std::string icon_small);
+		void SetIcon();
+		void MaximizeWindow(bool maximize);
+		void SetResizable(bool resizable);
+		bool IsBorderless();
 		bool IsFullscreen();
 		std::string GetTitle();
-		glm::ivec2 GetWindowSize();
-		glm::ivec2 GetWindowPos();
+		void GetWindowSize(int &width, int &height);
+		void GetWindowPos(int &x, int &y);
+		void GetScreenResolution(int& width, int& height);
 		bool GetVSync();
 		void FEP();
 		GLFWwindow* PassPointer();
-		bool GetButtonPressed(int key);
-		glm::dvec2 GetMousePos();
-		bool GetMouseButtonPressed(int key);
+		//temp
+		bool IsKeyPressed(int key);
 	};
 }
-
