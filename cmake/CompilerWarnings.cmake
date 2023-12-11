@@ -10,9 +10,7 @@ function(
   CLANG_WARNINGS
   GCC_WARNINGS
   CUDA_WARNINGS)
-	message("CompilerWarnings function is run")
 	if("${MSVC_WARNINGS}" STREQUAL "")
-		message("MSVC warnings set")
 		set(MSVC_WARNINGS
 		/W4 # Baseline reasonable warnings
 		/w14242 # 'identifier': conversion from 'type1' to 'type2', possible loss of data
@@ -41,7 +39,6 @@ function(
 	endif()
 
 	if("${CLANG_WARNINGS}" STREQUAL "")
-		message("CLANG warnings set")
 		set(CLANG_WARNINGS
 		-Wall
 		-Wextra # reasonable and standard
@@ -63,7 +60,6 @@ function(
 	endif()
 
 	if("${GCC_WARNINGS}" STREQUAL "")
-		message("GCC warnings set")
 		set(GCC_WARNINGS
 		${CLANG_WARNINGS}
 		-Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
@@ -86,7 +82,6 @@ function(
 	endif()
 
 	if(WARNINGS_AS_ERRORS)
-		message("Warnings are treated as errors")
 		list(APPEND CLANG_WARNINGS -Werror)
 		list(APPEND GCC_WARNINGS -Werror)
 		list(APPEND MSVC_WARNINGS /WX)
