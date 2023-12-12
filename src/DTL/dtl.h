@@ -16,10 +16,10 @@
 #define ullong unsigned long long
 
 #define DTL_LOG dtl::Logger::GetInstance()
-#define DTL_ENT(text, ...) dtl::Log.entry(text, __VA_ARGS__)
-#define DTL_INF(text, ...) dtl::Log.info(text, __VA_ARGS__)
-#define DTL_WAR(text, ...) dtl::Log.warning(text, __VA_ARGS__)
-#define DTL_ERR(text, ...) dtl::Log.error(text, __VA_ARGS__)
+#define DTL_ENT(text, ...) dtl::Log.entry(text, ## __VA_ARGS__)
+#define DTL_INF(text, ...) dtl::Log.info(text, ## __VA_ARGS__)
+#define DTL_WAR(text, ...) dtl::Log.warning(text, ## __VA_ARGS__)
+#define DTL_ERR(text, ...) dtl::Log.error(text, ## __VA_ARGS__)
 #define DTL_BLACK			"\033[0;30m"
 #define DTL_DARK_GRAY		"\033[1;30m"
 #define DTL_BLUE			"\033[0;34m"
