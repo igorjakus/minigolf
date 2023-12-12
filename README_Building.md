@@ -2,10 +2,10 @@
 
 Szczegółowe instrukcje budowania projektu.
 
+## Instrukcje budowania dla:
+
 <details>
 <summary>Visual Studio</summary>
-
-## Budowanie przy pomocy Visual Studio
 
 Budowanie przy pomocy VS jest banalne. Wystarczy otworzyć projekt. VS sam znajdzie pliki CMake. Należy u góry wybrać jedynie rodzaj konfiguracji i plik wykonywalny. Następnie można zbudować projekt kombinacją klawiszy ctrl + shift + B, lub zbudować i uruchomić przyciskiem F5.
 
@@ -13,8 +13,6 @@ Budowanie przy pomocy VS jest banalne. Wystarczy otworzyć projekt. VS sam znajd
 
 <details>
 <summary>Terminal</summary>
-
-## Budowanie ręczne w terminalu
 
 Budowanie projektu odbywa się w dwóch prostych krokach:
 1) Utworzenie konfiguracji przy pomocy CMake
@@ -36,7 +34,19 @@ gdzie dostępnymi (na systemach Linux i MacOS) konfiguracjami są:
 
 ### (2)
 
-przejdź do folderu build/
-    
+przejdź do folderu `build/<konfiguracja>/` i wywołaj polecenie:
+
+    ninja
 
 </details>
+
+## Ustawienia konfiguracji
+
+Konfiguracja zostanie utworzona z ustawieniami znajdującymi się w pliku `ProjectSettings.cmake`. Aby je zmienić należy wartości odpowiednich ustawień zmienić na `ON` lub `OFF`.
+
+Budując w terminalu polecenie `cmake` należy po zmianie ustawień wywoływać z dodatkową flagą na końcu `--fresh`.
+
+## Zbudowany projekt
+
+Plik wykonywalny i cały folder assets w zbudowanym projekcie znajdować się będą w folderze `build/<konfiguracja>/mini_golf/`.
+
