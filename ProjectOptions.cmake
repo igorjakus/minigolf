@@ -43,8 +43,14 @@ macro(project_local_options)
 	add_library(project_warnings INTERFACE)
 	add_library(project_options INTERFACE)
 
+	if(NOT ${project_WARNINGS_AS_ERRORS})
+		message("######################################################")
+		message("Warning: compiler warnings not treated as errors")
+		message("It is recommended to se the WARNINGS_AS_ERRORS option to ON")
+		message("######################################################")
+	endif()
+
 	include(cmake/CompilerWarnings.cmake)
-	message(WARNING "${project_WARNINGS_AS_ERRORS}")
 	set_project_warnings(
 		project_warnings
 		${project_WARNINGS_AS_ERRORS}

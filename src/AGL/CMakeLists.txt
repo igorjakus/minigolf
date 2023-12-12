@@ -20,5 +20,5 @@ target_include_directories(lib_agl PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_features(lib_agl PUBLIC cxx_std_20)
 target_compile_definitions(lib_agl PUBLIC SAMPLE_LIBRARY_STATIC_DEFINE)
 
-# This library uses DTL for logging
-target_link_libraries(lib_agl PRIVATE lib_dtl)
+# link dependencies
+target_link_libraries(lib_agl PRIVATE glm glfw glad stb lib_dtl)
