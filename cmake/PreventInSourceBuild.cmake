@@ -1,7 +1,10 @@
 #
 # This function will prevent in-source builds
-# It is yoinked from Jason Turner's cmake template
 #
+# Source:
+#
+# https://github.com/cpp-best-practices/cmake_template/blob/main/cmake/PreventInSourceBuilds.cmake
+
 function(myproject_assure_out_of_source_builds)
 	# make sure the user doesn't play dirty with symlinks
 	get_filename_component(srcdir "${CMAKE_SOURCE_DIR}" REALPATH)

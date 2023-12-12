@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1...3.20 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1)
 project(glad)
 
 add_library(glad)

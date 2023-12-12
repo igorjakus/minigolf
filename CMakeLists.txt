@@ -13,8 +13,6 @@ project_local_options()
 
 target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
-# include(ProjectDependencies.cmake)
-
 include_directories(src)
 
 add_library(project::project_options ALIAS project_options)

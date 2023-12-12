@@ -1,6 +1,6 @@
-# from here:
+# Source:
 #
-# https://github.com/lefticus/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
+# https://github.com/cpp-best-practices/cmake_template/blob/main/cmake/CompilerWarnings.cmake
 
 function(
   set_project_warnings
@@ -77,28 +77,24 @@ function(
 		-Wunused
 		-Wconversion
 		-Wshadow
-		# TODO add more Cuda warnings
 		)
 	endif()
 
 	if(WARNINGS_AS_ERRORS)
+		message(STATUS "WARNING TREATED AS ERRORS ENABLED")
 		list(APPEND CLANG_WARNINGS -Werror)
 		list(APPEND GCC_WARNINGS -Werror)
 		list(APPEND MSVC_WARNINGS /WX)
 	endif()
 
 	if(MSVC)
-		message("MSVC set")
 		set(PROJECT_WARNINGS_CXX ${MSVC_WARNINGS})
 	elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-		message("CLANG set")
 		set(PROJECT_WARNINGS_CXX ${CLANG_WARNINGS})
 	elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-		message("GNU set")
 		set(PROJECT_WARNINGS_CXX ${GCC_WARNINGS})
 	else()
-		message("No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
-		# TODO support Intel compiler
+		message(WARNING "No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
 	endif()
 
 	# use the same warning flags for C
