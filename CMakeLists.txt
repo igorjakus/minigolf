@@ -7,33 +7,18 @@ project(mini_golf)
 
 include(cmake/PreventInSourceBuild.cmake)
 
-set(SOURCES 
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ProjectOptions.cmake)
+include(ProjectOptions.cmake)
+project_options_setup()
+project_local_options()
 
-	App/App.cpp
-	AGL/Core.cpp
-	AGL/Core.h
-	AGL/Shader.cpp
-	AGL/Shader.h
-	AGL/Window.cpp
-	AGL/Window.h
-	DTL/dtl.cpp
-	DTL/dtl.h
-)
+target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
-add_subdirectory(AGL-Deps/GLAD)	
-add_subdirectory(AGL-Deps/GLFW)	
-add_subdirectory(AGL-Deps/glm)	
-add_subdirectory(AGL-Deps/stb)	
+include_directories(src)
 
-include_directories(AGL-Deps/GLFW/include)
-include_directories(AGL-Deps/GLAD/include)
-include_directories(pch)
-include_directories(DTL)
-include_directories(AGL)
+add_library(project::project_options ALIAS project_options)
+add_library(project::project_warnings ALIAS project_warnings)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
-target_precompile_headers(${PROJECT_NAME} PUBLIC pch/pch.h)
-
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw 
-	glad stb)
+add_subdirectory(src)

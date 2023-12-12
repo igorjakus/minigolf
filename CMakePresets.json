@@ -8,15 +8,15 @@
 	"configurePresets": [
 		{
 			"name": "common",
-			"description": "General settings that apply to all configurations",
+			"description": "General settings used by all build types",
 			"hidden": true,
 			"generator": "Ninja",
-			"binaryDir": "${sourceDir}/out/build/${presetName}",
-			"installDir": "${sourceDir}/out/install/${presetName}"
+			"binaryDir": "${sourceDir}/build/${presetName}",
+			"installDir": "${sourceDir}out/install/${presetName}"
 		},
 		{
 			"name": "windows-common",
-			"description": "Windows settings for MSBuild toolchain that apply to msvc and clang",
+			"description": "Settings for Windows builds",
 			"hidden": true,
 			"inherits": "common",
 			"condition": {
@@ -39,7 +39,7 @@
 		},
 		{
 			"name": "unixlike-common",
-			"description": "Unix-like OS settings for gcc and clang toolchains",
+			"description": "Settings for all Unix-like builds",
 			"hidden": true,
 			"inherits": "common",
 			"condition": {
@@ -57,9 +57,9 @@
 			}
 		},
 		{
-			"name": "windows-msvc-debug-developer-mode",
-			"displayName": "msvc Debug (Developer Mode)",
-			"description": "Target Windows with the msvc compiler, debug build type",
+			"name": "msvc-debug",
+			"displayName": "msvc Debug",
+			"description": "Msvc Debug build",
 			"inherits": "windows-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
@@ -69,9 +69,9 @@
 			}
 		},
 		{
-			"name": "windows-msvc-release-developer-mode",
-			"displayName": "msvc Release (Developer Mode)",
-			"description": "Target Windows with the msvc compiler, release build type",
+			"name": "msvc-release-debug-info",
+			"displayName": "msvc Release with debug info",
+			"description": "Msvc optimised Release build with debug info",
 			"inherits": "windows-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
@@ -81,33 +81,21 @@
 			}
 		},
 		{
-			"name": "windows-msvc-debug-user-mode",
-			"displayName": "msvc Debug (User Mode)",
-			"description": "Target Windows with the msvc compiler, debug build type",
+			"name": "msvc-release",
+			"displayName": "msvc Release",
+			"description": "Msvc Release build",
 			"inherits": "windows-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
 				"CMAKE_CXX_COMPILER": "cl",
-				"CMAKE_BUILD_TYPE": "Debug",
+				"CMAKE_BUILD_TYPE": "Release",
 				"ENABLE_DEVELOPER_MODE": "OFF"
 			}
 		},
 		{
-			"name": "windows-msvc-release-user-mode",
-			"displayName": "msvc Release (User Mode)",
-			"description": "Target Windows with the msvc compiler, release build type",
-			"inherits": "windows-common",
-			"cacheVariables": {
-				"CMAKE_C_COMPILER": "cl",
-				"CMAKE_CXX_COMPILER": "cl",
-				"CMAKE_BUILD_TYPE": "RelWithDebInfo",
-				"ENABLE_DEVELOPER_MODE": "OFF"
-			}
-		},
-		{
-			"name": "windows-clang-debug",
+			"name": "win-clang-debug",
 			"displayName": "clang Debug",
-			"description": "Target Windows with the clang compiler, debug build type",
+			"description": "Windows Debug build with clang compiler",
 			"inherits": "windows-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang-cl",
@@ -121,14 +109,14 @@
 			}
 		},
 		{
-			"name": "windows-clang-release",
+			"name": "win-clang-release",
 			"displayName": "clang Release",
-			"description": "Target Windows with the clang compiler, release build type",
+			"description": "Windows Release build with clang compiler",
 			"inherits": "windows-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang-cl",
 				"CMAKE_CXX_COMPILER": "clang-cl",
-				"CMAKE_BUILD_TYPE": "RelWithDebInfo"
+				"CMAKE_BUILD_TYPE": "Release"
 			},
 			"vendor": {
 				"microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -139,7 +127,7 @@
 		{
 			"name": "unixlike-gcc-debug",
 			"displayName": "gcc Debug",
-			"description": "Target Unix-like OS with the gcc compiler, debug build type",
+			"description": "Unix-like Debug build with gcc compiler",
 			"inherits": "unixlike-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "gcc",
@@ -150,18 +138,18 @@
 		{
 			"name": "unixlike-gcc-release",
 			"displayName": "gcc Release",
-			"description": "Target Unix-like OS with the gcc compiler, release build type",
+			"description": "Unix-like Release build with gcc compiler",
 			"inherits": "unixlike-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "gcc",
 				"CMAKE_CXX_COMPILER": "g++",
-				"CMAKE_BUILD_TYPE": "RelWithDebInfo"
+				"CMAKE_BUILD_TYPE": "Release"
 			}
 		},
 		{
 			"name": "unixlike-clang-debug",
 			"displayName": "clang Debug",
-			"description": "Target Unix-like OS with the clang compiler, debug build type",
+			"description": "Unix-like Debug build with clang compiler",
 			"inherits": "unixlike-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang",
@@ -172,12 +160,12 @@
 		{
 			"name": "unixlike-clang-release",
 			"displayName": "clang Release",
-			"description": "Target Unix-like OS with the clang compiler, release build type",
+			"description": "Unix-like Release build with clang compiler",
 			"inherits": "unixlike-common",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang",
 				"CMAKE_CXX_COMPILER": "clang++",
-				"CMAKE_BUILD_TYPE": "RelWithDebInfo"
+				"CMAKE_BUILD_TYPE": "Release"
 			}
 		}
 	]
