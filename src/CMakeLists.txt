@@ -1,11 +1,11 @@
-# add_subdirectory(AGL-Deps/GLAD)	
-# add_subdirectory(AGL-Deps/GLFW)	
-# add_subdirectory(AGL-Deps/glm)	
-# add_subdirectory(AGL-Deps/stb)	
+add_subdirectory(AGL-Deps/GLAD)	
+add_subdirectory(AGL-Deps/GLFW)	
+add_subdirectory(AGL-Deps/glm)	
+add_subdirectory(AGL-Deps/stb)	
 
 include_directories(AGL-Deps)
-# include_directories(AGL-Deps/GLFW/include)
-# include_directories(AGL-Deps/GLAD/include)
+include_directories(AGL-Deps/GLFW/include)
+include_directories(AGL-Deps/GLAD/include)
 
 include_directories(pch)
 
