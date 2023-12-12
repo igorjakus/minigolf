@@ -1,7 +1,7 @@
 set(AGL_SOURCES
 
-	Core.cpp
-	Core.h
+	Agl.cpp
+	Agl.h
 	Shader.cpp
 	Shader.h
 	Window.cpp

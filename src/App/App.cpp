@@ -1,8 +1,8 @@
-#include "dtl.h"
+#include"dtl.h"
 #include"pch.h"
 #include<Window.h>
 #include"Shader.h"
-#include"Core.h"
+#include"Agl.h"
 
 int main() 
 {
@@ -10,7 +10,7 @@ int main()
 	agl::Window win1(640, 480, "minigolf");
 
 	win1.Create();
-	win1.SetIcon("../../../icone/icone.png", "../../../icone/icone.png");
+	win1.SetIcon("assets/icon/icon.png", "assets/icon/icon.png");
 	win1.SetWindowPos(640, 300);
 	
 
