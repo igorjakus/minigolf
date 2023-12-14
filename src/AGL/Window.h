@@ -13,7 +13,7 @@ namespace agl
 		GLFWwindow* m_ID;
 		std::string m_title;
 		GLFWmonitor* m_monitor;
-		GLFWimage m_icone[2];
+		GLFWimage m_icon[2];
 		int m_winPosX, m_winPosY;
 		int m_winSizeW, m_winSizeH;
 	public:
@@ -21,8 +21,8 @@ namespace agl
 		Window(uint32_t width, uint32_t height, std::string title);
 		~Window();
 		void create();
-		bool closeCallBack();
-		void close();
+		bool closeCallBack() const;
+		void close() const;
 		void setFullscreen(bool fullscreen);
 		//Not fully working as indended WIP
 		void setBorderless(bool borderless);
@@ -32,18 +32,18 @@ namespace agl
 		void setSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH);
 		void setTitle(std::string title);
 		void setIcon(std::string icon, std::string icon_small);
-		void setIcon();
-		void maximizeWindow(bool maximize);
-		void setResizable(bool resizable);
-		bool isBorderless();
-		bool isFullscreen();
+		void setIcon() const;
+		void maximizeWindow(bool maximize) const;
+		void setResizable(bool resizable) const;
+		bool isBorderless() const;
+		bool isFullscreen() const;
 		std::string getTitle();
 		void getWindowSize(int &width, int &height);
 		void getWindowPos(int &x, int &y);
 		void getScreenResolution(int& width, int& height);
-		bool getVSync();
-		void FEP();
-		GLFWwindow* passPointer();
+		bool getVSync() const;
+		void FEP() const;
+		GLFWwindow* passPointer() const;
 		//temp
 		bool IsKeyPressed(int key);
 	};

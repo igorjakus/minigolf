@@ -61,7 +61,7 @@ void agl::Object::move(glm::vec2 pos) { m_pos += pos; }
 void agl::Object::m_transform() { m_model = glm::translate(glm::mat4(1.f), glm::vec3(m_pos, 0.f)) * glm::rotate(glm::mat4(1.f), glm::radians(m_rot), glm::vec3(0.f, 0.f, 1.f)) * glm::scale(glm::mat4(1.f), glm::vec3(m_xs, m_ys, 1.f)); }
 
 
-agl::Renderer::Renderer(GL::Shader* shader)
+agl::Renderer::Renderer(agl::Shader* shader)
 	:m_shader(shader){}
 
 agl::Renderer::~Renderer()

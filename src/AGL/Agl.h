@@ -55,13 +55,13 @@ namespace agl
 
 	class Renderer
 	{
-		GL::Shader* m_shader;
+		agl::Shader* m_shader;
 		const uint32_t m_trisStencile[6] = {0, 1, 2, 2, 3, 1};
 		std::vector<BufferData> m_bd;
 
 	public:
 		Renderer(const Renderer&) = delete;
-		Renderer(GL::Shader* shader);
+		Renderer(agl::Shader* shader);
 		~Renderer();
 		void draw();
 		void addObject(Object& obj);
