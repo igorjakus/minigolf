@@ -3,7 +3,7 @@
 #include<stb_image.h>
 
 agl::Window::Window(uint32_t width, uint32_t height, std::string title)
-	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icone{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height) {}
+	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height) {}
 agl::Window::~Window()
 { glfwDestroyWindow(m_ID); }
 
@@ -28,13 +28,13 @@ void agl::Window::create()
 	}
 }
 
-bool agl::Window::closeCallBack()
+bool agl::Window::closeCallBack() const
 {
 	if (!m_ID) return false;
 	return glfwWindowShouldClose(m_ID);
 }
 
-void agl::Window::close()
+void agl::Window::close() const
 { if (m_ID == nullptr) { return; } glfwSetWindowShouldClose(m_ID, GLFW_TRUE); }
 
 void agl::Window::setFullscreen(bool fullscreen)
@@ -98,7 +98,7 @@ void agl::Window::setTitle(std::string title)
 	m_title = title;
 }
 
-void agl::Window::FEP()
+void agl::Window::FEP() const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before setting a frame end point."); return; }
@@ -113,26 +113,27 @@ void agl::Window::setIcon(std::string icon, std::string icon_small)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set an icon."); return; }
 
 	stbi_set_flip_vertically_on_load(0);
-	m_icone[0].pixels = stbi_load(icon.c_str(), &m_icone[0].width, &m_icone[0].height, 0, 4);
-	m_icone[1].pixels = stbi_load(icon.c_str(), &m_icone[1].width, &m_icone[1].height, 0, 4);
+	m_icon[0].pixels = stbi_load(icon.c_str(), &m_icon[0].width, &m_icon[0].height, 0, 4);
+	m_icon[1].pixels = stbi_load(icon.c_str(), &m_icon[1].width, &m_icon[1].height, 0, 4);
 
-	if (m_icone[0].pixels == nullptr || m_icone[1].pixels == nullptr)
+
+	if (m_icon[0].pixels == nullptr || m_icon[1].pixels == nullptr)
 	{ DTL_ERR("Failed to load window icon."); return; }
 
-	glfwSetWindowIcon(m_ID, 2, m_icone);
-	stbi_image_free(m_icone[0].pixels);
-	stbi_image_free(m_icone[1].pixels);
+	glfwSetWindowIcon(m_ID, 2, m_icon);
+	stbi_image_free(m_icon[0].pixels);
+	stbi_image_free(m_icon[1].pixels);
 	stbi_set_flip_vertically_on_load(1);
 }
 
-void agl::Window::setIcon()
+void agl::Window::setIcon() const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set an icon."); return; }
 	glfwSetWindowIcon(m_ID, 0, NULL);
 }
 
-void agl::Window::maximizeWindow(bool maximize)
+void agl::Window::maximizeWindow(bool maximize) const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's maximization."); return; }
@@ -142,17 +143,17 @@ void agl::Window::maximizeWindow(bool maximize)
 	glfwRestoreWindow(m_ID);
 }
 
-void agl::Window::setResizable(bool resizable)
+void agl::Window::setResizable(bool resizable) const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's resizing."); return; }
 	glfwSetWindowAttrib(m_ID, GLFW_RESIZABLE, resizable);
 }
 
-bool agl::Window::isBorderless()
+bool agl::Window::isBorderless() const
 { return m_isBorderless; }
 
-bool agl::Window::isFullscreen()
+bool agl::Window::isFullscreen() const
 { return (m_ID == nullptr) ? false : glfwGetWindowMonitor(m_ID) != nullptr; }
 
 std::string agl::Window::getTitle()
@@ -180,10 +181,10 @@ void agl::Window::getScreenResolution(int& width, int& height)
 	width = mode->width; height = mode->height;
 }
 
-bool agl::Window::getVSync()
+bool agl::Window::getVSync() const
 { return m_isVSync; }
 
-GLFWwindow* agl::Window::passPointer()
+GLFWwindow* agl::Window::passPointer() const
 { return m_ID; }
 
 

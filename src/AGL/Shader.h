@@ -3,19 +3,16 @@
 #include<GLAD/glad.h>
 #include<GLFW/glfw3.h>
 
-namespace GL
+namespace agl
 {
 	class Shader
 	{
 	private:
-		bool m_firstCon = true;
 		unsigned int m_ID;
 		static unsigned int sm_currBind;
 		std::unordered_map<std::string, int> uniformLocs;
 		enum shaderType
-		{
-			vertex, fragment, geometry, none
-		};
+		{ vertex, fragment, geometry, none };
 		bool getUniformLoc(const std::string& varName, uint32_t id);
 		unsigned int CompileShader(unsigned int type, const std::string& src);
 	public:
@@ -25,6 +22,7 @@ namespace GL
 		~Shader();
 		void bind() const;
 		static void unbind();
+		static void enableBlending();
 
 		void setUniform1f(const std::string& varName, float v0);
 		void setUniform2f(const std::string& varName, float v0, float v1);
@@ -53,12 +51,37 @@ namespace GL
 		void setUniform1fv(const std::string& varName, float* ptr, size_t size);
 		void setUniform1iv(const std::string& varName, int* ptr, size_t size);
 		void setUniform1uv(const std::string& varName, uint32_t* ptr, size_t size);
+
 		void setUniform1fv(const std::string& varName, const std::vector<float>& arr);
 		void setUniform1iv(const std::string& varName, const std::vector<int>& arr);
 		void setUniform1uv(const std::string& varName, const std::vector<uint32_t>& arr);
-		
+
+		template<size_t S>
+		void setUniform1fv(const std::string& varName, const std::array<float, S>& arr)
+		{
+			glUseProgram(m_ID);
+			if (getUniformLoc(varName, m_ID)) return;
+			glUniform1fv(uniformLocs[varName], S, &arr[0]);
+			glUseProgram(sm_currBind);
+		}
+		template<size_t S>
+		void setUniform1iv(const std::string& varName, const std::array<int, S>& arr)
+		{
+			glUseProgram(m_ID);
+			if (getUniformLoc(varName, m_ID)) return;
+			glUniform1iv(uniformLocs[varName], S, &arr[0]);
+			glUseProgram(sm_currBind);
+		}
+		template<size_t S>
+		void setUniform1uv(const std::string& varName, const std::array<uint32_t, S>& arr)
+		{
+			glUseProgram(m_ID);
+			if (getUniformLoc(varName, m_ID)) return;
+			glUniform1uiv(uniformLocs[varName], S, &arr[0]);
+			glUseProgram(sm_currBind);
+		}
+				
 		void setUniformMatrix3(const std::string& varName, glm::mat3 v0);
-		void setUniformMatrix4(const std::string& varName, glm::mat4 v0);
-		
+		void setUniformMatrix4(const std::string& varName, glm::mat4 v0);		
 	};
 }
