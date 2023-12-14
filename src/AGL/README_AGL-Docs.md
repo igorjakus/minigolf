@@ -291,3 +291,425 @@ Returns the pointer to the window. Using this method of interactions with the wi
 As of this moment there is a funcion "bool IsKeyPressed(int key)" 
 DO NOT USE THIS FUNCION, IT WILL BE REMOVED!!!
 </details>
+
+# Shader
+
+- Defined in header <Shader.h>
+
+- namespace agl
+
+<details>
+<summary>Constructor</summary>
+
+##### Parameters: 
+- std::string filePath
+##### Return:
+- none
+
+#### Constructor
+
+##### Parameters: 
+- std::string vertexFilePath
+- std::string fragmentFilePath
+- std::string geometryFilePath
+##### Return:
+- none
+</details>
+
+<details>
+<summary>bind</summary>
+
+##### Parameters: 
+- none
+##### Return:
+- none
+##### Descrption:
+Binds the shader.
+</details>
+
+<details>
+<summary>unbind</summary>
+
+:Static
+##### Parameters: 
+- none
+##### Return:
+- none
+##### Descrption:
+Unbinds all shaders.
+</details>
+
+<details>
+<summary>setUniform1f</summary>
+
+##### Parameters: 
+- std::string varName
+- float v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader float uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform2f</summary>
+
+##### Parameters: 
+- std::string varName
+- float v0
+- float v1
+##### Return:
+- none
+##### Descrption:
+Sets the shader float2 uniform with the name of "varName" to the value of "v0" and "v1".
+
+#### setUniform2f
+
+##### Parameters: 
+- std::string varName
+- glm::vec2 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader float2 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform3f</summary>
+
+##### Parameters: 
+- std::string varName
+- float v0
+- float v1
+- float v2
+##### Return:
+- none
+##### Descrption:
+Sets the shader float3 uniform with the name of "varName" to the value of "v0", "v1" and "v2".
+
+#### setUniform3f
+
+##### Parameters: 
+- std::string varName
+- glm::vec3 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader float3 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform4f</summary>
+
+##### Parameters: 
+- std::string varName
+- float v0
+- float v1
+- float v2
+- float v3
+##### Return:
+- none
+##### Descrption:
+Sets the shader float4 uniform with the name of "varName" to the value of "v0", "v1", "v2" and "v3".
+
+#### setUniform4f
+
+##### Parameters: 
+- std::string varName
+- glm::vec4 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader float4 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform1i</summary>
+
+##### Parameters: 
+- std::string varName
+- int v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader int uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform2i</summary>
+
+##### Parameters: 
+- std::string varName
+- int v0
+- int v1
+##### Return:
+- none
+##### Descrption:
+Sets the shader int2 uniform with the name of "varName" to the value of "v0" and "v1".
+
+#### setUniform2i
+
+##### Parameters: 
+- std::string varName
+- glm::ivec2 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader int2 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform3i</summary>
+
+##### Parameters: 
+- std::string varName
+- int v0
+- int v1
+- int v2
+##### Return:
+- none
+##### Descrption:
+Sets the shader int3 uniform with the name of "varName" to the value of "v0", "v1" and "v2".
+
+#### setUniform3i
+
+##### Parameters: 
+- std::string varName
+- glm::ivec3 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader int3 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform4i</summary>
+
+##### Parameters: 
+- std::string varName
+- int v0
+- int v1
+- int v2
+- int v3
+##### Return:
+- none
+##### Descrption:
+Sets the shader int4 uniform with the name of "varName" to the value of "v0", "v1", "v2", "v3".
+
+#### setUniform4i
+
+##### Parameters: 
+- std::string varName
+- glm::ivec4 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader int4 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform1u</summary>
+
+##### Parameters: 
+- std::string varName
+- unsigned int v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform2u</summary>
+
+##### Parameters: 
+- std::string varName
+- unsigned int v0
+- unsigned int v1
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint2 uniform with the name of "varName" to the value of "v0" and "v1".
+
+#### setUniform2u
+
+##### Parameters: 
+- std::string varName
+- glm::uvec2 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint3 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform3u</summary>
+
+##### Parameters: 
+- std::string varName
+- unsigned int v0
+- unsigned int v1
+- unsigned int v2
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint3 uniform with the name of "varName" to the value of "v0", "v1" and "v2".
+
+#### setUniform3u
+
+##### Parameters: 
+- std::string varName
+- glm::uvec3 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint3 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform4u</summary>
+
+##### Parameters: 
+- std::string varName
+- unsigned int v0
+- unsigned int v1
+- unsigned int v2
+- unsigned int v3
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint4 uniform with the name of "varName" to the value of "v0", "v1", "v2" and "v3".
+
+#### setUniform4u
+
+##### Parameters: 
+- std::string varName
+- glm::uvec4 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint4 uniform with the name of "varName" to the value of "v0".
+</details>
+
+<details>
+<summary>setUniform1fv</summary>
+
+##### Parameters: 
+- std::string varName
+- float* ptr
+- size_t size
+##### Return:
+- none
+##### Descrption:
+Sets the shader float or float{2, 3, 4} array uniform with the name of "varName" to the data specified in the array passed with the "ptr" pointer and size of "size".
+
+#### setUniform1fv
+
+##### Parameters: 
+- std::string varName
+- std::vector&lt;float&gt; arr
+##### Return:
+- none
+##### Descrption:
+Sets the shader float or float{2, 3, 4} array uniform with the name of "varName" to the data specified in the vector "arr".
+
+#### setUniform1fv
+
+##### Parameters: 
+- std::string varName
+- std::array&lt;float, any&gt; arr
+##### Return:
+- none
+##### Descrption:
+Sets the shader float or float{2, 3, 4} array uniform with the name of "varName" to the data specified in the array "arr".
+</details>
+
+<details>
+<summary>setUniform1iv</summary>
+
+##### Parameters: 
+- std::string varName
+- int* ptr
+- size_t size
+##### Return:
+- none
+##### Descrption:
+Sets the shader int or int{2, 3, 4} array uniform with the name of "varName" to the data specified in the array passed with the "ptr" pointer and size of "size".
+
+#### setUniform1iv
+
+##### Parameters: 
+- std::string varName
+- std::vector&lt;int&gt; arr
+##### Return:
+- none
+##### Descrption:
+Sets the shader int or int{2, 3, 4} array uniform with the name of "varName" to the data specified in the vector "arr".
+
+#### setUniform1iv
+
+##### Parameters: 
+- std::string varName
+- std::array&lt;int, any&gt; arr
+##### Return:
+- none
+##### Descrption:
+Sets the shader int or int{2, 3, 4} array uniform with the name of "varName" to the data specified in the array "arr".
+</details>
+
+<details>
+<summary>setUniform1uv</summary>
+
+##### Parameters: 
+- std::string varName
+- unsigned int* ptr
+- size_t size
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint or uint{2, 3, 4} array uniform with the name of "varName" to the data specified in the array passed with the "ptr" pointer and size of "size".
+
+#### setUniform1uv
+
+##### Parameters: 
+- std::string varName
+- std::vector&lt;unsigned int&gt; arr
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint or uint{2, 3, 4} array uniform with the name of "varName" to the data specified in the vector "arr".
+
+#### setUniform1uv
+
+##### Parameters: 
+- std::string varName
+- std::array&lt;unsigned int, any&gt; arr
+##### Return:
+- none
+##### Descrption:
+Sets the shader uint or uint{2, 3, 4} array uniform with the name of "varName" to the data specified in the array "arr".
+</details>
+
+<details>
+<summary>setUniformMatrix3</summary>
+
+##### Parameters: 
+- std::string varName
+- glm::mat3 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader matrix(float, 3, 3) uniform with the name of "varName" to the data specified in the array "v0".
+</details>
+
+<details>
+<summary>setUniformMatrix4</summary>
+
+##### Parameters: 
+- std::string varName
+- glm::mat4 v0
+##### Return:
+- none
+##### Descrption:
+Sets the shader matrix(float, 4, 4) uniform with the name of "varName" to the data specified in the array "v0".
+</details>

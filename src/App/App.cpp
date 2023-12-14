@@ -12,7 +12,6 @@ int main()
 	win1.create();
 	win1.setIcon("assets/icon/icon.png", "assets/icon/icon.png");
 	win1.setWindowPos(640, 300);
-	
 
 	while (!win1.closeCallBack())
 	{
