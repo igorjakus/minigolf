@@ -7,7 +7,7 @@ agl::Window::Window(uint32_t width, uint32_t height, std::string title)
 agl::Window::~Window()
 { glfwDestroyWindow(m_ID); }
 
-void agl::Window::Create()
+void agl::Window::create()
 {
 	m_monitor = glfwGetPrimaryMonitor();
 	glfwWindowHint(GLFW_SAMPLES, 4);
@@ -28,20 +28,20 @@ void agl::Window::Create()
 	}
 }
 
-bool agl::Window::CloseCallBack()
+bool agl::Window::closeCallBack()
 {
 	if (!m_ID) return false;
-	return !glfwWindowShouldClose(m_ID);
+	return glfwWindowShouldClose(m_ID);
 }
 
-void agl::Window::Close()
+void agl::Window::close()
 { if (m_ID == nullptr) { return; } glfwSetWindowShouldClose(m_ID, GLFW_TRUE); }
 
-void agl::Window::SetFullscreen(bool fullscreen)
+void agl::Window::setFullscreen(bool fullscreen)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set fullscreen."); return; }
-	if (IsFullscreen() == fullscreen) return;
+	if (isFullscreen() == fullscreen) return;
 	if (fullscreen)
 	{
 		glfwGetWindowPos(m_ID, &m_winPosX, &m_winPosY);
@@ -53,44 +53,44 @@ void agl::Window::SetFullscreen(bool fullscreen)
 	{ glfwSetWindowMonitor(m_ID, nullptr, m_winPosX, m_winPosY, m_winSizeW, m_winSizeH, 0); }
 }
 
-void agl::Window::SetBorderless(bool borderless)
+void agl::Window::setBorderless(bool borderless)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set borderless."); return; }
 
-	if (IsBorderless() == borderless) return;
+	if (isBorderless() == borderless) return;
 	if (borderless)
-	{ glfwSetWindowAttrib(m_ID, GLFW_DECORATED, GLFW_FALSE); MaximizeWindow(true); }
+	{ glfwSetWindowAttrib(m_ID, GLFW_DECORATED, GLFW_FALSE); maximizeWindow(true); }
 	else
-	{ MaximizeWindow(false); glfwSetWindowAttrib(m_ID, GLFW_DECORATED, GLFW_TRUE); }
+	{ maximizeWindow(false); glfwSetWindowAttrib(m_ID, GLFW_DECORATED, GLFW_TRUE); }
 	m_isBorderless = borderless;
 }
 
-void agl::Window::SetVSync(bool vsync)
+void agl::Window::setVSync(bool vsync)
 { glfwSwapInterval(vsync); }
 
-void agl::Window::SetWindowSize(uint32_t width, uint32_t height)
+void agl::Window::setWindowSize(uint32_t width, uint32_t height)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size."); return; }
 	glfwSetWindowSize(m_ID, width, height);
 }
 
-void agl::Window::SetWindowPos(uint32_t x, uint32_t y)
+void agl::Window::setWindowPos(uint32_t x, uint32_t y)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set position."); return; }
 	glfwSetWindowPos(m_ID, x, y);
 }
 
-void agl::Window::SetSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH)
+void agl::Window::setSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH)
 { 
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size limits."); return; }
 	glfwSetWindowSizeLimits(m_ID, minW, minH, maxW, maxH); 
 }
 
-void agl::Window::SetTitle(std::string title)
+void agl::Window::setTitle(std::string title)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set a title."); return; }
@@ -107,7 +107,7 @@ void agl::Window::FEP()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void agl::Window::SetIcon(std::string icon, std::string icon_small)
+void agl::Window::setIcon(std::string icon, std::string icon_small)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set an icon."); return; }
@@ -125,14 +125,14 @@ void agl::Window::SetIcon(std::string icon, std::string icon_small)
 	stbi_set_flip_vertically_on_load(1);
 }
 
-void agl::Window::SetIcon()
+void agl::Window::setIcon()
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set an icon."); return; }
 	glfwSetWindowIcon(m_ID, 0, NULL);
 }
 
-void agl::Window::MaximizeWindow(bool maximize)
+void agl::Window::maximizeWindow(bool maximize)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's maximization."); return; }
@@ -142,37 +142,37 @@ void agl::Window::MaximizeWindow(bool maximize)
 	glfwRestoreWindow(m_ID);
 }
 
-void agl::Window::SetResizable(bool resizable)
+void agl::Window::setResizable(bool resizable)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's resizing."); return; }
 	glfwSetWindowAttrib(m_ID, GLFW_RESIZABLE, resizable);
 }
 
-bool agl::Window::IsBorderless()
+bool agl::Window::isBorderless()
 { return m_isBorderless; }
 
-bool agl::Window::IsFullscreen()
+bool agl::Window::isFullscreen()
 { return (m_ID == nullptr) ? false : glfwGetWindowMonitor(m_ID) != nullptr; }
 
-std::string agl::Window::GetTitle()
+std::string agl::Window::getTitle()
 { return m_title; }
 
-void agl::Window::GetWindowSize(int& width, int& height)
+void agl::Window::getWindowSize(int& width, int& height)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window size."); return; }
 	glfwGetWindowSize(m_ID, &width, &height);
 }
 
-void agl::Window::GetWindowPos(int& x, int& y)
+void agl::Window::getWindowPos(int& x, int& y)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window position."); return; }
 	glfwGetWindowSize(m_ID, &x, &y);
 }
 
-void agl::Window::GetScreenResolution(int& width, int& height)
+void agl::Window::getScreenResolution(int& width, int& height)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get screen resolution."); return; }
@@ -180,10 +180,10 @@ void agl::Window::GetScreenResolution(int& width, int& height)
 	width = mode->width; height = mode->height;
 }
 
-bool agl::Window::GetVSync()
+bool agl::Window::getVSync()
 { return m_isVSync; }
 
-GLFWwindow* agl::Window::PassPointer()
+GLFWwindow* agl::Window::passPointer()
 { return m_ID; }
 
 

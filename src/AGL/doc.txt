@@ -12,7 +12,7 @@ namespace agl
 	Return:
 		none
 
-- Create
+- create
 	Parameters: 
 		none
 	Return:
@@ -20,7 +20,7 @@ namespace agl
 	Description:
 		Creates the window and initializes GLAD. This funcion must be called before being able to do any sort of interaction with the window.
 
-- CloseCallBack
+- closeCallBack
 	Parameters: 
 		none
 	Return:
@@ -28,7 +28,7 @@ namespace agl
 	Description:
 		Returns the state of close flag.
 		
-- Close
+- close
 	Parameters: 
 		none
 	Return:
@@ -36,7 +36,7 @@ namespace agl
 	Description:
 		Sets the close flag.
 
-- SetFullscreen
+- setFullscreen
 	Parameters: 
 		bool fullscreen
 	Return:
@@ -46,7 +46,7 @@ namespace agl
 			- fullscreen if "fullscreen" is true.
 			- windowed if "fullscreen" is false.
 
-- SetBorderless
+- setBorderless
 	Parameters: 
 		bool borderless
 	Return:
@@ -57,7 +57,7 @@ namespace agl
 			- windowed if "borderless" is false.
 	! This funcion isin't fully implemented. It doesn't make the window cover os taskbar.
 
-- SetVSync
+- setVSync
 	Parameters: 
 		bool vsync
 	Return:
@@ -65,7 +65,7 @@ namespace agl
 	Description:
 		Sets the VSync to the value specified by "vsync". On by default.
 
-- SetWindowSize
+- setWindowSize
 	Parameters: 
 		unsigned int width
 		unsigned int height
@@ -74,7 +74,7 @@ namespace agl
 	Description:
 		Sets the window size to the parameters specified in "width" and "height".
 
-- SetWindowPos
+- setWindowPos
 	Parameters: 
 		unsigned int x
 		unsigned int y
@@ -83,7 +83,7 @@ namespace agl
 	Description:
 		Sets the window position to the parameters specified in "x" and "y". {0, 0} is the top left corner
 
-- SetSizeLimits
+- setSizeLimits
 	Parameters: 
 		unsigned int minW
 		unsigned int minH
@@ -95,7 +95,7 @@ namespace agl
 		Makes the window unable to be resized to a size smaller than specified by "minW" and "minH" and bigger than specified by "maxW" and "maxH".
 		This limit will still apply when trying to maximise the window (including putting it in borderless fulscreen mode)!
 
-- SetTitle
+- setTitle
 	Parameters: 
 		std::string title
 	Return:
@@ -103,7 +103,7 @@ namespace agl
 	Description:
 		Sets the window title to one specified in "title".
 	
-- SetIcon
+- setIcon
 	Parameters: 
 		std::string icon
 		std::string icon_small
@@ -114,7 +114,7 @@ namespace agl
 		For details why two images are an option see GLFW Documentation
 		The image data is 32-bit, little-endian, non-premultiplied RGBA, i.e. eight bits per channel with the red channel first. The pixels are arranged canonically as sequential rows, starting from the top-left corner.
 	
-- SetIcon
+- setIcon
 	Parameters: 
 		none
 	Return:
@@ -122,7 +122,7 @@ namespace agl
 	Description:
 		Sets the window icon to the Windows default icon.
 	
-- MaximizeWindow
+- maximizeWindow
 	Parameters: 
 		bool maximize
 	Return:
@@ -132,7 +132,7 @@ namespace agl
 		- maximized if "maximize" is true.
 		- windowed if "maximize" is false.
 	
-- SetResizable
+- setResizable
 	Parameters: 
 		bool resizable
 	Return:
@@ -141,7 +141,7 @@ namespace agl
 		- Allows windows resizeing if "resizable" is true.
 		- Disallows windows resizeing if "resizable" is false.
 	
-- IsBorderless
+- isBorderless
 	Parameters: 
 		none
 	Return:
@@ -149,7 +149,7 @@ namespace agl
 	Description:
 	 Return true is window is in borderless fullscreen, false otherwise.
 	
-- IsFullscreen
+- isFullscreen
 	Parameters: 
 		none
 	Return:
@@ -157,7 +157,7 @@ namespace agl
 	Description:
 	 Return true is window is in fullscreen, false otherwise.
 	
-- GetTitle
+- getTitle
 	Parameters: 
 		none
 	Return:
@@ -165,7 +165,7 @@ namespace agl
 	Description:
 		Return the currnet window title.
 
-- GetWindowSize
+- getWindowSize
 	Parameters: 
 		int& width
 		int& height
@@ -174,7 +174,7 @@ namespace agl
 	Description:
 		Puts the current window width into "width" and current window height into "height".
 
-- GetWindowPos
+- getWindowPos
 	Parameters: 
 		int& x
 		int& y
@@ -183,7 +183,7 @@ namespace agl
 	Description:
 		Puts the current window x coordinate into "x" and current window y coordinate into "y" {0, 0} being the top left corner.
 
-- GetScreenResolution
+- getScreenResolution
 	Parameters: 
 		int& width
 		int& height
@@ -192,7 +192,7 @@ namespace agl
 	Description:
 		Puts the primary monitor's resolution into "witdh" and "height".
 
-- GetVSync
+- getVSync
 	Parameters: 
 		none
 	Return:
@@ -208,7 +208,7 @@ namespace agl
 	Description:
 		This funcion marks the end of rendering frame and should be put at the end of rendering loop.
 
-- PassPointer
+- passPointer
 	Parameters: 
 		none
 	Return:
