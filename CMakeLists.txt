@@ -29,4 +29,6 @@ else()
 	add_compile_definitions(__DIST__)
 endif()
 
+add_compile_definitions(GLM_FORCE_CXX11)
+
 add_subdirectory(src)
