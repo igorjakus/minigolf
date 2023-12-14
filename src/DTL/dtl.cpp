@@ -16,7 +16,7 @@ bool dtl::Logger::findToken(const std::string& s, size_t* t1, size_t* t2)
 void dtl::Logger::processToken(char c, const std::string& arg)
 {
 	if (c == '0') m_msg << arg;
-	else if (c == 'b') { long long val; memcpy(&val, &arg, sizeof(arg)); m_msg << std::bitset<sizeof(arg) * 8>(val); }
+	else if (c == 'b') { unsigned long long val; memcpy(&val, &arg, sizeof(arg)); m_msg << std::bitset<sizeof(arg) * 8>(val); }
 }
 void dtl::Logger::processToken(char c, const char* arg)
 {
@@ -28,7 +28,7 @@ void dtl::Logger::showtime()
 {
 	if (m_timeFormat == DTL_PROGRAM_TIME) 
 	{
-		int ctime = (clock() - m_time_start) / 1000;
+		long ctime = (clock() - m_time_start) / 1000;
 		m_msg
 			<< "[" << std::setfill('0') << std::setw(2) << (ctime / 3600) << ":"
 			<< std::setw(2) << ctime % 3600 / 60 << ":" << std::setw(2) << ctime % 60 << "]"; 
@@ -62,7 +62,7 @@ dtl::Logger::~Logger()
 	} 
 }
 
-void dtl::Logger::settings(std::string entryCol, std::string infoCol, std::string warningCol, std::string errorCol, int timeFormat, int logLocation)
+void dtl::Logger::settings(std::string entryCol, std::string infoCol, std::string warningCol, std::string errorCol, int timeFormat, uint32_t logLocation)
 {
 	if (entryCol != "\0") m_colEntry = entryCol;
 	if (infoCol != "\0") m_colInfo = infoCol;

@@ -16,10 +16,17 @@
 #define ullong unsigned long long
 
 #define DTL_LOG dtl::Logger::GetInstance()
+#if defined __COMPILER_GCC__ || __COMPILER_CLANG__ || __COMPILER_CLANG_CL__
+#define DTL_ENT(text, ...) dtl::Log.entry(text __VA_OPT__(,) __VA_ARGS__)
+#define DTL_INF(text, ...) dtl::Log.info(text __VA_OPT__(,) __VA_ARGS__)
+#define DTL_WAR(text, ...) dtl::Log.warning(text __VA_OPT__(,) __VA_ARGS__)
+#define DTL_ERR(text, ...) dtl::Log.error(text __VA_OPT__(,) __VA_ARGS__)
+#else
 #define DTL_ENT(text, ...) dtl::Log.entry(text, ## __VA_ARGS__)
 #define DTL_INF(text, ...) dtl::Log.info(text, ## __VA_ARGS__)
 #define DTL_WAR(text, ...) dtl::Log.warning(text, ## __VA_ARGS__)
 #define DTL_ERR(text, ...) dtl::Log.error(text, ## __VA_ARGS__)
+#endif
 #define DTL_BLACK			"\033[0;30m"
 #define DTL_DARK_GRAY		"\033[1;30m"
 #define DTL_BLUE			"\033[0;34m"
@@ -48,7 +55,7 @@ namespace dtl
 	class Logger
 	{
 		static Logger s_Log;
-		int m_time_start;
+		clock_t m_time_start;
 		uint m_mode;
 		std::string m_colEntry;
 		std::string m_colInfo;
@@ -109,7 +116,7 @@ namespace dtl
 	public:
 		Logger(const Logger&) = delete;
 		~Logger();
-		void settings(std::string entryCol, std::string infoCol, std::string warningCol, std::string errorCol, int timeFormat, int logLocation);
+		void settings(std::string entryCol, std::string infoCol, std::string warningCol, std::string errorCol, int timeFormat, uint32_t logLocation);
 		void setFile(const std::string& filePath);
 		static Logger& GetInstance();
 		template<typename ...Types>
