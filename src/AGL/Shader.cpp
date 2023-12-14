@@ -1,6 +1,7 @@
 #include"pch.h"
 #include"Shader.h"
 
+
 unsigned int GL::Shader::sm_currBind = 0;
 
 unsigned int GL::Shader::CompileShader(unsigned int type, const std::string& src)
