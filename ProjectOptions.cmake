@@ -23,7 +23,7 @@ endmacro()
 
 macro(project_options_setup)
 	option(project_ENABLE_IPO "Enable IPO/LTO" ON)
-	option(project_WARNINGS_AS_ERRORS "Treat Warnings As Errors" OFF)
+	option(project_WARNINGS_AS_ERRORS "Treat Warnings As Errors" ON)
 	option(project_ENABLE_USER_LINKER "Enable user-selected linker" OFF)
 	option(project_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" ${SUPPORTS_ASAN})
 	option(project_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)

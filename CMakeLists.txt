@@ -21,4 +21,12 @@ add_library(project::project_warnings ALIAS project_warnings)
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(__DEBUG__)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+	add_compile_definitions(__RELEASE__)
+else()
+	add_compile_definitions(__DIST__)
+endif()
+
 add_subdirectory(src)
