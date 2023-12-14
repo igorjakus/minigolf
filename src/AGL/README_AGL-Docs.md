@@ -289,8 +289,9 @@ This funcion marks the end of rendering frame and should be put at the end of re
 Returns the pointer to the window. Using this method of interactions with the window is NOT advised.
 
 As of this moment there is a funcion "bool IsKeyPressed(int key)" 
-DO NOT USE THIS FUNCION, IT WILL BE REMOVED!!!
 </details>
+
+==DO NOT USE THIS FUNCION, IT WILL BE REMOVED!!!==
 
 # Shader
 
