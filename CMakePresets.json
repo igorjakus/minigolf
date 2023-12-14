@@ -64,6 +64,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
 				"CMAKE_CXX_COMPILER": "cl",
+				"USE_COMPILER": "cl",
 				"CMAKE_BUILD_TYPE": "Debug",
 				"ENABLE_DEVELOPER_MODE": "ON"
 			}
@@ -76,6 +77,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
 				"CMAKE_CXX_COMPILER": "cl",
+				"USE_COMPILER": "cl",
 				"CMAKE_BUILD_TYPE": "RelWithDebInfo",
 				"ENABLE_DEVELOPER_MODE": "ON"
 			}
@@ -88,6 +90,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "cl",
 				"CMAKE_CXX_COMPILER": "cl",
+				"USE_COMPILER": "cl",
 				"CMAKE_BUILD_TYPE": "Release",
 				"ENABLE_DEVELOPER_MODE": "OFF"
 			}
@@ -100,6 +103,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang-cl",
 				"CMAKE_CXX_COMPILER": "clang-cl",
+				"USE_COMPILER": "clang-cl",
 				"CMAKE_BUILD_TYPE": "Debug"
 			},
 			"vendor": {
@@ -116,6 +120,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang-cl",
 				"CMAKE_CXX_COMPILER": "clang-cl",
+				"USE_COMPILER": "clang-cl",
 				"CMAKE_BUILD_TYPE": "Release"
 			},
 			"vendor": {
@@ -132,6 +137,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "gcc",
 				"CMAKE_CXX_COMPILER": "g++",
+				"USE_COMPILER": "gcc",
 				"CMAKE_BUILD_TYPE": "Debug"
 			}
 		},
@@ -143,6 +149,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "gcc",
 				"CMAKE_CXX_COMPILER": "g++",
+				"USE_COMPILER": "gcc",
 				"CMAKE_BUILD_TYPE": "Release"
 			}
 		},
@@ -154,6 +161,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang",
 				"CMAKE_CXX_COMPILER": "clang++",
+				"USE_COMPILER": "clang",
 				"CMAKE_BUILD_TYPE": "Debug"
 			}
 		},
@@ -165,6 +173,7 @@
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "clang",
 				"CMAKE_CXX_COMPILER": "clang++",
+				"USE_COMPILER": "clang",
 				"CMAKE_BUILD_TYPE": "Release"
 			}
 		}
