@@ -14,10 +14,11 @@ project_local_options()
 
 target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
-include_directories(src)
-
 add_library(project::project_options ALIAS project_options)
 add_library(project::project_warnings ALIAS project_warnings)
+
+include_directories(src)
+
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
