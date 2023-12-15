@@ -114,10 +114,10 @@ Sets the window position to the parameters specified in "x" and "y". {0, 0} is t
 <summary>setSizeLimits</summary>
 
 ##### Parameters: 
--unsigned int minW
--unsigned int minH
--unsigned int maxW
--unsigned int maxH
+- unsigned int minW
+- unsigned int minH
+- unsigned int maxW
+- unsigned int maxH
 ##### Return:
 - none
 ##### Descrption:
