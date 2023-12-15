@@ -21,11 +21,13 @@
 #define DTL_INF(text, ...) dtl::Log.info(text __VA_OPT__(,) __VA_ARGS__)
 #define DTL_WAR(text, ...) dtl::Log.warning(text __VA_OPT__(,) __VA_ARGS__)
 #define DTL_ERR(text, ...) dtl::Log.error(text __VA_OPT__(,) __VA_ARGS__)
-#else
+#elif defined __COMPILER_CL__
 #define DTL_ENT(text, ...) dtl::Log.entry(text, ## __VA_ARGS__)
 #define DTL_INF(text, ...) dtl::Log.info(text, ## __VA_ARGS__)
 #define DTL_WAR(text, ...) dtl::Log.warning(text, ## __VA_ARGS__)
 #define DTL_ERR(text, ...) dtl::Log.error(text, ## __VA_ARGS__)
+#else
+#error Compiler not supported
 #endif
 #define DTL_BLACK			"\033[0;30m"
 #define DTL_DARK_GRAY		"\033[1;30m"
