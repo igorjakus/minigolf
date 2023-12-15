@@ -16,18 +16,29 @@
 #define ullong unsigned long long
 
 #define DTL_LOG dtl::Logger::GetInstance()
-#if defined __COMPILER_GCC__ || __COMPILER_CLANG__ || __COMPILER_CLANG_CL__
-#define DTL_ENT(text, ...) dtl::Log.entry(text __VA_OPT__(,) __VA_ARGS__)
-#define DTL_INF(text, ...) dtl::Log.info(text __VA_OPT__(,) __VA_ARGS__)
-#define DTL_WAR(text, ...) dtl::Log.warning(text __VA_OPT__(,) __VA_ARGS__)
-#define DTL_ERR(text, ...) dtl::Log.error(text __VA_OPT__(,) __VA_ARGS__)
-#elif defined __COMPILER_CL__
-#define DTL_ENT(text, ...) dtl::Log.entry(text, ## __VA_ARGS__)
-#define DTL_INF(text, ...) dtl::Log.info(text, ## __VA_ARGS__)
-#define DTL_WAR(text, ...) dtl::Log.warning(text, ## __VA_ARGS__)
-#define DTL_ERR(text, ...) dtl::Log.error(text, ## __VA_ARGS__)
+#if defined __DEBUG__ || __RELEASE__
+	#if defined __COMPILER_GCC__ || __COMPILER_CLANG__ || __COMPILER_CLANG_CL__
+		#define DTL_ENT(text, ...) dtl::Log.entry(text __VA_OPT__(,) __VA_ARGS__)
+		#define DTL_INF(text, ...) dtl::Log.info(text __VA_OPT__(,) __VA_ARGS__)
+		#define DTL_WAR(text, ...) dtl::Log.warning(text __VA_OPT__(,) __VA_ARGS__)
+		#define DTL_ERR(text, ...) dtl::Log.error(text __VA_OPT__(,) __VA_ARGS__)
+	#elif defined __COMPILER_CL__
+		#define DTL_ENT(text, ...) dtl::Log.entry(text, ## __VA_ARGS__)
+		#define DTL_INF(text, ...) dtl::Log.info(text, ## __VA_ARGS__)
+		#define DTL_WAR(text, ...) dtl::Log.warning(text, ## __VA_ARGS__)
+		#define DTL_ERR(text, ...) dtl::Log.error(text, ## __VA_ARGS__)
+	#else
+		#error Compiler not supported
+	#endif
 #else
-#error Compiler not supported
+	#if defined __COMPILER_GCC__ || __COMPILER_CLANG__ || __COMPILER_CLANG_CL__
+		#define DTL_ERR(text, ...) dtl::Log.error(text __VA_OPT__(,) __VA_ARGS__)
+	#elif defined __COMPILER_CL__
+		#define DTL_ERR(text, ...) dtl::Log.error(text, ## __VA_ARGS__)
+	#endif
+#define DTL_ENT()
+#define DTL_INF()
+#define DTL_WAR()
 #endif
 #define DTL_BLACK			"\033[0;30m"
 #define DTL_DARK_GRAY		"\033[1;30m"
