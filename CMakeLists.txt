@@ -41,5 +41,6 @@ elseif(${USE_COMPILER} STREQUAL "clang")
 endif()
 
 add_compile_definitions(GLM_FORCE_CXX11)
+add_compile_definitions(GLM_FORCE_SILENT_WARNINGS)
 
 add_subdirectory(src)
