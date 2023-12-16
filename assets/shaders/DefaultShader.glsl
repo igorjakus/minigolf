@@ -4,13 +4,15 @@ layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec2 aTex;  
 
 uniform mat4 u_P;
-uniform mat4 u_M;
+uniform mat4 u_T;
+uniform mat4 u_R;
+uniform mat4 u_S;
 
 out vec2 vTex;
 
 void main()
 {
-    gl_Position = u_P * u_M * vec4(aPos, 0.0f, 1.0f);
+    gl_Position = u_P * u_T * u_R * u_S * vec4(aPos, 0.0f, 1.0f);
     vTex = aTex;
 }
 

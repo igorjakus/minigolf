@@ -47,52 +47,50 @@ void agl::Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 //?rendering---------------------------------------------------------------------------------------------------------------------------------------
 agl::Object::Object(float width, float height, agl::Texture& texture, glm::vec2 position /*= {0.f, 0.f}*/,glm::ivec2 texRatio/*= {1, 1}*/)
-	:m_pos({position}), m_tRat(texRatio), m_xs(width), m_ys(height), m_rot(0.f), m_tex(&texture)
-{ m_transform(); }
+	:m_pos({position}), m_texRatio(texRatio), m_xScale(width), m_yScale(height), m_rotation(0.f), m_tex(&texture) {}
 
 agl::Object::~Object(){}
 
 //transform funcions
 void agl::Object::setTexture(agl::Texture& texture) { m_tex = &texture; }
-void agl::Object::setRotation(float rads) { m_rot = rads; m_transform(); }
-void agl::Object::setScale(float xScale, float yScale) { m_xs = xScale; m_ys = yScale; m_transform(); }
-void agl::Object::setPosition(float xPos, float yPos) { m_pos = { xPos, yPos }; m_transform(); }
-void agl::Object::setPosition(glm::vec2 pos) { m_pos = pos; m_transform(); }
-void agl::Object::rotate(float rads) { m_rot += rads; m_transform(); }
-void agl::Object::scale(float xScale, float yScale) { m_xs += xScale; m_ys += yScale; m_transform(); }
-void agl::Object::move(float xPos, float yPos) { m_pos.x += xPos; m_pos.y += yPos; m_transform(); }
-void agl::Object::move(glm::vec2 pos) { m_pos += pos; }
-void agl::Object::m_transform() { m_model = glm::translate(glm::mat4(1.f), glm::vec3(m_pos, 0.f)) * glm::rotate(glm::mat4(1.f), glm::radians(m_rot), glm::vec3(0.f, 0.f, 1.f)) * glm::scale(glm::mat4(1.f), glm::vec3(m_xs, m_ys, 1.f)); }
+void agl::Object::setRotation(float radians) { m_rotation = radians; }
+void agl::Object::setScale(float xScale, float yScale) { m_xScale = xScale; m_yScale = yScale; }
+void agl::Object::setPosition(float xPos, float yPos) { m_pos = { xPos, yPos }; }
+void agl::Object::setPosition(glm::vec2 pos) { m_pos = pos; }
+float agl::Object::getRotation() { return m_rotation; }
+glm::vec2 agl::Object::getScale() { return { m_xScale, m_yScale }; }
+glm::vec2 agl::Object::getPosition() { return m_pos; }
 
-
-agl::Renderer::Renderer(agl::Shader* shader)
+agl::GraphicLayer::GraphicLayer(agl::Shader* shader)
 	:m_shader(shader){}
 
-agl::Renderer::~Renderer()
+agl::GraphicLayer::~GraphicLayer()
 {
-	for (int i = 0; i < m_bd.size(); ++i)
+	for (auto a : m_bd)
 	{
-		glDeleteBuffers(1, &m_bd[i].VBO);
-		glDeleteBuffers(1, &m_bd[i].EBO);
-		glDeleteVertexArrays(1, &m_bd[i].VAO);
+		glDeleteBuffers(1, &a.VBO);
+		glDeleteBuffers(1, &a.EBO);
+		glDeleteVertexArrays(1, &a.VAO);
 	}
 }
 
-void agl::Renderer::draw()
+void agl::GraphicLayer::draw()
 {
 	m_shader->bind();
 	m_shader->setUniform1i("u_Tex", 0);
 	for (int i = 0; i < m_bd.size(); ++i)
 	{
 		glBindVertexArray(m_bd[i].VAO);
-		m_shader->setUniformMatrix4("u_M", m_bd[i].objptr->m_model);
+		m_shader->setUniformMatrix4("u_T", glm::translate(glm::mat4(1.f), glm::vec3(m_bd[i].objptr->m_pos, 0.f)));
+		m_shader->setUniformMatrix4("u_R", glm::rotate(glm::mat4(1.f), glm::radians(m_bd[i].objptr->m_rotation), glm::vec3(0.f, 0.f, 1.f)));
+		m_shader->setUniformMatrix4("u_S", glm::scale(glm::mat4(1.f), glm::vec3(m_bd[i].objptr->m_xScale, m_bd[i].objptr->m_yScale, 1.f)));
 		m_bd[i].objptr->m_tex->bind();
-		glDrawElements(GL_TRIANGLES, 6,GL_UNSIGNED_INT, nullptr );
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
 	}
 	m_shader->unbind();
 }
 
-void agl::Renderer::addObject(Object& obj)
+void agl::GraphicLayer::addObject(Object& obj)
 {
 	m_bd.push_back({0, 0, 0, nullptr});
 	//vertex buffer generation and setup
@@ -115,10 +113,10 @@ void agl::Renderer::addObject(Object& obj)
 	(*(m_bd.end() - 1)).objptr = &obj;
 
 	Vertice objectData[4] = {
-		{{-.5f, -.5f,}	, {0.0f			, 0.0f			}},
-		{{ .5f, -.5f,}	, {obj.m_tRat.x	, 0.0f			}},
-		{{-.5f,  .5f,}	, {0.0f			, obj.m_tRat.y	}},
-		{{ .5f,  .5f,}	, obj.m_tRat					}};
+		{{-.5f, -.5f,}	, {0.0f, 0.0f}},
+		{{ .5f, -.5f,}	, {obj.m_texRatio.x, 0.0f}},
+		{{-.5f,  .5f,}	, {0.0f, obj.m_texRatio.y}},
+		{{ .5f,  .5f,}	, obj.m_texRatio}};
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(Vertice), objectData);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, 6 * sizeof(uint32_t), m_trisStencile);
@@ -126,7 +124,7 @@ void agl::Renderer::addObject(Object& obj)
 	glBindVertexArray(0);
 }
 
-void agl::Renderer::removeObject(Object& obj)
+void agl::GraphicLayer::removeObject(Object& obj)
 {
 	for (int i = 0; i < m_bd.size(); ++i) 
 	{ 
@@ -141,3 +139,8 @@ void agl::Renderer::removeObject(Object& obj)
 	}
 }
 
+agl::Camera::Camera(float x, float y, float focalLength) 
+: m_pos(x, y), m_focalLengh(focalLength){}
+agl::Camera::Camera(glm::vec2 position, float focalLength)
+: m_pos(position), m_focalLengh(focalLength){}
+agl::Camera::~Camera() {}

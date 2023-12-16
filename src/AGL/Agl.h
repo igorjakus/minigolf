@@ -6,7 +6,7 @@
 #include<stb/stb_image.h>
 #include<ImGui.h>
 
-#define AGL_DEFINE_DEFTEX agl::Texture solidWhiteTex("src/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT)
+#define AGL_DEFINE_DEFTEX agl::Texture solidWhiteTex("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT)
 #define AGL_DEFTEX solidWhiteTex
 
 struct Vertice;
@@ -31,14 +31,11 @@ namespace agl
 	//Rendering
 	class Object
 	{
-		static agl::Texture s_defTex;
 		glm::vec2 m_pos;
-		glm::ivec2 m_tRat;
-		glm::mat4 m_model;
-		float m_xs, m_ys;
-		float m_rot;
+		glm::ivec2 m_texRatio;
+		float m_xScale, m_yScale;
+		float m_rotation;
 		agl::Texture* m_tex;
-		void m_transform();
 	public:
 		Object(float width, float height, agl::Texture& texture, glm::vec2 pos = { 0.f, 0.f }, glm::ivec2 texRatio = {1, 1});
 		~Object();
@@ -47,26 +44,40 @@ namespace agl
 		void setScale(float xScale, float yScale);
 		void setPosition(float xPos, float yPos);
 		void setPosition(glm::vec2 pos);
-		void rotate(float rads);
-		void scale(float xScale, float yScale);
-		void move(float xPos, float yPos);
-		void move(glm::vec2 pos);
-		friend class Renderer;
+		float getRotation();
+		glm::vec2 getScale();
+		glm::vec2 getPosition();
+
+		friend class GraphicLayer;
 	};
 
-	class Renderer
+	class GraphicLayer
 	{
 		agl::Shader* m_shader;
 		const uint32_t m_trisStencile[6] = {0, 1, 2, 2, 3, 1};
 		std::vector<BufferData> m_bd;
 
 	public:
-		Renderer(const Renderer&) = delete;
-		Renderer(agl::Shader* shader);
-		~Renderer();
+		GraphicLayer(const GraphicLayer&) = delete;
+		GraphicLayer(agl::Shader* shader);
+		~GraphicLayer();
 		void draw();
 		void addObject(Object& obj);
 		void removeObject(Object& obj);
+	};
+
+	class Camera
+	{
+		glm::vec2 m_pos;
+		float m_focalLengh;
+	public:
+		Camera(const Camera&) = delete;
+		Camera(float x, float y, float focalLength);
+		Camera(glm::vec2 position, float focalLength);
+		~Camera();
+		void setFocalLength(float focalLength);
+		void setPosition(float x, float y);
+		void setPosition(glm::vec2 position);
 	};
 
 }
