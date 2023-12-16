@@ -21,7 +21,7 @@ add_subdirectory(DTL)
 # Application source code:
 add_subdirectory(App)
 
-target_precompile_headers(${PROJECT_NAME} PUBLIC pch/pch.h)
+target_precompile_headers(${PROJECT_NAME} PRIVATE pch/pch.h)
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw glad stb lib_agl lib_dtl)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE imgui)
