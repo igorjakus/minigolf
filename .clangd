@@ -1,2 +1,2 @@
 CompileFlags:
-    CompilationDatabase: build/unixlike-gcc-debug
+    CompilationDatabase: build/unixlike-clang-debug

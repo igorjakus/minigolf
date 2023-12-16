@@ -36,9 +36,9 @@
 	#elif defined __COMPILER_CL__
 		#define DTL_ERR(text, ...) dtl::Log.error(text, ## __VA_ARGS__)
 	#endif
-#define DTL_ENT()
-#define DTL_INF()
-#define DTL_WAR()
+#define DTL_ENT(...)
+#define DTL_INF(...)
+#define DTL_WAR(...)
 #endif
 #define DTL_BLACK			"\033[0;30m"
 #define DTL_DARK_GRAY		"\033[1;30m"
