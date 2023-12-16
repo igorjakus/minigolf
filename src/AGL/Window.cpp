@@ -1,9 +1,9 @@
-#include"pch.h"
-#include"Window.h"
+#include<pch.h>
+#include<Window.h>
 #include<stb_image.h>
 
 agl::Window::Window(uint32_t width, uint32_t height, std::string title)
-	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height) {}
+	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height), m_temp(true) {}
 agl::Window::~Window()
 { glfwDestroyWindow(m_ID); }
 
@@ -80,14 +80,14 @@ void agl::Window::setWindowPos(uint32_t x, uint32_t y)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set position."); return; }
-	glfwSetWindowPos(m_ID, x, y);
+	glfwSetWindowPos(m_ID, static_cast<int>(x), static_cast<int>(y));
 }
 
 void agl::Window::setSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH)
 { 
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size limits."); return; }
-	glfwSetWindowSizeLimits(m_ID, minW, minH, maxW, maxH); 
+	glfwSetWindowSizeLimits(m_ID, static_cast<int>(minW), static_cast<int>(minH), static_cast<int>(maxW), static_cast<int>(maxH));
 }
 
 void agl::Window::setTitle(std::string title)
@@ -191,6 +191,7 @@ GLFWwindow* agl::Window::passPointer() const
 //temp
 bool agl::Window::IsKeyPressed(int key)
 {
+	if (m_temp) { DTL_WAR("Using funcion IsKeyPressed is dangerous since it will be deprecated"); m_temp = false; }
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get button press callback."); return false; }
 	return glfwGetKey(m_ID, key);

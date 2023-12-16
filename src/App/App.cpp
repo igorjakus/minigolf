@@ -22,7 +22,7 @@ int main()
 
 	while (!win1.closeCallBack())
 	{
-	
+		win1.IsKeyPressed(12);
 
 		win1.FEP();
 	}

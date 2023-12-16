@@ -17,6 +17,7 @@ namespace agl
 		GLFWimage m_icon[2];
 		int m_winPosX, m_winPosY;
 		int m_winSizeW, m_winSizeH;
+		bool m_temp; //temporeary variable used to warn user against using IsKeyPressed
 	public:
 		Window(const Window&) = delete;
 		Window(uint32_t width, uint32_t height, std::string title);
