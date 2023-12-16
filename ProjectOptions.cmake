@@ -60,6 +60,11 @@ macro(project_local_options)
 		""
 	)
 
+	include(cmake/ClangTidy.cmake)
+	if(project_ENABLE_CLANG_TIDY)
+		project_enable_clang_tidy(project_options ${project_WARNINGS_AS_ERRORS})
+	endif()
+
 	# user-selected linker
 
 	# satanizers
