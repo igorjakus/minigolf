@@ -5,25 +5,7 @@
 macro(project_enable_clang_tidy target WARNINGS_AS_ERRORS)
 
 	find_program(CLANGTIDY clang-tidy)
-	if(CLANGTIDY)
-		if(NOT
-	   CMAKE_CXX_COMPILER_ID
-	   MATCHES
-	   ".*Clang")
-
-			get_target_property(TARGET_PCH ${target} INTERFACE_PRECOMPILE_HEADERS)
-
-			if("${TARGET_PCH}" STREQUAL "TARGET_PCH-NOTFOUND")
-				get_target_property(TARGET_PCH ${target} PRECOMPILE_HEADERS)
-			endif()
-
-			if(NOT ("${TARGET_PCH}" STREQUAL "TARGET_PCH-NOTFOUND"))
-				message(
-		  SEND_ERROR
-			"clang-tidy cannot be enabled with non-clang compiler and PCH, clang-tidy fails to handle gcc's PCH file")
-			endif()
-		endif()
-
+	if(CLANGTIDY AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 		# construct the clang-tidy command line
 		set(CLANG_TIDY_OPTIONS
 		${CLANGTIDY}
@@ -48,8 +30,10 @@ macro(project_enable_clang_tidy target WARNINGS_AS_ERRORS)
 			list(APPEND CLANG_TIDY_OPTIONS -warnings-as-errors=*)
 		endif()
 
-		message("Also setting clang-tidy globally")
+		message("clang-tidy set globally")
 		set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS})
+	elseif(NOT CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+		message(${WARNING_MESSAGE} "Not using clang-tidy since clang is not used")
 	else()
 		message(${WARNING_MESSAGE} "clang-tidy requested but executable not found")
 	endif()
