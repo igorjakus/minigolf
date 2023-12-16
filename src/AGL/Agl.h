@@ -47,37 +47,46 @@ namespace agl
 		float getRotation();
 		glm::vec2 getScale();
 		glm::vec2 getPosition();
+		friend class GraphicLayer;
+	};
 
+	class Camera
+	{
+		glm::vec2 m_pos;
+		glm::vec2 m_size;
+		float m_focalLengh;
+	public:
+		Camera(const Camera&) = delete;
+		Camera(float x, float y, glm::vec2 size, float focalLength);
+		Camera(glm::vec2 position, float w, float h, float focalLength);
+		Camera(float x, float y, float w, float h, float focalLength);
+		Camera(glm::vec2 position, glm::vec2 size, float focalLength);
+		~Camera();
+		void setFocalLength(float focalLength);
+		void setPosition(float x, float y);
+		void setPosition(glm::vec2 position);
+		void setSize(float w, float h);
+		void setSize(glm::vec2 size);
+		float getFocalLength();
+		glm::vec2 getPosition();
+		glm::vec2 getSize();
 		friend class GraphicLayer;
 	};
 
 	class GraphicLayer
 	{
 		agl::Shader* m_shader;
+		agl::Camera* m_camera;
 		const uint32_t m_trisStencile[6] = {0, 1, 2, 2, 3, 1};
 		std::vector<BufferData> m_bd;
 
 	public:
 		GraphicLayer(const GraphicLayer&) = delete;
-		GraphicLayer(agl::Shader* shader);
+		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
 		~GraphicLayer();
 		void draw();
 		void addObject(Object& obj);
 		void removeObject(Object& obj);
-	};
-
-	class Camera
-	{
-		glm::vec2 m_pos;
-		float m_focalLengh;
-	public:
-		Camera(const Camera&) = delete;
-		Camera(float x, float y, float focalLength);
-		Camera(glm::vec2 position, float focalLength);
-		~Camera();
-		void setFocalLength(float focalLength);
-		void setPosition(float x, float y);
-		void setPosition(glm::vec2 position);
 	};
 
 }
