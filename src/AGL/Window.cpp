@@ -162,11 +162,14 @@ bool agl::Window::isFullscreen() const
 std::string agl::Window::getTitle()
 { return m_title; }
 
-void agl::Window::getWindowSize(int& width, int& height)
+void agl::Window::getWindowSize(uint& width, uint& height)
 {
+	int w, h;
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window size."); return; }
-	glfwGetWindowSize(m_ID, &width, &height);
+	glfwGetWindowSize(m_ID, &w, &h);
+	width = static_cast<uint>(w);
+	height = static_cast<uint>(h);
 }
 
 void agl::Window::getWindowPos(int& x, int& y)
@@ -176,12 +179,13 @@ void agl::Window::getWindowPos(int& x, int& y)
 	glfwGetWindowSize(m_ID, &x, &y);
 }
 
-void agl::Window::getScreenResolution(int& width, int& height)
+void agl::Window::getScreenResolution(uint& width, uint& height)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get screen resolution."); return; }
 	const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
-	width = mode->width; height = mode->height;
+	width = static_cast<uint>(mode->width);
+	height = static_cast<uint>(mode->height);
 }
 
 bool agl::Window::getVSync() const

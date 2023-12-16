@@ -16,7 +16,7 @@ class App {
 
 public:
 	explicit App(unsigned int width = c_defaultWidth, unsigned int height = c_defaultHeight, std::string title = c_defaultTitle);
-	~App();
+	~App() = default;
 	App(App &&) = delete;
 	App(const App &) = delete;
 	App &operator=(App &&) = delete;

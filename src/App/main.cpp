@@ -2,7 +2,8 @@
 
 #include <Agl.h>
 
-auto main() -> int {
+int main()
+{
 
 	#ifdef __DIST__
 		dtl::Log.settings(DTL_DEFAULT, DTL_DEFAULT, DTL_DEFAULT, DTL_DEFAULT, DTL_PROGRAM_TIME, DTL_FILE);
@@ -17,5 +18,4 @@ auto main() -> int {
 	agl::Terminate();
 
 	return EXIT_SUCCESS;
-
 }

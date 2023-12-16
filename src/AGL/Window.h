@@ -3,7 +3,6 @@
 #include<GLAD/glad.h>
 #include<GLFW/glfw3.h>
 
-
 namespace agl
 {
 	class Window
@@ -40,9 +39,9 @@ namespace agl
 		bool isBorderless() const;
 		bool isFullscreen() const;
 		std::string getTitle();
-		void getWindowSize(int &width, int &height);
+		void getWindowSize(uint &width, uint &height);
 		void getWindowPos(int &x, int &y);
-		void getScreenResolution(int& width, int& height);
+		void getScreenResolution(uint& width, uint& height);
 		bool getVSync() const;
 		void FEP() const;
 		GLFWwindow* passPointer() const;
