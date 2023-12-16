@@ -6,9 +6,13 @@ void agl::Init()
 	//gfwd init
 	if (!glfwInit())
 	{ dtl::Log.error("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
+	//imgui init
+	bool imguiInit = IMGUI_INIT;
+	if (!imguiInit) {/*todo Logging*/ };
 }
 void agl::Terminate()
 {
+	IMGUI_TERMINATE;
 	glfwTerminate();
 }
 //?data structures---------------------------------------------------------------------------------------------------------------------------------------

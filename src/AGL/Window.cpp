@@ -1,6 +1,7 @@
 #include<pch.h>
 #include<Window.h>
 #include<stb_image.h>
+#include<ImGui.h>
 
 agl::Window::Window(uint32_t width, uint32_t height, std::string title)
 	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height), m_temp(true) {}
@@ -26,6 +27,7 @@ void agl::Window::create()
 		DTL_ERR("Failed to initialize GLAD.");
 		exit(EXIT_FAILURE);
 	}
+	IMGUI_IMPLGL(m_ID);
 }
 
 bool agl::Window::closeCallBack() const
@@ -100,6 +102,7 @@ void agl::Window::setTitle(std::string title)
 
 void agl::Window::FEP() const
 {
+	IMGUI_RENDER;
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before setting a frame end point."); return; }
 	glfwSwapBuffers(m_ID);

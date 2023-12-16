@@ -1,9 +1,10 @@
 #pragma once
-#include"dtl.h"
-#include"GLAD/glad.h"
-#include"GLFW/glfw3.h"
-#include"Shader.h"
-#include"stb/stb_image.h"
+#include<dtl.h>
+#include<GLAD/glad.h>
+#include<GLFW/glfw3.h>
+#include<Shader.h>
+#include<stb/stb_image.h>
+#include<ImGui.h>
 
 #define AGL_DEFINE_DEFTEX agl::Texture solidWhiteTex("src/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT)
 #define AGL_DEFTEX solidWhiteTex

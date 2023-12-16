@@ -6,7 +6,7 @@ set(AGL_SOURCES
 	Shader.h
 	Window.cpp
 	Window.h
-
+	ImGui.h
 )
 
 add_library(lib_agl ${AGL_SOURCES})
