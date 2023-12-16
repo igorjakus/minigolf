@@ -22,3 +22,6 @@ target_compile_definitions(lib_agl PUBLIC SAMPLE_LIBRARY_STATIC_DEFINE)
 
 # link dependencies
 target_link_libraries(lib_agl PRIVATE glm glfw glad stb lib_dtl)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+target_link_libraries(lib_agl PRIVATE imgui)
+endif()
