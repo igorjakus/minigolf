@@ -56,7 +56,7 @@ namespace agl
 		glm::vec2 m_size;
 		float m_focalLengh;
 	public:
-		Camera(const Camera&) = delete;
+		Camera(const Camera&) = default;
 		Camera(float x, float y, glm::vec2 size, float focalLength);
 		Camera(glm::vec2 position, float w, float h, float focalLength);
 		Camera(float x, float y, float w, float h, float focalLength);
@@ -74,11 +74,13 @@ namespace agl
 
 	class GraphicLayer
 	{
+		struct BufferData;
 		agl::Shader* m_shader;
 		agl::Camera* m_camera;
 		const uint32_t m_trisStencile[6] = {0, 1, 2, 2, 3, 1};
 		std::vector<BufferData> m_bd;
-
+		struct BufferData
+		{ uint32_t VBO, EBO, VAO; agl::Object* objptr; };
 	public:
 		GraphicLayer(const GraphicLayer&) = delete;
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
@@ -99,8 +101,3 @@ struct Vertice
 	Vertice(glm::vec2 pos, glm::vec2 UV = { 0.0f, 0.0f });
 };
 
-struct BufferData
-{
-	uint32_t VBO, EBO, VAO;
-	agl::Object* objptr;
-};

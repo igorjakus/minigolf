@@ -41,6 +41,7 @@ void App::run() {
 	agl::Object o2(25, 25, AGL_DEFTEX, { -50, -50 });
 	agl::Object o3(25, 25, AGL_DEFTEX, { -50, 50 });
 	agl::Object o4(25, 25, AGL_DEFTEX, { 50, -50 });
+
 	test.addObject(o);
 	test.addObject(o2);
 	test.addObject(o3);

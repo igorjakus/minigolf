@@ -66,11 +66,11 @@ agl::GraphicLayer::GraphicLayer(agl::Shader& shader, agl::Camera& camera)
 
 agl::GraphicLayer::~GraphicLayer()
 {
-	for (auto a : m_bd)
+	for (int i = 0; i < m_bd.size(); ++i)
 	{
-		glDeleteBuffers(1, &a.VBO);
-		glDeleteBuffers(1, &a.EBO);
-		glDeleteVertexArrays(1, &a.VAO);
+		glDeleteBuffers(1, &m_bd[i].VBO);
+		glDeleteBuffers(1, &m_bd[i].EBO);
+		glDeleteVertexArrays(1, &m_bd[i].VAO);
 	}
 }
 
