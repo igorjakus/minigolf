@@ -306,6 +306,8 @@ As of this moment there is a funcion "bool IsKeyPressed(int key)"
 - std::string filePath
 ##### Return:
 - none
+##### Description:
+The constructor takes care of compiling, linking and logging errors connected with compilation of the shader program.
 
 #### Constructor
 
@@ -315,6 +317,8 @@ As of this moment there is a funcion "bool IsKeyPressed(int key)"
 - std::string geometryFilePath
 ##### Return:
 - none
+##### Description:
+The constructor takes care of compiling, linking and logging errors connected with compilation of the shader program.
 </details>
 
 <details>

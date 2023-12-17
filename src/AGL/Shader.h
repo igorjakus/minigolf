@@ -15,7 +15,7 @@ namespace agl
 		enum shaderType
 		{ vertex, fragment, geometry, none };
 		bool getUniformLoc(const std::string& varName, uint32_t id);
-		unsigned int CompileShader(unsigned int type, const std::string& src);
+		static unsigned int CompileShader(unsigned int type, const std::string& src);
 	public:
 		Shader(const Shader&) = delete;
 		Shader(const std::string& FilePath);

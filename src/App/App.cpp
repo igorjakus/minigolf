@@ -17,11 +17,9 @@ App::App(uint width, uint height, std::string title)
 	DTL_INF("Application created: {0}", window.getTitle());
 
 
-	uint screenX = 0;
-	uint screenY = 0;
-	window.getScreenResolution(screenX, screenY); 
-	const uint windowPosX = screenX / 2 - width / 2;
-	const uint windowPosY = screenY / 2 - height / 2;
+	glm::uvec2 screenRes = window.getScreenResolution(); 
+	const uint windowPosX = screenRes.x / 2 - width / 2;
+	const uint windowPosY = screenRes.y / 2 - height / 2;
 	window.setWindowPos(windowPosX, windowPosY);
 
 	window.setIcon("assets/icon/icon.png", "assets/icon/icon.png");
@@ -38,15 +36,15 @@ void App::run() {
 
 	agl::Camera cam(0.f, 0.f, 640.f, 480.f, 1.f);
 
-	agl::GraphicLayer r(shader, cam);
+	agl::GraphicLayer test(shader, cam);
 	agl::Object o(25, 25, AGL_DEFTEX, { 50, 50 });
 	agl::Object o2(25, 25, AGL_DEFTEX, { -50, -50 });
 	agl::Object o3(25, 25, AGL_DEFTEX, { -50, 50 });
 	agl::Object o4(25, 25, AGL_DEFTEX, { 50, -50 });
-	r.addObject(o);
-	r.addObject(o2);
-	r.addObject(o3);
-	r.addObject(o4);
+	test.addObject(o);
+	test.addObject(o2);
+	test.addObject(o3);
+	test.addObject(o4);
 
 	while(!window.closeCallBack()) {
 
@@ -62,15 +60,15 @@ void App::run() {
 		if (window.IsKeyPressed(GLFW_KEY_DOWN)) { o.setScale(o.getScale().x - 1, o.getScale().y); }
 		if (window.IsKeyPressed(GLFW_KEY_LEFT)) { o.setScale(o.getScale().x, o.getScale().y - 1); }
 
-		if (window.IsKeyPressed(GLFW_KEY_I)) { cam.setPosition(cam.getPosition() + glm::vec2{0.f, -1.f}); }
-		if(window.IsKeyPressed(GLFW_KEY_K)) { cam.setPosition(cam.getPosition() + glm::vec2{ 0.f, 1.f }); }
-		if(window.IsKeyPressed(GLFW_KEY_J)) { cam.setPosition(cam.getPosition() + glm::vec2{ 1.f, 0.f }); }
-		if(window.IsKeyPressed(GLFW_KEY_L)) { cam.setPosition(cam.getPosition() + glm::vec2{ -1.f, 0.f }); }
+		if (window.IsKeyPressed(GLFW_KEY_I)) { cam.setPosition(cam.getPosition() + glm::vec2{0.f, 1.f}); }
+		if(window.IsKeyPressed(GLFW_KEY_K)) { cam.setPosition(cam.getPosition() + glm::vec2{ 0.f, -1.f }); }
+		if(window.IsKeyPressed(GLFW_KEY_J)) { cam.setPosition(cam.getPosition() + glm::vec2{ -1.f, 0.f }); }
+		if(window.IsKeyPressed(GLFW_KEY_L)) { cam.setPosition(cam.getPosition() + glm::vec2{ 1.f, 0.f }); }
 
 		if (window.IsKeyPressed(GLFW_KEY_MINUS)) { cam.setFocalLength(cam.getFocalLength() + 0.1f); }
 		if(window.IsKeyPressed(GLFW_KEY_EQUAL)) { cam.setFocalLength(cam.getFocalLength() - 0.1f); }
 
-		r.draw();
+		test.draw();
 
 
 

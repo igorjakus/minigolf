@@ -39,9 +39,9 @@ namespace agl
 		bool isBorderless() const;
 		bool isFullscreen() const;
 		std::string getTitle();
-		void getWindowSize(uint &width, uint &height);
-		void getWindowPos(int &x, int &y);
-		void getScreenResolution(uint& width, uint& height);
+		glm::uvec2 getWindowSize();
+		glm::ivec2 getWindowPos();
+		glm::uvec2 getScreenResolution();
 		bool getVSync() const;
 		void FEP() const;
 		GLFWwindow* passPointer() const;
