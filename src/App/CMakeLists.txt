@@ -1,7 +1,16 @@
 set(SOURCES 
 
 	main.cpp
+	App.h 
 	App.cpp
+	AppData.h
+	AppData.cpp 
+
+	SceneManager.h
+	SceneManager.cpp 
+	Scene.h 
+	Scenes.h 
+	Scenes.cpp 
 
 )
 

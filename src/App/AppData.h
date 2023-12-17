@@ -16,20 +16,16 @@ class AppData {
 public:
 	AppData() = delete;
 
-	static void init(uint32_t width, uint32_t height, std::string title);
+	static void init(uint width, uint height, const std::string& title);
 
-	static SceneManager& SceneManager();
-	static agl::Window& Window();
+	static SceneManager& getSceneManager();
+	static agl::Window& getWindow();
 
 private:
 
 	static std::unique_ptr<agl::Window> s_window;
 	
 };
-
-
-
-
 
 
 }

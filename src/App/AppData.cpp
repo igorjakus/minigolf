@@ -3,7 +3,9 @@
 namespace golf {
 
 
-void AppData::init(uint width, uint height, std::string title) {
+std::unique_ptr<agl::Window> AppData::s_window;
+
+void AppData::init(uint width, uint height, const std::string& title) {
 	// Window creation
 	s_window = std::make_unique<agl::Window>(width, height, title);
 
@@ -19,14 +21,14 @@ void AppData::init(uint width, uint height, std::string title) {
 	s_window->setIcon("assets/icon/icon.png", "assets/icon/icon.png");
 
 	// Other systems initialization
-	SceneManager();
+	getSceneManager();
 }
 
-SceneManager& AppData::SceneManager() {
+SceneManager& AppData::getSceneManager() {
 	return SceneManager::getInstance();
 }
 
-agl::Window& AppData::Window() {
+agl::Window& AppData::getWindow() {
 	return *s_window;
 }
 

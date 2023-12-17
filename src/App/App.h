@@ -25,7 +25,11 @@ public:
 
 
 private:
-	static bool shouldClose();
+	//void handleInput(); (probably something like that)
+	void update(float deltaT);
+	void render();
+
+	bool shouldClose();
 
 	void terminate();
 
