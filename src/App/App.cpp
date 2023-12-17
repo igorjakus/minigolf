@@ -50,6 +50,7 @@ void App::run() {
 
 	while(!window.closeCallBack()) {
 
+		//testing controls and transformation example
 		if (window.IsKeyPressed(GLFW_KEY_E)) { o.setRotation(o.getRotation() - 1); }
 		if (window.IsKeyPressed(GLFW_KEY_Q)) { o.setRotation(o.getRotation() + 1); }
 		if (window.IsKeyPressed(GLFW_KEY_W)) { o.setPosition(o.getPosition() + glm::vec2{0.f, 1.f }); }
