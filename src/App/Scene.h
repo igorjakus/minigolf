@@ -4,20 +4,26 @@
 
 #pragma once
 
+
+
 namespace golf {
 
 
 class Scene {
-public:
-	Scene();
-	Scene(Scene &&) = default;
-	Scene(const Scene &) = default;
-	Scene &operator=(Scene &&) = default;
-	Scene &operator=(const Scene &) = default;
-	~Scene();
 
-private:
-	
+public:
+	virtual ~Scene() = default;
+	Scene(const Scene &) = default;
+	Scene(Scene &&) = default;
+	Scene &operator=(const Scene &) = default;
+	Scene &operator=(Scene &&) = default;
+
+	// handleInput();
+	virtual void update(float deltaT);
+	virtual void render();
+
+	virtual void load();
+
 };
 
 

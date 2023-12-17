@@ -26,14 +26,14 @@ public:
 	void update(float deltaT);
 	void render();
 
-	void pushScene(std::unique_ptr<Scene> newScene);
-
-	void processChanges();
+	void pushScene(std::shared_ptr<Scene> newScene);
+	void nextScene();
+	void loadNextScene();
 
 private:
 
-	std::shared_ptr<Scene> currentScene;
-	std::queue<std::shared_ptr<Scene>> sceneQueueBuffer;
+	std::shared_ptr<Scene> m_currentScene;
+	std::queue<std::shared_ptr<Scene>> m_sceneQueueBuffer;
 
 	
 };

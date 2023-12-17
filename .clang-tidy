@@ -25,6 +25,7 @@ Checks: '-*,
   -hicpp-vararg,
   misc-*,
   modernize-*,
+  -modernize-use-trailing-return-type,
   readability-*,
   -readability-named-parameter'
 WarningsAsErrors: ''
