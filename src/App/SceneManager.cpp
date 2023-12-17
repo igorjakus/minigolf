@@ -3,6 +3,13 @@
 namespace golf {
 
 
+SceneManager::SceneManager() = default; 
+
+SceneManager& SceneManager::getInstance() {
+	static SceneManager instance;
+	return instance;
+}
+
 void SceneManager::pushScene(std::shared_ptr<Scene> newScene) {
 	m_sceneQueueBuffer.push(newScene);
 }
