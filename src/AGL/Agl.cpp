@@ -61,8 +61,8 @@ float agl::Object::getRotation() { return m_rotation; }
 glm::vec2 agl::Object::getScale() { return { m_xScale, m_yScale }; }
 glm::vec2 agl::Object::getPosition() { return m_pos; }
 
-agl::GraphicLayer::GraphicLayer(agl::Shader* shader)
-	:m_shader(shader){}
+agl::GraphicLayer::GraphicLayer(agl::Shader& shader, agl::Camera& camera)
+	:m_shader(&shader), m_camera(&camera) {}
 
 agl::GraphicLayer::~GraphicLayer()
 {
@@ -78,6 +78,12 @@ void agl::GraphicLayer::draw()
 {
 	m_shader->bind();
 	m_shader->setUniform1i("u_Tex", 0);
+	glm::mat4 proj = glm::ortho
+		(m_camera->m_pos.x * m_camera->getFocalLength(), 
+		(m_camera->m_pos.x + m_camera->m_size.x) * m_camera->m_focalLengh,
+		 m_camera->m_pos.y * m_camera->m_focalLengh,
+		(m_camera->m_pos.y + m_camera->m_size.y) * m_camera->m_focalLengh, -1.0f, 1.0f);
+	m_shader->setUniformMatrix4("u_P", proj);
 	for (int i = 0; i < m_bd.size(); ++i)
 	{
 		glBindVertexArray(m_bd[i].VAO);
@@ -139,8 +145,21 @@ void agl::GraphicLayer::removeObject(Object& obj)
 	}
 }
 
-agl::Camera::Camera(float x, float y, float focalLength) 
-: m_pos(x, y), m_focalLengh(focalLength){}
-agl::Camera::Camera(glm::vec2 position, float focalLength)
-: m_pos(position), m_focalLengh(focalLength){}
+agl::Camera::Camera(float x, float y, glm::vec2 size, float focalLength)
+	:m_pos(x, y), m_size(size), m_focalLengh(focalLength) {}
+agl::Camera::Camera(glm::vec2 position, float w, float h, float focalLength)
+	:m_pos(position), m_size(w, h), m_focalLengh(focalLength) {}
+agl::Camera::Camera(float x, float y, float w, float h, float focalLength)
+	:m_pos(x, y), m_size(w, h), m_focalLengh(focalLength) {}
+agl::Camera::Camera(glm::vec2 position, glm::vec2 size, float focalLength)
+	:m_pos(position), m_size(size), m_focalLengh(focalLength) {}
 agl::Camera::~Camera() {}
+
+void agl::Camera::setFocalLength(float focalLength) { m_focalLengh = focalLength; }
+void agl::Camera::setPosition(float x, float y) { m_pos = { x, y }; }
+void agl::Camera::setPosition(glm::vec2 position) { m_pos = position; }
+void agl::Camera::setSize(float w, float h) { m_size = { w, h }; }
+void agl::Camera::setSize(glm::vec2 size) { m_size = size; }
+float agl::Camera::getFocalLength() { return m_focalLengh; }
+glm::vec2 agl::Camera::getPosition() { return m_pos; }
+glm::vec2 agl::Camera::getSize() { return m_size; }
