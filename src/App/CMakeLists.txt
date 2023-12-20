@@ -12,6 +12,8 @@ set(SOURCES
 	Scenes.h 
 	Scenes.cpp 
 
+	Input.h
+
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

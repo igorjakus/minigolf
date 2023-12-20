@@ -27,7 +27,7 @@ BlankScene::BlankScene()
 	// TODO
 	// Absolutly disgusting
 	testTex = std::make_unique<agl::Texture>("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT);
-	testObj = std::unique_ptr<agl::Object>(new agl::Object(1, 1, *testTex, {0, 0}));
+	testObj = std::make_unique<agl::Object>(agl::Object(1, 1, *testTex, {0, 0}));
 
 	m_graphicsLayer.addObject(*testObj);
 	// Needs changes ASAP

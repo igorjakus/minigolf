@@ -10,13 +10,14 @@
 
 namespace golf {
 
+
+
 const std::string App::c_defaultTitle = "Golf Game";
 
 App::App(uint width, uint height, const std::string& title)
 	:m_title(title) {
 
 	AppData::init(width, height, title);
-	AGL_DEFINE_DEFTEX;
 
 	AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlankScene()));
 	AppData::getSceneManager().loadNextScene();
