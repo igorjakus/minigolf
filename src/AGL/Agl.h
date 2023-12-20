@@ -25,8 +25,8 @@ namespace agl
 	public:
 		Texture(std::string filepath,int filter,int sWrap,int tWrap);
 		~Texture();
-		void bind(int slot = 0);
-		void unbind();
+		void bind(int slot = 0) const;
+		static void unbind();
 	};
 	//Rendering
 	class Object
@@ -70,7 +70,6 @@ namespace agl
 		float getFocalLength();
 		glm::vec2 getPosition();
 		glm::vec2 getSize();
-		friend class GraphicLayer;
 	};
 
 	class GraphicLayer

@@ -26,7 +26,7 @@ agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
 { 
 	stbi_set_flip_vertically_on_load(1);
 	m_bytesData = stbi_load(filepath.c_str(), &m_widthImg, &m_heightImg, &m_BPP, 4);
-	if(!m_bytesData) dtl::Log.error("Faild to load texture: \"{0}\"", filepath);
+	if(m_bytesData == nullptr) dtl::Log.error("Faild to load texture: \"{0}\"", filepath);
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
 
@@ -37,12 +37,12 @@ agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_widthImg, m_heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_bytesData);
 	
-	if(m_bytesData)	stbi_image_free(m_bytesData);
+	if(m_bytesData != nullptr)	stbi_image_free(m_bytesData);
 	stbi_set_flip_vertically_on_load(0);
 }
 agl::Texture::~Texture() { glDeleteTextures(1, &m_textureID); }
 
-void agl::Texture::bind(int slot/*= 0*/) { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
+void agl::Texture::bind(int slot/*= 0*/) const { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
 void agl::Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 //?rendering---------------------------------------------------------------------------------------------------------------------------------------
@@ -78,11 +78,11 @@ void agl::GraphicLayer::draw()
 {
 	m_shader->bind();
 	m_shader->setUniform1i("u_Tex", 0);
-	glm::mat4 proj = glm::ortho
-		(m_camera->m_pos.x * m_camera->getFocalLength(), 
-		(m_camera->m_pos.x + m_camera->m_size.x) * m_camera->m_focalLengh,
-		 m_camera->m_pos.y * m_camera->m_focalLengh,
-		(m_camera->m_pos.y + m_camera->m_size.y) * m_camera->m_focalLengh, -1.0f, 1.0f);
+
+	glm::vec2 pos = m_camera->getPosition();
+	glm::vec2 size = m_camera->getSize();
+	float fl = m_camera->getFocalLength();
+	glm::mat4 proj = glm::ortho(pos.x - (size.x/2)*fl, pos.x + (size.x/2)*fl, pos.y - (size.y/2)*fl, pos.y + (size.y/2)*fl, -1.0f, 1.0f);
 	m_shader->setUniformMatrix4("u_P", proj);
 	for (int i = 0; i < m_bd.size(); ++i)
 	{
