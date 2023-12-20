@@ -3,7 +3,7 @@
 namespace golf {
 
 
-std::unique_ptr<agl::Window> AppData::s_window;
+std::unique_ptr<agl::Window> AppData::s_window = nullptr; //NOLINT
 
 void AppData::init(uint width, uint height, const std::string& title) {
 	// Window creation
@@ -11,11 +11,9 @@ void AppData::init(uint width, uint height, const std::string& title) {
 
 	s_window->create();
 
-	uint screenX = 0;
-	uint screenY = 0;
-	s_window->getScreenResolution(screenX, screenY); 
-	const uint windowPosX = screenX / 2 - width / 2;
-	const uint windowPosY = screenY / 2 - height / 2;
+	glm::uvec2 screenRes = s_window->getScreenResolution(); 
+	const uint windowPosX = screenRes.x / 2 - width / 2;
+	const uint windowPosY = screenRes.y / 2 - height / 2;
 	s_window->setWindowPos(windowPosX, windowPosY);
 
 	s_window->setIcon("assets/icon/icon.png", "assets/icon/icon.png");
@@ -29,6 +27,11 @@ SceneManager& AppData::getSceneManager() {
 }
 
 agl::Window& AppData::getWindow() {
+	#ifdef __DEBUG__
+	if(!s_window) {
+		DTL_ERR("Attempt to access window before it is inicialized!");
+	}
+	#endif
 	return *s_window;
 }
 

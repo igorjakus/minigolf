@@ -16,7 +16,7 @@ public:
 	BlankScene();
 	~BlankScene() override = default;
 	BlankScene(BlankScene &&) = delete;
-	BlankScene(const BlankScene &);
+	BlankScene(const BlankScene &) = delete;
 	BlankScene &operator=(BlankScene &&) = delete;
 	BlankScene &operator=(const BlankScene &) = delete;
 

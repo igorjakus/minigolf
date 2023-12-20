@@ -23,7 +23,7 @@ public:
 
 private:
 
-	static std::unique_ptr<agl::Window> s_window;
+	static std::unique_ptr<agl::Window> s_window; //NOLINT
 	
 };
 
