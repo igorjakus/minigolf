@@ -176,7 +176,7 @@ Sets the window title to one specified in "title".
 ##### Descrption:
 Sets the window icon to the image being located in the localization specified in "icon" and "icon_small".\
 For details why two images are an option see GLFW Documentation.\
-The image data is 32-bit, little-endian, non-premultiplied RGBA, i.e. eight bits per channel with the red channel first. The pixels are arranged canonically as sequential rows starting from the top##left corner.
+The image data is 32-bit, little-endian, non-premultiplied RGBA, i.e. eight bits per channel with the red channel first. The pixels are arranged canonically as sequential rows starting from the top-left corner.
 
 #### setIcon
 
