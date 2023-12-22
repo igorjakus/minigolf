@@ -315,11 +315,10 @@ This funcion marks the end of rendering frame and should be put at the end of re
 - GLFWwindow*
 ##### Descrption:
 Returns the pointer to the window. Using this method of interactions with the window is NOT advised.
-
-As of this moment there is a funcion "bool IsKeyPressed(int key)" 
 </details>
 
-==DO NOT USE THIS FUNCION, IT WILL BE REMOVED!!!==
+As of this moment there is a funcion "bool IsKeyPressed(int key)" 
+==BE CAREFULL USING THIS FUNCTION, IT WILL BE REMOVED!!!==
 
 # Shader
 
