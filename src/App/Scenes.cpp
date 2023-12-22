@@ -9,13 +9,10 @@ BlankScene::BlankScene()
 	 m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
 	 m_graphicsLayer(m_shader, m_camera) {
 
-	// TODO
-	// Absolutly disgusting
 	testTex = std::make_unique<agl::Texture>("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT);
 	testObj = std::make_unique<agl::Object>(agl::Object(1, 1, *testTex, {0, 0}));
 
 	m_graphicsLayer.addObject(*testObj);
-	// Needs changes ASAP
 	
 }
 

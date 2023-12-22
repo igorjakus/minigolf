@@ -15,22 +15,21 @@ void SceneManager::pushScene(std::shared_ptr<Scene> newScene) {
 	m_unloadedSceneQueueBuffer.push(newScene);
 }
 
-//TODO optimize for dist
 void SceneManager::nextScene() {
-	if(!m_loadedSceneQueueBuffer.empty()) {
+	if(!m_loadedSceneQueueBuffer.empty()) [[likely]] {
 		m_currentScene = m_loadedSceneQueueBuffer.front();
 		m_loadedSceneQueueBuffer.pop();
-	} else {
+	} else [[unlikely]] {
 		DTL_ERR("Attempted to switch to a scene when no loaded scenes are present!");
 	}
 }
 
 void SceneManager::loadNextScene() {
-	if(!m_unloadedSceneQueueBuffer.empty()) {
+	if(!m_unloadedSceneQueueBuffer.empty()) [[likely]] {
 		m_unloadedSceneQueueBuffer.front()->load();
 		m_loadedSceneQueueBuffer.push(m_unloadedSceneQueueBuffer.front());
 		m_unloadedSceneQueueBuffer.pop();
-	} else {
+	} else [[unlikely]] {
 		DTL_ERR("Attempted to load a scene when no scenes in queue are present!");
 	}
 }
