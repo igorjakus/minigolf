@@ -27,7 +27,6 @@ public:
 	void load() override;
 
 private:
-	agl::Shader m_shader;
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 

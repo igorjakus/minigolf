@@ -4,6 +4,7 @@ namespace golf {
 
 
 std::unique_ptr<agl::Window> AppData::s_window = nullptr; //NOLINT
+std::unique_ptr<agl::Shader> AppData::s_globalShader; //NOLINT
 
 void AppData::init(uint width, uint height, const std::string& title) {
 	// Window creation
@@ -18,7 +19,10 @@ void AppData::init(uint width, uint height, const std::string& title) {
 
 	s_window->setIcon("assets/icon/icon.png", "assets/icon/icon.png");
 
-	// Other systems initialization
+	// Global shader creation
+	s_globalShader = std::make_unique<agl::Shader>("assets/shaders/DefaultShader.glsl");
+
+	// Scene manager initialization
 	getSceneManager();
 }
 
@@ -33,6 +37,10 @@ agl::Window& AppData::getWindow() {
 	}
 	#endif
 	return *s_window;
+}
+
+agl::Shader& AppData::getGlobalShader() {
+	return *s_globalShader;
 }
 
 

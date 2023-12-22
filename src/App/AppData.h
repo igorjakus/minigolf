@@ -6,6 +6,7 @@
 #pragma once
 
 #include "SceneManager.h"
+#include "Shader.h"
 #include "Window.h"
 
 namespace golf {
@@ -20,10 +21,12 @@ public:
 
 	static SceneManager& getSceneManager();
 	static agl::Window& getWindow();
+	static agl::Shader& getGlobalShader();
 
 private:
 
 	static std::unique_ptr<agl::Window> s_window; //NOLINT
+	static std::unique_ptr<agl::Shader> s_globalShader; //NOLINT
 	
 };
 
