@@ -35,7 +35,8 @@ private:
 	~SceneManager () = default;
 
 	std::shared_ptr<Scene> m_currentScene;
-	std::queue<std::shared_ptr<Scene>> m_sceneQueueBuffer;
+	std::queue<std::shared_ptr<Scene>> m_unloadedSceneQueueBuffer;
+	std::queue<std::shared_ptr<Scene>> m_loadedSceneQueueBuffer;
 
 	
 };

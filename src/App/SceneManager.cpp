@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "dtl.h"
 
 namespace golf {
 
@@ -11,16 +12,27 @@ SceneManager& SceneManager::getInstance() {
 }
 
 void SceneManager::pushScene(std::shared_ptr<Scene> newScene) {
-	m_sceneQueueBuffer.push(newScene);
+	m_unloadedSceneQueueBuffer.push(newScene);
 }
 
+//TODO optimize for dist
 void SceneManager::nextScene() {
-	m_currentScene = m_sceneQueueBuffer.front();
-	m_sceneQueueBuffer.pop();
+	if(!m_loadedSceneQueueBuffer.empty()) {
+		m_currentScene = m_loadedSceneQueueBuffer.front();
+		m_loadedSceneQueueBuffer.pop();
+	} else {
+		DTL_ERR("Attempted to switch to a scene when no loaded scenes are present!");
+	}
 }
 
 void SceneManager::loadNextScene() {
-	m_sceneQueueBuffer.front()->load();
+	if(!m_unloadedSceneQueueBuffer.empty()) {
+		m_unloadedSceneQueueBuffer.front()->load();
+		m_loadedSceneQueueBuffer.push(m_unloadedSceneQueueBuffer.front());
+		m_unloadedSceneQueueBuffer.pop();
+	} else {
+		DTL_ERR("Attempted to load a scene when no scenes in queue are present!");
+	}
 }
 
 void SceneManager::update(float deltaT) {
