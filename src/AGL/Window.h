@@ -29,8 +29,11 @@ namespace agl
 		void setBorderless(bool borderless);
 		void setVSync(bool vsync);
 		void setWindowSize(uint32_t width, uint32_t height);
+		void setWindowSize(glm::uvec2 dims);
 		void setWindowPos(uint32_t x, uint32_t y);
+		void setWindowPos(glm::uvec2 pos);
 		void setSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH);
+		void setSizeLimits(glm::uvec2 minDims, glm::uvec2 maxDims);
 		void setTitle(std::string title);
 		void setIcon(std::string icon, std::string icon_small);
 		void setIcon() const;

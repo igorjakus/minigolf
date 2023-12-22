@@ -96,6 +96,15 @@ Sets the VSync to the value specified by "vsync". On by default.
 - none
 ##### Descrption:
 Sets the window size to the parameters specified in "width" and "height".
+
+#### setWindowSize
+
+##### Parameters: 
+- glm::uvec2 dims
+##### Return:
+- none
+##### Descrption:
+Sets the window size to the parameters specified in "dims".
 </details>
 
 <details>
@@ -108,6 +117,15 @@ Sets the window size to the parameters specified in "width" and "height".
 - none
 ##### Descrption:
 Sets the window position to the parameters specified in "x" and "y". {0, 0} is the top left corner
+
+#### setWindowPos
+
+##### Parameters: 
+- glm::uvec2 pos
+##### Return:
+- none
+##### Descrption:
+Sets the window position to the parameters specified in "pos". {0, 0} is the top left corner
 </details>
 
 <details>
@@ -124,6 +142,16 @@ Sets the window position to the parameters specified in "x" and "y". {0, 0} is t
 Makes the window unable to be resized to a size smaller than specified by "minW" and "minH" and bigger than specified by "maxW" and "maxH".
 This limit will still apply when trying to maximise the window (including putting it in borderless fulscreen mode)!
 
+#### setSizeLimits
+
+##### Parameters: 
+- glm::uvec2 minDims
+- glm::uvec2 maxDims
+##### Return:
+- none
+##### Descrption:
+Makes the window unable to be resized to a size smaller than specified by "minDims" and bigger than specified by "maxDims".
+This limit will still apply when trying to maximise the window (including putting it in borderless fulscreen mode)!
 </details>
 
 <details>
