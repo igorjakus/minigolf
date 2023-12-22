@@ -32,5 +32,9 @@ agl::Window& AppData::getWindow() {
 	return *s_window;
 }
 
+Input& AppData::getInput() {
+	return Input::getInstance();
+}
+
 
 }

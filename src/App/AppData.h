@@ -6,6 +6,7 @@
 #pragma once
 
 #include "SceneManager.h"
+#include "UserInput.h"
 #include "Window.h"
 
 namespace golf {
@@ -20,6 +21,7 @@ public:
 
 	static SceneManager& getSceneManager();
 	static agl::Window& getWindow();
+	static Input& getInput();
 
 private:
 
