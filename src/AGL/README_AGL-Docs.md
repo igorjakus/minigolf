@@ -72,7 +72,7 @@ Sets the window to:
 Sets the window to:
 - borderless fullscreen if "borderless" is true.
 - windowed if "borderless" is false.
-!This funcion isin't fully implemented. It doesn't make the window cover os taskbar.
+!This funcion isin't fully implemented. It doesn't make the window cover OS taskbar.
 </details>
 
 <details>
@@ -139,7 +139,7 @@ Sets the window position to the parameters specified in "pos". {0, 0} is the top
 ##### Return:
 - none
 ##### Descrption:
-Makes the window unable to be resized to a size smaller than specified by "minW" and "minH" and bigger than specified by "maxW" and "maxH".
+Makes the window unable to be resized to a size smaller than specified by "minW" and "minH" and bigger than specified by "maxW" and "maxH".\
 This limit will still apply when trying to maximise the window (including putting it in borderless fulscreen mode)!
 
 #### setSizeLimits
@@ -150,7 +150,7 @@ This limit will still apply when trying to maximise the window (including puttin
 ##### Return:
 - none
 ##### Descrption:
-Makes the window unable to be resized to a size smaller than specified by "minDims" and bigger than specified by "maxDims".
+Makes the window unable to be resized to a size smaller than specified by "minDims" and bigger than specified by "maxDims".\
 This limit will still apply when trying to maximise the window (including putting it in borderless fulscreen mode)!
 </details>
 
@@ -174,8 +174,8 @@ Sets the window title to one specified in "title".
 ##### Return:
 - null
 ##### Descrption:
-Sets the window icon to the image being located in the localization specified in "icon" and "icon_small".
-For details why two images are an option see GLFW Documentation
+Sets the window icon to the image being located in the localization specified in "icon" and "icon_small".\
+For details why two images are an option see GLFW Documentation.\
 The image data is 32-bit, little-endian, non-premultiplied RGBA, i.e. eight bits per channel with the red channel first. The pixels are arranged canonically as sequential rows starting from the top##left corner.
 
 #### setIcon
@@ -317,7 +317,7 @@ This funcion marks the end of rendering frame and should be put at the end of re
 Returns the pointer to the window. Using this method of interactions with the window is NOT advised.
 </details>
 
-As of this moment there is a funcion "bool IsKeyPressed(int key)" 
+As of this moment there is a funcion "bool IsKeyPressed(int key)"\
 ==BE CAREFULL USING THIS FUNCTION, IT WILL BE REMOVED!!!==
 
 # Shader
