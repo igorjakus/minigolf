@@ -12,6 +12,7 @@ Input& Input::getInstance() {
 
 void Input::setTargetWindow(std::shared_ptr<agl::Window> window) {
 	m_window = window;
+	glfwSetKeyCallback(m_window, keyCallback);
 }
 
 
