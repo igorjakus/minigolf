@@ -1,9 +1,8 @@
 // Scene.h 
 //
-// Jeszcze nie wiem co to będzie
+// Klasa stanowiąca bazę dla wszystkich scen w aplikacji
 
 #pragma once
-
 
 
 namespace golf {

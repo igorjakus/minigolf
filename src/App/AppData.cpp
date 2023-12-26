@@ -1,10 +1,11 @@
 #include "AppData.h"
 
+
 namespace golf {
 
 
 std::unique_ptr<agl::Window> AppData::s_window = nullptr; //NOLINT
-std::unique_ptr<agl::Shader> AppData::s_globalShader; //NOLINT
+std::unique_ptr<agl::Shader> AppData::s_globalShader = nullptr; //NOLINT
 
 void AppData::init(uint width, uint height, const std::string& title) {
 
