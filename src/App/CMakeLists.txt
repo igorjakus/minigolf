@@ -6,8 +6,6 @@ set(SOURCES
 	AppData.h
 	AppData.cpp 
 
-	AglWrap.h
-	AglWrap.cpp
 	SceneManager.h
 	SceneManager.cpp 
 	Scene.h 

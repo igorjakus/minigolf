@@ -1,7 +1,5 @@
 #include "AppData.h"
 
-#include "AglWrap.h"
-
 namespace golf {
 
 
@@ -9,9 +7,6 @@ std::unique_ptr<agl::Window> AppData::s_window = nullptr; //NOLINT
 std::unique_ptr<agl::Shader> AppData::s_globalShader; //NOLINT
 
 void AppData::init(uint width, uint height, const std::string& title) {
-
-	// AGL library init
-	AglWrap::init();
 
 	// Window creation
 	s_window = std::make_unique<agl::Window>(width, height, title);
