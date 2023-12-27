@@ -6,7 +6,7 @@
 #include <string>
 
 namespace sus {
-	agl::Texture LoadTexture(std::string file_path); //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
+	std::unique_ptr<agl::Texture> LoadTexture(std::string file_path); //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
 
 
 }
