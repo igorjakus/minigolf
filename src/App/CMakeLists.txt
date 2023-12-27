@@ -13,7 +13,7 @@ set(SOURCES
 	Scenes.h 
 	Scenes.cpp 
 
-)
+ "Sus/Sus.h" "Sus/Sus.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
