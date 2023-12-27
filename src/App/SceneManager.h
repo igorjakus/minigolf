@@ -23,6 +23,7 @@ public:
 	void pushScene(std::shared_ptr<Scene> newScene);
 	void nextScene();
 	void loadNextScene();
+	void waitUntilNextScene();
 
 	SceneManager (SceneManager  &&) = delete;
 	SceneManager (const SceneManager  &) = delete;
@@ -33,6 +34,8 @@ private:
 	SceneManager ();
 	~SceneManager () = default;
 
+	bool m_acceptScenes = true;
+	bool m_requestNextScene = false;
 	std::shared_ptr<Scene> m_currentScene;
 	std::queue<std::shared_ptr<Scene>> m_unloadedSceneQueueBuffer;
 	std::queue<std::shared_ptr<Scene>> m_loadedSceneQueueBuffer;

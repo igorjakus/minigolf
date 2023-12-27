@@ -38,7 +38,7 @@ void BlankScene::render() {
 }
 
 void BlankScene::load() {
-
+	m_loaded = true;
 }
 
 
@@ -70,11 +70,9 @@ void TestScene::render() {
 
 void TestScene::load() {
 	DTL_INF("loading...");
-	for (int i = 0; i < 30000; i++) {
-		int d = 8393 * i / 100 % 99;
-		DTL_ENT("fake loading: {0} <- only printing this number to slow the program down", d);
-	}
+	std::this_thread::sleep_for(std::chrono::seconds(10));
 	DTL_INF("loaded scene");
+	m_loaded = true;
 }
 
 }

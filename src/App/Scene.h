@@ -22,6 +22,11 @@ public:
 	virtual void render() = 0;
 
 	virtual void load() = 0;
+	bool isLoaded();
+
+protected:
+
+	bool m_loaded = false;
 
 
 };
