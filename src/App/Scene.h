@@ -18,7 +18,6 @@ public:
 	Scene &operator=(const Scene &) = default;
 	Scene &operator=(Scene &&) = default;
 
-	// handleInput() = 0;
 	virtual void update(float deltaT) = 0;
 	virtual void render() = 0;
 

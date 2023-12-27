@@ -17,7 +17,6 @@ class SceneManager {
 public:
 	static SceneManager& getInstance();
 
-	// void handleInput(someKindOfInputClass);
 	void update(float deltaT);
 	void render();
 
