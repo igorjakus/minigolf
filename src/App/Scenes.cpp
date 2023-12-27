@@ -52,13 +52,13 @@ TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	std::cout << ":3" << "\n";
-	
+
+
 
 	const int tempX = AppData::getWindow().getWindowSize().x;
 	const int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize((float)tempX/(float)tempY, 1.0F);
-	testTex = std::make_unique<agl::Texture>("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT); //<-- unique pointer klasy texture; bedzie: sus::getTexture(tekstura)
+	testTex = sus::LoadTexture("assets/textures/white.png");//testTex = std::make_unique<agl::Texture>("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT); //<-- unique pointer klasy texture; bedzie: sus::getTexture(tekstura)
 	testObj = std::make_unique<agl::Object>(agl::Object(0.1, 0.1, *testTex)); // <--
 	m_graphicsLayer.addObject(*testObj);
 
