@@ -3,6 +3,8 @@
 #include "Agl.h"
 #include "AppData.h"
 
+#include "Sus/Sus.h"
+
 namespace golf {
 
 // forward declarations:
@@ -26,7 +28,7 @@ BlankScene::BlankScene()
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
-	if (timer > 300) {
+	if (timer > 3) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().loadNextScene();
 		AppData::getSceneManager().nextScene();
@@ -49,6 +51,9 @@ void BlankScene::load() {
 TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
+
+	std::cout << ":3" << "\n";
+	
 
 	const int tempX = AppData::getWindow().getWindowSize().x;
 	const int tempY = AppData::getWindow().getWindowSize().y;

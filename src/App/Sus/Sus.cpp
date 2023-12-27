@@ -3,12 +3,13 @@
 #include "Agl.h"
 #include <iostream>
 #include <fstream>
+#include "../App/AppData.h"
 
-agl::Texture * sus::Load(std::string filePath) { //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
+agl::Texture sus::LoadTexture(std::string filePath) { //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
+
+	
+	agl::Texture loadedTexture = agl::Texture(filePath, GL_NEAREST, GL_REPEAT, GL_REPEAT);
 
 
-	//loaded_texture = std::make_unique<agl::Texture>("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT);
-	agl::Texture loadedTexture = agl::Texture(filePath, 0,0,0);
-
-	return &loadedTexture;
+	return loadedTexture;
 }
