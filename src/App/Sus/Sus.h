@@ -7,7 +7,7 @@
 
 namespace sus {
 
-	int* Load(std::string file_path) { //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
+	agl::Texture * Load(std::string file_path) { //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
 }
 
 }
