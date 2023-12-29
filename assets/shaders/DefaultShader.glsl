@@ -22,8 +22,10 @@ void main()
 layout(location = 0) out vec4 color;
 in vec2 vTex;
 uniform sampler2D u_Tex;
+uniform vec4 u_Col;
+uniform int u_Texuse;
 
 void main()
 {
-    color = texture(u_Tex, vTex);
+    color = (u_Texuse == 1) ? texture(u_Tex, vTex) * u_Col : u_Col;
 }

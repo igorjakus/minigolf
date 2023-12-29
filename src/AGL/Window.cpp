@@ -78,6 +78,13 @@ void agl::Window::setWindowSize(uint32_t width, uint32_t height)
 	glfwSetWindowSize(m_ID, width, height);
 }
 
+void agl::Window::setWindowSize(glm::uvec2 dims)
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size."); return; }
+	glfwSetWindowSize(m_ID, dims.x, dims.y);
+}
+
 void agl::Window::setWindowPos(uint32_t x, uint32_t y)
 {
 	if (m_ID == nullptr)
@@ -85,11 +92,25 @@ void agl::Window::setWindowPos(uint32_t x, uint32_t y)
 	glfwSetWindowPos(m_ID, static_cast<int>(x), static_cast<int>(y));
 }
 
+void agl::Window::setWindowPos(glm::uvec2 pos)
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set position."); return; }
+	glfwSetWindowPos(m_ID, static_cast<int>(pos.x), static_cast<int>(pos.y));
+}
+
 void agl::Window::setSizeLimits(uint32_t minW, uint32_t minH, uint32_t maxW, uint32_t maxH)
 { 
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size limits."); return; }
 	glfwSetWindowSizeLimits(m_ID, static_cast<int>(minW), static_cast<int>(minH), static_cast<int>(maxW), static_cast<int>(maxH));
+}
+
+void agl::Window::setSizeLimits(glm::uvec2 minDims, glm::uvec2 maxDims)
+{ 
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size limits."); return; }
+	glfwSetWindowSizeLimits(m_ID, static_cast<int>(minDims.x), static_cast<int>(minDims.y), static_cast<int>(maxDims.x), static_cast<int>(maxDims.y));
 }
 
 void agl::Window::setTitle(std::string title)
