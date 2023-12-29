@@ -29,17 +29,12 @@ void BlankScene::update(float deltaT) {
 	timer += deltaT;
 	if (timer > 300) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
-		AppData::getSceneManager().loadNextScene();
 		AppData::getSceneManager().nextScene();
 	}
 }
 
 void BlankScene::render() {
 	m_graphicsLayer.draw();
-}
-
-void BlankScene::load() {
-	m_loaded = true;
 }
 
 
@@ -53,10 +48,9 @@ TestScene::TestScene()
 
 	const int tempX = AppData::getWindow().getWindowSize().x;
 	const int tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize((float)tempX/(float)tempY, 1.0F);
+	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
 	testObj = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, {0, 0}, {255, 0, 0, 255}));
 	m_graphicsLayer.addObject(*testObj);
-
 }
 
 void TestScene::update([[maybe_unused]] float deltaT) {
@@ -64,15 +58,7 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 }
 
 void TestScene::render() {
-
 	m_graphicsLayer.draw();
-}
-
-void TestScene::load() {
-	DTL_INF("loading...");
-	std::this_thread::sleep_for(std::chrono::seconds(5));
-	DTL_INF("loaded scene");
-	m_loaded = true;
 }
 
 }

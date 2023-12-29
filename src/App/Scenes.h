@@ -23,8 +23,6 @@ public:
 	void update(float deltaT) override;
 	void render() override;
 
-	void load() override;
-
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
@@ -49,8 +47,6 @@ public:
 
 	void update(float deltaT) override;
 	void render() override;
-
-	void load() override;
 
 private:
 	agl::Camera m_camera;

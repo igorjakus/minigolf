@@ -20,7 +20,6 @@ App::App(uint width, uint height, const std::string& title)
 	AppData::init(width, height, title);
 
 	AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlankScene()));
-	AppData::getSceneManager().loadNextScene();
 	AppData::getSceneManager().nextScene();
 
 	DTL_INF("Application created: {0}", title);
