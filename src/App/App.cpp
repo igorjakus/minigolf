@@ -32,15 +32,18 @@ void App::run() {
 	DTL_INF("Application run: {0}", window.getTitle());
 	//temp
 	agl::Shader shader("assets/shaders/DefaultShader.glsl");
-	AGL_DEFINE_DEFTEX;
 
 	agl::Camera cam(0.f, 0.f, 640.f, 480.f, 1.f);
 
+	agl::Texture popcat("assets/textures/popcat.png", GL_LINEAR, GL_REPEAT, GL_REPEAT);
+
 	agl::GraphicLayer test(shader, cam);
-	agl::Object o(25, 25, AGL_DEFTEX, { 50, 50 });
-	agl::Object o2(25, 25, AGL_DEFTEX, { -50, -50 });
-	agl::Object o3(25, 25, AGL_DEFTEX, { -50, 50 });
-	agl::Object o4(25, 25, AGL_DEFTEX, { 50, -50 });
+	agl::Object o(25, 25, { 50, 50 }, {255, 0, 0, 255});
+	agl::Object o2(25, 25, { -50, -50 }, {255, 255, 0, 255});
+	agl::Object o3(25, 25, { -50, 50 });
+	agl::Object o4(25, 25, { 50, -50 });
+
+	o2.setTexture(popcat);
 
 	test.addObject(o);
 	test.addObject(o2);

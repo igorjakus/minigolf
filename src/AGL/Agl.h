@@ -6,11 +6,28 @@
 #include<stb/stb_image.h>
 #include<ImGui.h>
 
-#define AGL_DEFINE_DEFTEX agl::Texture solidWhiteTex("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT)
-#define AGL_DEFTEX solidWhiteTex
-
-struct Vertice;
 struct BufferData;
+
+struct Vertice
+{
+	glm::vec2 position;
+	glm::vec2 uv;
+	Vertice();
+	Vertice(glm::vec2 pos, glm::vec2 UV = { 0.0f, 0.0f });
+	~Vertice() = default;
+	Vertice(const Vertice&) = default;
+};
+
+struct Color
+{
+	uchar r, g, b, a;
+	Color();
+	Color(uchar red, uchar green, uchar blue, uchar alpha);
+	~Color() = default;
+	Color(const Color&) = default;
+	glm::vec4 getNormalized() const;
+};
+
 
 namespace agl
 {
@@ -36,17 +53,18 @@ namespace agl
 		float m_xScale, m_yScale;
 		float m_rotation;
 		agl::Texture* m_tex;
+		Color m_color;
 	public:
-		Object(float width, float height, agl::Texture& texture, glm::vec2 pos = { 0.f, 0.f }, glm::ivec2 texRatio = {1, 1});
+		Object(float width, float height, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255}, glm::ivec2 texRatio = {1, 1});
 		~Object();
 		void setTexture(agl::Texture& texture);
 		void setRotation(float rads);
 		void setScale(float xScale, float yScale);
 		void setPosition(float xPos, float yPos);
 		void setPosition(glm::vec2 pos);
-		float getRotation();
-		glm::vec2 getScale();
-		glm::vec2 getPosition();
+		float getRotation() const;
+		glm::vec2 getScale() const;
+		glm::vec2 getPosition() const;
 		friend class GraphicLayer;
 	};
 
@@ -91,13 +109,4 @@ namespace agl
 	};
 
 }
-
-//data structures
-struct Vertice
-{
-	glm::vec2 position;
-	glm::vec2 uv;
-	Vertice();
-	Vertice(glm::vec2 pos, glm::vec2 UV = { 0.0f, 0.0f });
-};
 
