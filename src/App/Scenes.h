@@ -7,6 +7,8 @@
 #include "Agl.h"
 #include "Scene.h"
 
+#include "Sus/Sus.h"
+
 namespace golf {
 
 
@@ -60,6 +62,8 @@ private:
 	float pos = 0;
 	std::unique_ptr<agl::Object> testObj;
 	std::unique_ptr<agl::Texture> testTex;
+
+	sus::RepTex RepTemp;
 
 };
 

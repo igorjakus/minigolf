@@ -11,3 +11,33 @@ std::unique_ptr<agl::Texture> sus::LoadTexture(std::string file) { //na razie sc
 
 	return texturePointer;
 }
+
+
+using namespace sus;
+
+Tex::Tex(std::string file) {
+
+	next = nullptr;
+	prvs = nullptr;
+	pTex = LoadTexture(file);
+	name = file;
+
+}
+
+RepTex::RepTex() {
+
+	first = nullptr;
+	last = nullptr;
+
+}
+void RepTex::Add(Tex n) {
+	last->next = &n;
+	last = &n;
+	if (first == nullptr) {
+		first = &n;
+	}
+}
+
+
+
+

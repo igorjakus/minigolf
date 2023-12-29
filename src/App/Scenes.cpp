@@ -59,8 +59,8 @@ TestScene::TestScene()
 	const int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize((float)tempX/(float)tempY, 1.0F);
 
-
-	testTex = sus::LoadTexture("sponge.png"); //<-- unique pointer klasy texture; bedzie: sus::getTexture(tekstura)
+	//agl::Texture tes = agl::Texture("assets/textures/white.png", GL_NEAREST, GL_REPEAT, GL_REPEAT);
+	//tymczas.usunietetestTex = sus::LoadTexture("white.png"); //<-- unique pointer klasy texture; bedzie: sus::getTexture(tekstura)
 	testObj = std::make_unique<agl::Object>(agl::Object(0.1, 0.1, *testTex)); // <--
 	m_graphicsLayer.addObject(*testObj);
 
@@ -79,7 +79,9 @@ void TestScene::load() { //tutaj sus ³aduje potrzebne tekstury
 	DTL_INF("loading...");
 
 	
-	//tutaj wrzucasz potrzebne tekstury 
+	sus::Tex whit("white.png");
+	RepTemp.Add(whit);
+
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 	DTL_INF("loaded scene");
 	m_loaded = true;
