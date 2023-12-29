@@ -26,6 +26,7 @@ struct Color
 	~Color() = default;
 	Color(const Color&) = default;
 	glm::vec4 getNormalized() const;
+	Color operator+(Color c) const;
 };
 
 
@@ -62,6 +63,9 @@ namespace agl
 		void setScale(float xScale, float yScale);
 		void setPosition(float xPos, float yPos);
 		void setPosition(glm::vec2 pos);
+		void setColor(uchar red, uchar green, uchar blue, uchar alpha);
+		void setColor(Color color);
+		Color getColor() const;
 		float getRotation() const;
 		glm::vec2 getScale() const;
 		glm::vec2 getPosition() const;

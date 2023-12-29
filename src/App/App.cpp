@@ -72,6 +72,8 @@ void App::run() {
 		if (window.IsKeyPressed(GLFW_KEY_MINUS)) { cam.setFocalLength(cam.getFocalLength() + 0.1f); }
 		if(window.IsKeyPressed(GLFW_KEY_EQUAL)) { cam.setFocalLength(cam.getFocalLength() - 0.1f); }
 
+		o2.setColor(o2.getColor() + Color(1, 0, 0, 0));
+
 		test.draw();
 
 

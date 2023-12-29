@@ -26,6 +26,9 @@ Color::Color(uchar red, uchar green, uchar blue, uchar alpha)
 glm::vec4 Color::getNormalized() const
 { return { r / 255.f, g / 255.f, b / 255.f, a / 255.f }; }
 
+Color Color::operator+(Color c) const
+{ return { static_cast<uchar>(r + c.r), static_cast<uchar>(g + c.g), static_cast<uchar>(b + c.b), static_cast<uchar>(a + c.a) }; }
+
 
 //?textures---------------------------------------------------------------------------------------------------------------------------------------
 agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
@@ -64,6 +67,9 @@ void agl::Object::setRotation(float radians) { m_rotation = radians; }
 void agl::Object::setScale(float xScale, float yScale) { m_xScale = xScale; m_yScale = yScale; }
 void agl::Object::setPosition(float xPos, float yPos) { m_pos = { xPos, yPos }; }
 void agl::Object::setPosition(glm::vec2 pos) { m_pos = pos; }
+void agl::Object::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_color = { red, green, blue, alpha }; }
+void agl::Object::setColor(Color color) { m_color = color; }
+Color agl::Object::getColor() const { return m_color; }
 float agl::Object::getRotation() const { return m_rotation; }
 glm::vec2 agl::Object::getScale() const { return { m_xScale, m_yScale }; }
 glm::vec2 agl::Object::getPosition() const { return m_pos; }
