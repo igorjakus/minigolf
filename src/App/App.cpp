@@ -31,7 +31,8 @@ void App::run() {
 
 	DTL_INF("Application run: {0}", m_title);
 
-	while(!shouldClose()) {
+	while (!shouldClose()) 
+	{
 
 		IMGUI_NEW_FRAME;
 		IMGUI_CALL(ImGui::ShowDemoWindow());

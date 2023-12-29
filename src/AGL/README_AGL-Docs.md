@@ -72,7 +72,7 @@ Sets the window to:
 Sets the window to:
 - borderless fullscreen if "borderless" is true.
 - windowed if "borderless" is false.
-!This funcion isin't fully implemented. It doesn't make the window cover os taskbar.
+!This funcion isin't fully implemented. It doesn't make the window cover OS taskbar.
 </details>
 
 <details>
@@ -96,6 +96,15 @@ Sets the VSync to the value specified by "vsync". On by default.
 - none
 ##### Descrption:
 Sets the window size to the parameters specified in "width" and "height".
+
+#### setWindowSize
+
+##### Parameters: 
+- glm::uvec2 dims
+##### Return:
+- none
+##### Descrption:
+Sets the window size to the parameters specified in "dims".
 </details>
 
 <details>
@@ -108,6 +117,15 @@ Sets the window size to the parameters specified in "width" and "height".
 - none
 ##### Descrption:
 Sets the window position to the parameters specified in "x" and "y". {0, 0} is the top left corner
+
+#### setWindowPos
+
+##### Parameters: 
+- glm::uvec2 pos
+##### Return:
+- none
+##### Descrption:
+Sets the window position to the parameters specified in "pos". {0, 0} is the top left corner
 </details>
 
 <details>
@@ -121,9 +139,19 @@ Sets the window position to the parameters specified in "x" and "y". {0, 0} is t
 ##### Return:
 - none
 ##### Descrption:
-Makes the window unable to be resized to a size smaller than specified by "minW" and "minH" and bigger than specified by "maxW" and "maxH".
+Makes the window unable to be resized to a size smaller than specified by "minW" and "minH" and bigger than specified by "maxW" and "maxH".\
 This limit will still apply when trying to maximise the window (including putting it in borderless fulscreen mode)!
 
+#### setSizeLimits
+
+##### Parameters: 
+- glm::uvec2 minDims
+- glm::uvec2 maxDims
+##### Return:
+- none
+##### Descrption:
+Makes the window unable to be resized to a size smaller than specified by "minDims" and bigger than specified by "maxDims".\
+This limit will still apply when trying to maximise the window (including putting it in borderless fulscreen mode)!
 </details>
 
 <details>
@@ -146,9 +174,9 @@ Sets the window title to one specified in "title".
 ##### Return:
 - null
 ##### Descrption:
-Sets the window icon to the image being located in the localization specified in "icon" and "icon_small".
-For details why two images are an option see GLFW Documentation
-The image data is 32-bit, little-endian, non-premultiplied RGBA, i.e. eight bits per channel with the red channel first. The pixels are arranged canonically as sequential rows starting from the top##left corner.
+Sets the window icon to the image being located in the localization specified in "icon" and "icon_small".\
+For details why two images are an option see GLFW Documentation.\
+The image data is 32-bit, little-endian, non-premultiplied RGBA, i.e. eight bits per channel with the red channel first. The pixels are arranged canonically as sequential rows starting from the top-left corner.
 
 #### setIcon
 
@@ -287,11 +315,10 @@ This funcion marks the end of rendering frame and should be put at the end of re
 - GLFWwindow*
 ##### Descrption:
 Returns the pointer to the window. Using this method of interactions with the window is NOT advised.
-
-As of this moment there is a funcion "bool IsKeyPressed(int key)" 
 </details>
 
-==DO NOT USE THIS FUNCION, IT WILL BE REMOVED!!!==
+As of this moment there is a funcion "bool IsKeyPressed(int key)"\
+==BE CAREFULL USING THIS FUNCTION, IT WILL BE REMOVED!!!==
 
 # Shader
 

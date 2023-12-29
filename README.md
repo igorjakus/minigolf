@@ -8,3 +8,4 @@ Project for undergraduate studies
 ## See:
 
  * [Building Details](README_building.md)
+ * [AGL Documentation](src/AGL/README_AGL-Docs.md)
