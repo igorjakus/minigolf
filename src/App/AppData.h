@@ -7,6 +7,7 @@
 
 #include "SceneManager.h"
 #include "UserInput.h"
+#include "Shader.h"
 #include "Window.h"
 
 namespace golf {
@@ -15,18 +16,24 @@ namespace golf {
 class AppData {
 
 public:
-	AppData() = delete;
 
 	static void init(uint width, uint height, const std::string& title);
+	static void terminate();
 
-	static SceneManager& getSceneManager();
 	static agl::Window& getWindow();
+	static agl::Shader& getGlobalShader();
+	static SceneManager& getSceneManager();
 	static Input& getInput();
 
 private:
+	AppData() = default;
 
-	static std::unique_ptr<agl::Window> s_window;
+	static AppData& getInstance();
 	
+	std::unique_ptr<agl::Window> s_window;
+	std::unique_ptr<agl::Shader> s_globalShader;
+	std::unique_ptr<SceneManager> s_sceneManager;
+	//std::unique_ptr<System> s_someOtherSystem;
 };
 
 

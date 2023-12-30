@@ -1,35 +1,51 @@
 #include "AppData.h"
 
+
 namespace golf {
 
 
-std::unique_ptr<agl::Window> AppData::s_window;
+AppData& AppData::getInstance() {
+	static AppData instance;
+	return instance;
+}
 
 void AppData::init(uint width, uint height, const std::string& title) {
+
 	// Window creation
-	s_window = std::make_unique<agl::Window>(width, height, title);
+	getInstance().s_window = std::make_unique<agl::Window>(width, height, title);
 
-	s_window->create();
+	getInstance().s_window->create();
 
-	uint screenX = 0;
-	uint screenY = 0;
-	s_window->getScreenResolution(screenX, screenY); 
-	const uint windowPosX = screenX / 2 - width / 2;
-	const uint windowPosY = screenY / 2 - height / 2;
-	s_window->setWindowPos(windowPosX, windowPosY);
+	glm::uvec2 screenRes = getInstance().s_window->getScreenResolution();
+	const uint windowPosX = screenRes.x / 2 - width / 2;
+	const uint windowPosY = screenRes.y / 2 - height / 2;
+	getInstance().s_window->setWindowPos(windowPosX, windowPosY);
 
-	s_window->setIcon("assets/icon/icon.png", "assets/icon/icon.png");
+	getInstance().s_window->setIcon("assets/icon/icon.png", "assets/icon/icon.png");
 
-	// Other systems initialization
-	getSceneManager();
+	// Global shader creation
+	getInstance().s_globalShader = std::make_unique<agl::Shader>("assets/shaders/DefaultShader.glsl");
+
+	// Scene manager initialization
+	getInstance().s_sceneManager = std::make_unique<SceneManager>();
+}
+
+void AppData::terminate() {
+	getInstance().s_window.reset();
+	getInstance().s_globalShader.reset();
+	getInstance().s_globalShader.reset();
 }
 
 SceneManager& AppData::getSceneManager() {
-	return SceneManager::getInstance();
+	return *getInstance().s_sceneManager;
 }
 
 agl::Window& AppData::getWindow() {
-	return *s_window;
+	return *getInstance().s_window;
+}
+
+agl::Shader& AppData::getGlobalShader() {
+	return *getInstance().s_globalShader;
 }
 
 Input& AppData::getInput() {

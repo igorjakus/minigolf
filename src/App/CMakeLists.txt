@@ -8,7 +8,8 @@ set(SOURCES
 
 	SceneManager.h
 	SceneManager.cpp 
-	Scene.h 
+	Scene.h
+	
 	Scenes.h 
 	Scenes.cpp 
 

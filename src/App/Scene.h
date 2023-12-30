@@ -1,9 +1,8 @@
 // Scene.h 
 //
-// Jeszcze nie wiem co to będzie
+// Klasa stanowiąca bazę dla wszystkich scen w aplikacji
 
 #pragma once
-
 
 
 namespace golf {
@@ -19,12 +18,8 @@ public:
 	Scene &operator=(const Scene &) = default;
 	Scene &operator=(Scene &&) = default;
 
-	// handleInput() = 0;
 	virtual void update(float deltaT) = 0;
 	virtual void render() = 0;
-
-	virtual void load() = 0;
-
 
 };
 
