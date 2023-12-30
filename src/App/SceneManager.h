@@ -17,19 +17,11 @@ class SceneManager {
 
 public:
 
-	SceneManager () = default;
-	~SceneManager () = default;
-
 	void update(float deltaT);
 	void render();
 
 	void pushScene(std::shared_ptr<Scene> newScene);
 	void nextScene();
-
-	SceneManager(SceneManager&&) = delete;
-	SceneManager(const SceneManager&) = delete;
-	SceneManager &operator=(SceneManager&&) = delete;
-	SceneManager &operator=(const SceneManager&) = delete;
 
 private:
 

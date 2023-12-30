@@ -9,6 +9,9 @@ set(SOURCES
 	SceneManager.h
 	SceneManager.cpp 
 	Scene.h
+
+	UserInput.h
+	UserInput.cpp
 	
 	Scenes.h 
 	Scenes.cpp 

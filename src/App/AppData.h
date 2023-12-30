@@ -30,9 +30,10 @@ private:
 
 	static AppData& getInstance();
 	
-	std::unique_ptr<agl::Window> s_window;
-	std::unique_ptr<agl::Shader> s_globalShader;
-	std::unique_ptr<SceneManager> s_sceneManager;
+	std::unique_ptr<agl::Window> m_window;
+	std::unique_ptr<agl::Shader> m_globalShader;
+	std::unique_ptr<SceneManager> m_sceneManager;
+	std::unique_ptr<Input> m_input;
 	//std::unique_ptr<System> s_someOtherSystem;
 };
 
