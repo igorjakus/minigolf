@@ -12,10 +12,13 @@
 
 namespace golf {
 
+
 class SceneManager {
 
 public:
-	static SceneManager& getInstance();
+
+	SceneManager () = default;
+	~SceneManager () = default;
 
 	void update(float deltaT);
 	void render();
@@ -29,15 +32,11 @@ public:
 	SceneManager &operator=(const SceneManager&) = delete;
 
 private:
-	SceneManager ();
-	~SceneManager () = default;
 
 	std::shared_ptr<Scene> m_currentScene;
 	std::queue<std::shared_ptr<Scene>> m_sceneQueueBuffer;
 
-	
 };
-
 
 
 }

@@ -61,6 +61,8 @@ bool App::shouldClose() {
 
 void App::terminate() {
 
+	AppData::terminate();
+
 	DTL_INF("Application terminated: {0}", m_title);
 
 }
