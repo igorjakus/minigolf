@@ -2,6 +2,8 @@
 
 #include "App.h"
 
+static const bool cleanupRegister = (atexit(agl::Terminate) == 0);
+
 int main() {
 
 #ifdef __DIST__
@@ -13,8 +15,6 @@ int main() {
 
 	golf::App application;
 	application.run();
-
-	agl::Terminate();
 
 	return EXIT_SUCCESS;
 }
