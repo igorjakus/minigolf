@@ -54,7 +54,7 @@ TestScene::TestScene()
 }
 
 void TestScene::update([[maybe_unused]] float deltaT) {
-	testObj->setPosition(testObj->getPosition().x + speed * deltaT, 0);
+	//testObj->setPosition(testObj->getPosition().x + speed * deltaT, 0);
 }
 
 void TestScene::render() {
