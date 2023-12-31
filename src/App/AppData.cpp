@@ -33,9 +33,11 @@ void AppData::init(uint width, uint height, const std::string& title) {
 
 	// User input service initialization
 	getInstance().m_input = std::make_unique<Input>();
+	getInstance().m_input->setTargetWindow(*getInstance().m_window);
 }
 
 void AppData::terminate() {
+	glfwSetWindowUserPointer(getInstance().m_window->passPointer(), nullptr);
 	getInstance().m_window.reset();
 	getInstance().m_globalShader.reset();
 	getInstance().m_globalShader.reset();
