@@ -15,19 +15,23 @@ namespace golf {
 class AppData {
 
 public:
-	AppData() = delete;
 
 	static void init(uint width, uint height, const std::string& title);
+	static void terminate();
 
 	static SceneManager& getSceneManager();
 	static agl::Window& getWindow();
 	static agl::Shader& getGlobalShader();
 
 private:
+	AppData() = default;
 
-	static std::unique_ptr<agl::Window> s_window; //NOLINT
-	static std::unique_ptr<agl::Shader> s_globalShader; //NOLINT
+	static AppData& getInstance();
 	
+	std::unique_ptr<agl::Window> s_window;
+	std::unique_ptr<agl::Shader> s_globalShader;
+	std::unique_ptr<SceneManager> s_sceneManager;
+	//std::unique_ptr<System> s_someOtherSystem;
 };
 
 

@@ -1,7 +1,5 @@
 #include <Agl.h>
 
-static const bool cleanupRegister = (atexit(agl::Terminate) == 0);
-
 #include "App.h"
 
 int main() {
@@ -15,6 +13,8 @@ int main() {
 
 	golf::App application;
 	application.run();
+
+	agl::Terminate();
 
 	return EXIT_SUCCESS;
 }
