@@ -26,7 +26,7 @@ BlankScene::BlankScene()
 }
 
 void BlankScene::update(float deltaT) {
-	timer += deltaT;
+	timer ++;
 	if (timer > 300) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
@@ -46,14 +46,22 @@ TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	const int tempX = AppData::getWindow().getWindowSize().x;
-	const int tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
+	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
+	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
 	testObj = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, {0, 0}, {255, 0, 0, 255}));
 	m_graphicsLayer.addObject(*testObj);
 }
 
 void TestScene::update([[maybe_unused]] float deltaT) {
+	if(AppData::getInput().isKeyPressed("LEFT")) {
+		speed = -0.001f;
+	} else if(AppData::getInput().isKeyPressed("RIGHT")) {
+		speed = 0.001f;
+	} else {
+		speed = .0f;
+	}
+
 	testObj->setPosition(testObj->getPosition().x + speed * deltaT, 0);
 }
 
