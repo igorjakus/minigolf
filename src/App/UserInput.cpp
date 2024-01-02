@@ -72,6 +72,22 @@ bool Input::isRightMouseClicked() const {
 	return result;
 }
 
+void Input::toggleMousePosLock() const {
+	m_mouseLocked = !m_mouseLocked;
+}
+
+std::pair<float, float> Input::getMousePosOffset() const {
+	return {0.0f, 0.0f};
+}
+
+float Input::getMouseXOffset() const {
+	return 0.0f;
+}
+
+float Input::getMouseYOffset() const {
+	return 0.0f;
+}
+
 float Input::getWheelOffset() const {
 	return static_cast<float>(m_scrollOffset);
 }
@@ -112,7 +128,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 // }
 
 Input::Input() 
-	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_scrollOffset(0.0) {
+	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_mouseLocked(false), m_scrollOffset(0.0) {
 	s_instance = this;
 	setKeys();
 }
