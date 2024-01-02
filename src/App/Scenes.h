@@ -7,7 +7,6 @@
 #include "Agl.h"
 #include "Scene.h"
 
-#include "Sus/Sus.h"
 
 namespace golf {
 
@@ -24,8 +23,6 @@ public:
 
 	void update(float deltaT) override;
 	void render() override;
-
-	void load() override;
 
 private:
 	agl::Camera m_camera;
@@ -51,8 +48,6 @@ public:
 
 	void update(float deltaT) override;
 	void render() override;
-
-	void load() override;
 
 private:
 	agl::Camera m_camera;

@@ -1,7 +1,5 @@
 #include <Agl.h>
 
-static const bool cleanupRegister = (atexit(agl::Terminate) == 0);
-
 #include "App.h"
 
 int main() {
@@ -10,6 +8,8 @@ int main() {
 	dtl::Log.settings(DTL_DEFAULT, DTL_DEFAULT, DTL_DEFAULT, DTL_DEFAULT, DTL_PROGRAM_TIME, DTL_FILE);
 	dtl::Log.setFile("Log_error.txt");
 #endif
+
+	atexit(agl::Terminate);
 
 	agl::Init();
 

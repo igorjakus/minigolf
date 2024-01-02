@@ -4,10 +4,10 @@
 void agl::Init()
 {
 	//gfwd init
-	if (!glfwInit())
+	if (glfwInit() == GLFW_FALSE)
 	{ dtl::Log.error("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
 	//imgui init
-	bool imguiInit = IMGUI_INIT;
+	const bool imguiInit = IMGUI_INIT;
 	if (!imguiInit) {/*todo Logging*/ };
 }
 void agl::Terminate()
@@ -16,9 +16,19 @@ void agl::Terminate()
 	glfwTerminate();
 }
 //?data structures---------------------------------------------------------------------------------------------------------------------------------------
-Vertice::Vertice() :position({ 0.f, 0.f }), uv({0.0f, 0.0f}) {}
+Vertice::Vertice() :position({ 0.f, 0.f }), uv({0.f, 0.f}) {}
 Vertice::Vertice(glm::vec2 pos, glm::vec2 UV)
 	:position(pos), uv(UV) {}
+Color::Color() : r(255), g(255),b(255),a(255) {}
+Color::Color(uchar red, uchar green, uchar blue, uchar alpha) 
+	: r(red), g(green), b(blue), a(alpha) {}
+
+glm::vec4 Color::getNormalized() const
+{ return { r / 255.f, g / 255.f, b / 255.f, a / 255.f }; }
+
+Color Color::operator+(Color c) const
+{ return { static_cast<uchar>(r + c.r), static_cast<uchar>(g + c.g), static_cast<uchar>(b + c.b), static_cast<uchar>(a + c.a) }; }
+
 
 //?textures---------------------------------------------------------------------------------------------------------------------------------------
 agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
@@ -46,8 +56,8 @@ void agl::Texture::bind(int slot/*= 0*/) const { glActiveTexture(GL_TEXTURE0 + s
 void agl::Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 //?rendering---------------------------------------------------------------------------------------------------------------------------------------
-agl::Object::Object(float width, float height, agl::Texture& texture, glm::vec2 position /*= {0.f, 0.f}*/,glm::ivec2 texRatio/*= {1, 1}*/)
-	:m_pos({position}), m_texRatio(texRatio), m_xScale(width), m_yScale(height), m_rotation(0.f), m_tex(&texture) {}
+agl::Object::Object(float width, float height, glm::vec2 pos/*= { 0.f, 0.f }*/, Color color/* = {255, 255, 255, 255}*/, glm::ivec2 texRatio/*= {1, 1}*/)
+	:m_pos({pos}), m_texRatio(texRatio), m_xScale(width), m_yScale(height), m_rotation(0.f), m_tex(nullptr), m_color(color) {}
 
 agl::Object::~Object(){}
 
@@ -57,32 +67,34 @@ void agl::Object::setRotation(float radians) { m_rotation = radians; }
 void agl::Object::setScale(float xScale, float yScale) { m_xScale = xScale; m_yScale = yScale; }
 void agl::Object::setPosition(float xPos, float yPos) { m_pos = { xPos, yPos }; }
 void agl::Object::setPosition(glm::vec2 pos) { m_pos = pos; }
-float agl::Object::getRotation() { return m_rotation; }
-glm::vec2 agl::Object::getScale() { return { m_xScale, m_yScale }; }
-glm::vec2 agl::Object::getPosition() { return m_pos; }
+void agl::Object::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_color = { red, green, blue, alpha }; }
+void agl::Object::setColor(Color color) { m_color = color; }
+Color agl::Object::getColor() const { return m_color; }
+float agl::Object::getRotation() const { return m_rotation; }
+glm::vec2 agl::Object::getScale() const { return { m_xScale, m_yScale }; }
+glm::vec2 agl::Object::getPosition() const { return m_pos; }
 
 agl::GraphicLayer::GraphicLayer(agl::Shader& shader, agl::Camera& camera)
 	:m_shader(&shader), m_camera(&camera) {}
 
 agl::GraphicLayer::~GraphicLayer()
 {
-	for (auto a : m_bd)
+	for (int i = 0; i < m_bd.size(); ++i)
 	{
-		glDeleteBuffers(1, &a.VBO);
-		glDeleteBuffers(1, &a.EBO);
-		glDeleteVertexArrays(1, &a.VAO);
+		glDeleteBuffers(1, &m_bd[i].VBO);
+		glDeleteBuffers(1, &m_bd[i].EBO);
+		glDeleteVertexArrays(1, &m_bd[i].VAO);
 	}
 }
 
 void agl::GraphicLayer::draw()
 {
 	m_shader->bind();
-	m_shader->setUniform1i("u_Tex", 0);
 
-	glm::vec2 pos = m_camera->getPosition();
-	glm::vec2 size = m_camera->getSize();
-	float fl = m_camera->getFocalLength();
-	glm::mat4 proj = glm::ortho(pos.x - (size.x/2)*fl, pos.x + (size.x/2)*fl, pos.y - (size.y/2)*fl, pos.y + (size.y/2)*fl, -1.0f, 1.0f);
+	const glm::vec2 pos = m_camera->getPosition();
+	const glm::vec2 size = m_camera->getSize();
+	const float focl = m_camera->getFocalLength();
+	const glm::mat4 proj = glm::ortho(pos.x - (size.x / 2) * focl, pos.x + (size.x / 2) * focl, pos.y - (size.y / 2) * focl, pos.y + (size.y / 2) * focl, -1.f, 1.f);
 	m_shader->setUniformMatrix4("u_P", proj);
 	for (int i = 0; i < m_bd.size(); ++i)
 	{
@@ -90,10 +102,17 @@ void agl::GraphicLayer::draw()
 		m_shader->setUniformMatrix4("u_T", glm::translate(glm::mat4(1.f), glm::vec3(m_bd[i].objptr->m_pos, 0.f)));
 		m_shader->setUniformMatrix4("u_R", glm::rotate(glm::mat4(1.f), glm::radians(m_bd[i].objptr->m_rotation), glm::vec3(0.f, 0.f, 1.f)));
 		m_shader->setUniformMatrix4("u_S", glm::scale(glm::mat4(1.f), glm::vec3(m_bd[i].objptr->m_xScale, m_bd[i].objptr->m_yScale, 1.f)));
-		m_bd[i].objptr->m_tex->bind();
+		m_shader->setUniform4f("u_Col", m_bd[i].objptr->m_color.getNormalized());
+		if (m_bd[i].objptr->m_tex != nullptr) {
+			m_shader->setUniform1i("u_Tex", 1);
+			m_shader->setUniform1i("u_Texuse", 1);
+			m_bd[i].objptr->m_tex->bind(1); }
+		else {
+			m_shader->setUniform1i("u_Tex", 0); 
+			m_shader->setUniform1i("u_Texuse", 0); }
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
 	}
-	m_shader->unbind();
+	agl::Shader::unbind();
 }
 
 void agl::GraphicLayer::addObject(Object& obj)
@@ -119,13 +138,13 @@ void agl::GraphicLayer::addObject(Object& obj)
 	(*(m_bd.end() - 1)).objptr = &obj;
 
 	Vertice objectData[4] = {
-		{{-.5f, -.5f,}	, {0.0f, 0.0f}},
-		{{ .5f, -.5f,}	, {obj.m_texRatio.x, 0.0f}},
-		{{-.5f,  .5f,}	, {0.0f, obj.m_texRatio.y}},
+		{{-.5f, -.5f,}	, {0.f, 0.f}},
+		{{ .5f, -.5f,}	, {obj.m_texRatio.x, 0.f}},
+		{{-.5f,  .5f,}	, {0.f, obj.m_texRatio.y}},
 		{{ .5f,  .5f,}	, obj.m_texRatio}};
 
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(Vertice), objectData);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, 6 * sizeof(uint32_t), m_trisStencile);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(Vertice), &objectData[0]);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, 6 * sizeof(uint32_t), &m_trisStencile[0]);
 
 	glBindVertexArray(0);
 }
@@ -163,3 +182,4 @@ void agl::Camera::setSize(glm::vec2 size) { m_size = size; }
 float agl::Camera::getFocalLength() { return m_focalLengh; }
 glm::vec2 agl::Camera::getPosition() { return m_pos; }
 glm::vec2 agl::Camera::getSize() { return m_size; }
+

@@ -20,7 +20,6 @@ App::App(uint width, uint height, const std::string& title)
 	AppData::init(width, height, title);
 
 	AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlankScene()));
-	AppData::getSceneManager().loadNextScene();
 	AppData::getSceneManager().nextScene();
 
 	DTL_INF("Application created: {0}", title);
@@ -31,7 +30,8 @@ void App::run() {
 
 	DTL_INF("Application run: {0}", m_title);
 
-	while(!shouldClose()) {
+	while (!shouldClose()) 
+	{
 
 		IMGUI_NEW_FRAME;
 		IMGUI_CALL(ImGui::ShowDemoWindow());
@@ -60,6 +60,8 @@ bool App::shouldClose() {
 }
 
 void App::terminate() {
+
+	AppData::terminate();
 
 	DTL_INF("Application terminated: {0}", m_title);
 
