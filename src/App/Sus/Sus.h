@@ -4,31 +4,33 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
-namespace sus {
-	std::unique_ptr<agl::Texture> LoadTexture(std::string file_path); //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
+namespace golf {
 
+	class Sus {
 
-	class Tex {
-	public: 
-		Tex(std::string file);
-		Tex* next;
-		Tex* prvs;
-		std::unique_ptr<agl::Texture> pTex;
-		std::string name;
-	
-	};
-
-	class RepTex {
 	public:
-		RepTex();
-		void Add(Tex n);
+		void LoadAll();
 
-		Tex* first;
-		Tex* last;
+		void LoadTexture(const std::string& file); //loadtexture jeszcze dla ziemi
+		const agl::Texture* GetTexture(const std::string& file) const; //const na pocz¹tku upewnia siê ¿e nie zmienisz orgina³u, na koñcu: mówi ze nie zmienisz nic w klasie
+		//& przekazuje ca³y obiekt; musisz sie upewniac ze nie zmienisz
+
+		void LoadAllTextures();
+
+		//===========
+		void LoadAllAudio();
+
+
+
+
+
+
+		//===========
+	private:
+		std::map<std::string, agl::Texture> m_Textures;
+
 	};
-
-
-
 
 }

@@ -63,7 +63,7 @@ private:
 	std::unique_ptr<agl::Object> testObj;
 	std::unique_ptr<agl::Texture> testTex;
 
-	sus::RepTex RepTemp;
+	
 
 };
 

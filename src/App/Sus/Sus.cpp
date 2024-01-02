@@ -5,39 +5,46 @@
 #include <fstream>
 #include "../App/AppData.h"
 
-std::unique_ptr<agl::Texture> sus::LoadTexture(std::string file) { //na razie sciezka, potem bedzie wybieralo typ (dziwek, tekstura) i wystarczy nazwa (np. tekstura, white)
-
-	std::unique_ptr<agl::Texture> texturePointer = std::make_unique<agl::Texture>("assets/textures/"+file, GL_NEAREST, GL_REPEAT, GL_REPEAT);
-
-	return texturePointer;
-}
+namespace golf {
 
 
-using namespace sus;
+	void Sus::LoadAll() {
+	
+		LoadAllTextures();
+		LoadAllAudio();
 
-Tex::Tex(std::string file) {
-
-	next = nullptr;
-	prvs = nullptr;
-	pTex = LoadTexture(file);
-	name = file;
-
-}
-
-RepTex::RepTex() {
-
-	first = nullptr;
-	last = nullptr;
-
-}
-void RepTex::Add(Tex n) {
-	last->next = &n;
-	last = &n;
-	if (first == nullptr) {
-		first = &n;
 	}
+
+
+	void Sus::LoadTexture(const std::string& file) {
+
+		m_Textures.insert({file,agl::Texture("assets/textures/" + file, GL_NEAREST, GL_REPEAT, GL_REPEAT)});
+
+	}
+
+
+	const agl::Texture* Sus::GetTexture(const std::string& file) const {
+
+		auto item = m_Textures.find(file);
+		if (item != m_Textures.end()) {
+			return &item->second;
+		}
+		
+		
+	}
+
+	void Sus::LoadAllTextures() {
+		//zbieranie po kolei z pliku, na razie tylko case 2 tekstur:
+
+		LoadTexture("sponge.png"); //jak jest Sus:: to nie trzeba tu te¿ Sus::
+		LoadTexture("white.png");
+
+	}
+
+	void Sus::LoadAllAudio() {
+
+	}
+
+
+
 }
-
-
-
-
