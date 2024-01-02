@@ -52,6 +52,7 @@ void App::update(float deltaT) {
 void App::render() {
 	AppData::getSceneManager().render();
 
+	AppData::getInput().frameEnd();
 	AppData::getWindow().FEP();
 }
 

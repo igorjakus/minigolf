@@ -20,28 +20,39 @@ public:
 	Input &operator=(const Input &) = delete;
 	Input &operator=(Input &&) = delete;
 
-	bool isKeyPressed(const std::string& key);
-	bool isKeyClicked(const std::string& key);
+	bool isKeyPressed(const std::string& key) const;
+	bool isKeyClicked(const std::string& key) const;
 
-	std::pair<float, float> getMousePos();
-	float getMouseX();
-	float getMouseY();
-	bool isLeftMousePressed();
-	bool isLeftMouseClicked();
-	bool isRightMousePressed();
-	bool isRightMouseClicked();
+	std::pair<float, float> getMousePos() const;
+	float getMouseX() const;
+	float getMouseY() const;
+	bool isLeftMousePressed() const;
+	bool isLeftMouseClicked() const;
+	bool isRightMousePressed() const;
+	bool isRightMouseClicked() const;
 
-	float getWheelOffset();
+	float getWheelOffset() const;
 
 	bool isFocused();
 
 	void setTargetWindow(const agl::Window& window);
+	void frameEnd();
 
 private:
 
+	struct KeyPair {
+		int keyCode;
+		bool wasPressed;
+	};
+
 	GLFWwindow* m_window;
 
-	std::unordered_map<std::string, int> m_keys;
+	mutable std::unordered_map<std::string, KeyPair> m_keys;
+
+	mutable bool m_LmbWasPressed;
+	mutable bool m_RmbWasPressed;
+
+	double m_scrollOffset;
 
 	static Input* s_instance; //NOLINT
 	static void s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

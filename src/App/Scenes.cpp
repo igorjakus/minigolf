@@ -62,7 +62,26 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 		speed = .0f;
 	}
 
-	testObj->setPosition(testObj->getPosition().x + speed * deltaT, 0);
+	if(AppData::getInput().isKeyClicked("UP")) {
+		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y + 0.1f);
+	} else if(AppData::getInput().isKeyClicked("DOWN")) {
+		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y - 0.1f);
+	}
+
+	if(AppData::getInput().getWheelOffset() != 0.0f) {
+		// This obviously doesn't work because we need some lerps and norms and clamps and stuff like that but you get the idea;
+		// float scale = AppData::getInput().getWheelOffset();
+		// testObj->setScale(testObj->getScale().x * scale, testObj->getScale().y * scale;
+		DTL_ENT("{0}", AppData::getInput().getWheelOffset());
+	}
+
+	if(AppData::getInput().isLeftMouseClicked()) {
+		DTL_ENT("Hello!");
+	} else if(AppData::getInput().isRightMousePressed()) {
+		DTL_ENT("YOOOO");
+	}
+
+	testObj->setPosition(testObj->getPosition().x + speed * deltaT, testObj->getPosition().y);
 }
 
 void TestScene::render() {
