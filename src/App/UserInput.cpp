@@ -83,33 +83,33 @@ bool Input::isFocused() {
 void Input::setTargetWindow(const agl::Window& window) {
 	m_window = window.passPointer();
 
-	glfwSetKeyCallback(m_window, s_keyCallback); 
-	glfwSetCursorPosCallback(m_window, s_mousePosCallback);
-	glfwSetMouseButtonCallback(m_window, s_mouseCallback);
+	// glfwSetKeyCallback(m_window, s_keyCallback); 
+	// glfwSetCursorPosCallback(m_window, s_mousePosCallback);
+	// glfwSetMouseButtonCallback(m_window, s_mouseCallback);
 	glfwSetScrollCallback(m_window, s_scrollCallback);
-	glfwSetWindowFocusCallback(m_window, s_focusCallback);
+	// glfwSetWindowFocusCallback(m_window, s_focusCallback);
 }
 
 void Input::frameEnd() {
 	m_scrollOffset = 0.0;
 }
 
-void Input::s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { //NOLINT
-	// s_instance->doSomething();
-}
-
-void Input::s_mousePosCallback(GLFWwindow* window, double xPos, double yPos) { //NOLINT
-
-}
-void Input::s_mouseCallback(GLFWwindow* window, int buttom, int action, int mods) { //NOLINT
-
-}
-void Input::s_scrollCallback(GLFWwindow* window, double	xOffset, double yOffset) { //NOLINT
+// void Input::s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { //NOLINT
+//
+// }
+//
+// void Input::s_mousePosCallback(GLFWwindow* window, double xPos, double yPos) { //NOLINT
+//
+// }
+// void Input::s_mouseCallback(GLFWwindow* window, int buttom, int action, int mods) { //NOLINT
+//
+// }
+void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] double xOffset, double yOffset) { //NOLINT
 	s_instance->m_scrollOffset += yOffset;
 }
-void Input::s_focusCallback(GLFWwindow* window, int focused) { //NOLINT
-
-}
+// void Input::s_focusCallback(GLFWwindow* window, int focused) { //NOLINT
+//
+// }
 
 Input::Input() 
 	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_scrollOffset(0.0) {

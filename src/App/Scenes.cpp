@@ -25,7 +25,7 @@ BlankScene::BlankScene()
 	
 }
 
-void BlankScene::update(float deltaT) {
+void BlankScene::update([[maybe_unused]] float deltaT) {
 	timer ++;
 	if (timer > 300) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
@@ -69,7 +69,7 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 	}
 
 	if(AppData::getInput().getWheelOffset() != 0.0f) {
-		// This obviously doesn't work because we need some lerps and norms and clamps and stuff like that but you get the idea;
+		// This obviously doesn't work because we need some lerps and norms and clamps and stuff like that but you get the idea
 		// float scale = AppData::getInput().getWheelOffset();
 		// testObj->setScale(testObj->getScale().x * scale, testObj->getScale().y * scale;
 		DTL_ENT("{0}", AppData::getInput().getWheelOffset());

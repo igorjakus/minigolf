@@ -55,11 +55,11 @@ private:
 	double m_scrollOffset;
 
 	static Input* s_instance; //NOLINT
-	static void s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void s_mousePosCallback(GLFWwindow* window, double xPos, double yPos);
-	static void s_mouseCallback(GLFWwindow* window, int buttom, int action, int mods);
+	// static void s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	// static void s_mousePosCallback(GLFWwindow* window, double xPos, double yPos);
+	// static void s_mouseCallback(GLFWwindow* window, int buttom, int action, int mods);
 	static void s_scrollCallback(GLFWwindow* window, double	xOffset, double yOffset);
-	static void s_focusCallback(GLFWwindow* window, int focused);
+	// static void s_focusCallback(GLFWwindow* window, int focused);
 
 	void setKeys();
 

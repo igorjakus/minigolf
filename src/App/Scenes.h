@@ -52,8 +52,7 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	float speed = 0.001;
-	float pos = 0;
+	float speed = 0.0f;
 	std::unique_ptr<agl::Object> testObj;
 	std::unique_ptr<agl::Texture> testTex;
 
