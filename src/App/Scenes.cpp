@@ -48,7 +48,7 @@ TestScene::TestScene()
 
 	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+	m_camera.setSize(static_cast<float>(tempX), static_cast<float>(tempY));
 	testObj = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, {0, 0}, {255, 0, 0, 255}));
 	m_graphicsLayer.addObject(*testObj);
 }

@@ -30,6 +30,8 @@ public:
 	bool isLeftMouseClicked();
 	bool isRightMousePressed() const;
 	bool isRightMouseClicked();
+	bool isMiddleMousePressed() const;
+	bool isMiddleMouseClicked();
 
 	void toggleMouseVisibility();
 	void setMouseVisibility(bool visible);
@@ -60,15 +62,16 @@ private:
 
 	std::unordered_map<std::string, KeyPair> m_keys;
 
-	bool m_LmbWasPressed;
-	bool m_RmbWasPressed;
+	bool m_LmbWasPressed = false;
+	bool m_RmbWasPressed = false;
+	bool m_MmbWasPressed = false;
 
-	bool m_mouseVisible;
-	bool m_mouseLocked;
+	bool m_mouseVisible = true;
+	bool m_mouseLocked = false;
 
 	std::pair<float, float> m_prevMousePos;
 
-	double m_scrollOffset;
+	double m_scrollOffset = 0.0;
 
 	static Input* s_instance; //NOLINT
 	// static void s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

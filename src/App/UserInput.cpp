@@ -72,6 +72,17 @@ bool Input::isRightMouseClicked() {
 	return result;
 }
 
+bool Input::isMiddleMousePressed() const {
+	return glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
+}
+
+bool Input::isMiddleMouseClicked() {
+	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS; 
+	bool result = !m_MmbWasPressed && pressedNow;
+	m_MmbWasPressed = pressedNow;
+	return result;
+}
+
 void Input::toggleMouseVisibility() {
 	if(!m_mouseLocked) {
 		m_mouseVisible = !m_mouseVisible;
@@ -175,7 +186,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 // }
 
 Input::Input() 
-	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_mouseVisible(false), m_mouseLocked(false), m_scrollOffset(0.0) {
+	:m_window(nullptr) {
 	s_instance = this;
 	setKeys();
 }
