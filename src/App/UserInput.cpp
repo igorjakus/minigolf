@@ -34,7 +34,7 @@ bool Input::isKeyClicked(const std::string& key) {
 }
 
 //////////////////////////////////////////////
-///				Mouse Input	
+///				Mouse Position
 //////////////////////////////////////////////
 
 std::pair<float, float> Input::getMousePos() const {
@@ -57,6 +57,23 @@ float Input::getMouseY() const {
 	glfwGetCursorPos(m_window, &xPos, &yPos);
 	return static_cast<float>(yPos);
 }
+
+std::pair<float, float> Input::getMouseScaledPos() const {
+	auto[xPos, yPos] = getMousePos();
+	return {m_xScale * xPos, m_yScale * yPos};
+}
+
+float Input::getMouseScaledX() const {
+	return m_xScale * getMouseX();
+}
+
+float Input::getMouseScaledY() const {
+	return m_yScale * getMouseY();
+}
+
+//////////////////////////////////////////////
+///				Mouse Input
+//////////////////////////////////////////////
 
 bool Input::isLeftMousePressed() const {
 	return glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
@@ -162,6 +179,19 @@ float Input::getMouseOffsetY() const {
 	return static_cast<float>(yPos);
 }
 
+std::pair<float, float> Input::getMouseScaledOffset() const {
+	auto[xPos, yPos] = getMouseOffset();
+	return {m_xScale * xPos, m_yScale * yPos};
+}
+
+float Input::getMouseScaledOffsetX() const {
+	return m_xScale * getMouseOffsetX();
+}
+
+float Input::getMouseScaledOffsetY() const {
+	return m_xScale * getMouseOffsetY();
+}
+
 //////////////////////////////////////////////
 ///					Other	
 //////////////////////////////////////////////
@@ -180,6 +210,11 @@ bool Input::isFocused() const {
 
 void Input::setTargetWindow(const agl::Window& window) {
 	m_window = window.passPointer();
+	int width = 0;
+	int height = 0;
+	glfwGetWindowSize(m_window, &width, &height);
+	m_xScale = 1 / static_cast<float>(width);
+	m_yScale = 1 / static_cast<float>(height);
 
 	// glfwSetKeyCallback(m_window, s_keyCallback); 
 	// glfwSetCursorPosCallback(m_window, s_mousePosCallback);
