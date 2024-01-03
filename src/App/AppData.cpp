@@ -28,12 +28,16 @@ void AppData::init(uint width, uint height, const std::string& title) {
 
 	// Scene manager initialization
 	getInstance().s_sceneManager = std::make_unique<SceneManager>();
+
+	//Sus initialization
+	getInstance().s_us = std::make_unique<Sus>();
 }
 
 void AppData::terminate() {
+	getInstance().s_sceneManager.reset();
 	getInstance().s_window.reset();
 	getInstance().s_globalShader.reset();
-	getInstance().s_globalShader.reset();
+	getInstance().s_us.reset();
 }
 
 SceneManager& AppData::getSceneManager() {
@@ -48,5 +52,7 @@ agl::Shader& AppData::getGlobalShader() {
 	return *getInstance().s_globalShader;
 }
 
-
+Sus& AppData::getSus() {
+	return *getInstance().s_us;
+}
 }

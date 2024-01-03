@@ -56,8 +56,8 @@ private:
 	float speed = 0.001;
 	float pos = 0;
 	std::unique_ptr<agl::Object> testObj;
-	std::unique_ptr<agl::Texture> testTex;
-
+	//std::unique_ptr<agl::Texture> testTex;
+	agl::Texture* temp;
 	
 
 };
