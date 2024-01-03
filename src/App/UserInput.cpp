@@ -6,6 +6,10 @@ namespace golf {
 
 Input* Input::s_instance; //NOLINT
 
+//////////////////////////////////////////////
+///				Keyboard Input
+//////////////////////////////////////////////
+
 bool Input::isKeyPressed(const std::string& key) const {
 	auto item = m_keys.find(key);
 	if(item != m_keys.end()) {
@@ -28,6 +32,10 @@ bool Input::isKeyClicked(const std::string& key) {
 	DTL_WAR("Call to unknown key value: \"{0}\"", key);
 	return false;
 }
+
+//////////////////////////////////////////////
+///				Mouse Input	
+//////////////////////////////////////////////
 
 std::pair<float, float> Input::getMousePos() const {
 	double xPos = 0;
@@ -83,6 +91,10 @@ bool Input::isMiddleMouseClicked() {
 	return result;
 }
 
+//////////////////////////////////////////////
+///			Mouse Options Control	
+//////////////////////////////////////////////
+
 void Input::toggleMouseVisibility() {
 	if(!m_mouseLocked) {
 		m_mouseVisible = !m_mouseVisible;
@@ -127,6 +139,10 @@ bool Input::isMouseLocked() const {
 	return m_mouseLocked;
 }
 
+//////////////////////////////////////////////
+///				Locked Mouse Mode	
+//////////////////////////////////////////////
+
 std::pair<float, float> Input::getMouseOffset() const {
 	auto[xPos, yPos] = getMousePos();
 	xPos -= m_prevMousePos.first;
@@ -146,6 +162,10 @@ float Input::getMouseOffsetY() const {
 	return static_cast<float>(yPos);
 }
 
+//////////////////////////////////////////////
+///					Other	
+//////////////////////////////////////////////
+
 float Input::getWheelOffset() const {
 	return static_cast<float>(m_scrollOffset);
 }
@@ -153,6 +173,10 @@ float Input::getWheelOffset() const {
 bool Input::isFocused() const {
 	return glfwGetWindowAttrib(m_window, GLFW_FOCUSED) == GLFW_TRUE;
 }
+
+//////////////////////////////////////////////
+///				Technical Methods	
+//////////////////////////////////////////////
 
 void Input::setTargetWindow(const agl::Window& window) {
 	m_window = window.passPointer();
