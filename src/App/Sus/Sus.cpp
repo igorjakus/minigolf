@@ -18,20 +18,23 @@ namespace golf {
 
 	void Sus::LoadTexture(const std::string& file) {
 
-		m_Textures.insert({file,agl::Texture("assets/textures/" + file, GL_NEAREST, GL_REPEAT, GL_REPEAT)});
-
+		m_Textures.emplace(std::piecewise_construct,std::forward_as_tuple(file),std::forward_as_tuple("assets/textures/" + file, GL_NEAREST, GL_REPEAT, GL_REPEAT));
+		//czemu siê tekstura od razu usuwa???
+		
 	}
 
+	//std::make_pair<std::string, agl::Texture>(file, { "assets/textures/" + file, GL_NEAREST, GL_REPEAT, GL_REPEAT })
 
-	const agl::Texture* Sus::GetTexture(const std::string& file) const {
+
+	agl::Texture* Sus::GetTexture(const std::string& file){
 
 		auto item = m_Textures.find(file);
-		if (item != m_Textures.end()) {
-			return &item->second;
-		}
-		
+		return &item->second;
+		//return &m_Textures[file];
 		
 	}
+
+	
 
 	void Sus::LoadAllTextures() {
 		//zbieranie po kolei z pliku, na razie tylko case 2 tekstur:

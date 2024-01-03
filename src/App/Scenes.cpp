@@ -57,9 +57,11 @@ TestScene::TestScene()
 	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
 
 	AppData::getSus().LoadTexture("popcat.png");
-	//temp = AppData::getSus().GetTexture("popcat.png");
+
 	testObj = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, {0, 0}, {255, 0, 0, 255}));
-	//testObj->setTexture(*temp);
+
+	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
+
 	m_graphicsLayer.addObject(*testObj);
 }
 

@@ -43,6 +43,7 @@ namespace agl
 	public:
 		Texture(std::string filepath,int filter,int sWrap,int tWrap);
 		~Texture();
+		Texture(const Texture&) = delete;
 		void bind(int slot = 0) const;
 		static void unbind();
 	};
