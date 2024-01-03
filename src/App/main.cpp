@@ -9,12 +9,12 @@ int main() {
 	dtl::Log.setFile("Log_error.txt");
 #endif
 
-	atexit(agl::Terminate);
-
 	agl::Init();
 
 	golf::App application;
 	application.run();
+	
+	agl::Terminate();
 
 	return EXIT_SUCCESS;
 }

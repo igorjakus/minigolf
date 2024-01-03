@@ -33,7 +33,7 @@ void AppData::init(uint width, uint height, const std::string& title) {
 void AppData::terminate() {
 	getInstance().s_window.reset();
 	getInstance().s_globalShader.reset();
-	getInstance().s_globalShader.reset();
+	getInstance().s_sceneManager.reset();
 }
 
 SceneManager& AppData::getSceneManager() {
