@@ -47,7 +47,7 @@ float Input::getMouseY() const {
 	double xPos = 0;
 	double yPos = 0;
 	glfwGetCursorPos(m_window, &xPos, &yPos);
-	return static_cast<float>(xPos);
+	return static_cast<float>(yPos);
 }
 
 bool Input::isLeftMousePressed() const {
@@ -72,6 +72,23 @@ bool Input::isRightMouseClicked() {
 	return result;
 }
 
+void Input::toggleMouseVisibility() {
+	if(!m_mouseLocked) {
+		m_mouseVisible = !m_mouseVisible;
+		glfwSetInputMode(m_window, GLFW_CURSOR, m_mouseVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
+	}
+}
+
+void Input::setMouseVisibility(bool visible) {
+	if(visible != m_mouseVisible) {
+		toggleMouseVisibility();
+	}
+}
+
+bool Input::isMouseVisible() const {
+	return m_mouseVisible;
+}
+
 void Input::toggleMousePosLock() {
 	m_mouseLocked = !m_mouseLocked;
 	m_mouseVisible = true;
@@ -80,6 +97,7 @@ void Input::toggleMousePosLock() {
 		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
 			glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 		}
+		m_prevMousePos = getMousePos();
 	} else {
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
@@ -88,15 +106,37 @@ void Input::toggleMousePosLock() {
 	}
 }
 
-float Input::getWheelOffset() const {
-	return static_cast<float>(m_scrollOffset);
+void Input::setMousePosLock(bool lock) {
+	if(lock != m_mouseLocked) {
+		toggleMousePosLock();
+	}
 }
 
-void Input::toggleMouseVisibility() {
-	if(!m_mouseLocked) {
-		m_mouseVisible = !m_mouseVisible;
-		glfwSetInputMode(m_window, GLFW_CURSOR, m_mouseVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
-	}
+bool Input::isMouseLocked() const {
+	return m_mouseLocked;
+}
+
+std::pair<float, float> Input::getMouseOffset() const {
+	auto[xPos, yPos] = getMousePos();
+	xPos -= m_prevMousePos.first;
+	yPos -= m_prevMousePos.second;
+	return {static_cast<float>(xPos), static_cast<float>(yPos)};
+}
+
+float Input::getMouseOffsetX() const {
+	float xPos = getMouseX();
+	xPos -= m_prevMousePos.first;
+	return static_cast<float>(xPos);
+}
+
+float Input::getMouseOffsetY() const {
+	float yPos = getMouseX();
+	yPos -= m_prevMousePos.second;
+	return static_cast<float>(yPos);
+}
+
+float Input::getWheelOffset() const {
+	return static_cast<float>(m_scrollOffset);
 }
 
 bool Input::isFocused() const {
@@ -135,7 +175,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 // }
 
 Input::Input() 
-	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_mouseLocked(false), m_mouseVisible(false), m_scrollOffset(0.0) {
+	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_mouseVisible(false), m_mouseLocked(false), m_scrollOffset(0.0) {
 	s_instance = this;
 	setKeys();
 }

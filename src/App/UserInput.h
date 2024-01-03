@@ -31,8 +31,16 @@ public:
 	bool isRightMousePressed() const;
 	bool isRightMouseClicked();
 
-	void toggleMousePosLock();
 	void toggleMouseVisibility();
+	void setMouseVisibility(bool visible);
+	bool isMouseVisible() const;
+
+	void toggleMousePosLock();
+	void setMousePosLock(bool lock);
+	bool isMouseLocked() const;
+	std::pair<float, float> getMouseOffset() const;
+	float getMouseOffsetX() const;
+	float getMouseOffsetY() const;
 
 	float getWheelOffset() const;
 
@@ -55,8 +63,10 @@ private:
 	bool m_LmbWasPressed;
 	bool m_RmbWasPressed;
 
-	bool m_mouseLocked;
 	bool m_mouseVisible;
+	bool m_mouseLocked;
+
+	std::pair<float, float> m_prevMousePos;
 
 	double m_scrollOffset;
 
