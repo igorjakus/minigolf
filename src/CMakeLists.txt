@@ -14,11 +14,12 @@ include_directories(AGL-Deps/GLAD/include)
 # Precompiled headers:
 include_directories(pch)
 
-set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS})
 
 # Project libraries:
 add_subdirectory(AGL)
 add_subdirectory(DTL)
+
+set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS})
 
 # Application source code:
 add_subdirectory(App)

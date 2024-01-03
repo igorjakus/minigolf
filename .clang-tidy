@@ -22,12 +22,15 @@ Checks: '-*,
   google-runtime-int,
   google-runtime-operator,
   hicpp-*,
+  -hicpp-uppercase-literal-suffix,
   -hicpp-vararg,
   misc-*,
   modernize-*,
   -modernize-use-trailing-return-type,
   readability-*,
-  -readability-named-parameter'
+  -readability-named-parameter,
+  -readability-uppercase-literal-suffix,
+  -readability-convert-member-functions-to-static'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 FormatStyle:     none

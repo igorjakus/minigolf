@@ -3,6 +3,9 @@
 #include<stb_image.h>
 #include<ImGui.h>
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{ glViewport(0, 0, width, height); }
+
 agl::Window::Window(uint32_t width, uint32_t height, std::string title)
 	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height), m_temp(true) {}
 agl::Window::~Window()
@@ -28,6 +31,7 @@ void agl::Window::create()
 		exit(EXIT_FAILURE);
 	}
 	IMGUI_IMPLGL(m_ID);
+	glfwSetFramebufferSizeCallback(m_ID, framebuffer_size_callback);
 }
 
 bool agl::Window::closeCallBack() const

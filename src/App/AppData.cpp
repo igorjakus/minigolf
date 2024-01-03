@@ -40,7 +40,7 @@ void AppData::terminate() {
 	glfwSetWindowUserPointer(getInstance().m_window->passPointer(), nullptr);
 	getInstance().m_window.reset();
 	getInstance().m_globalShader.reset();
-	getInstance().m_globalShader.reset();
+	getInstance().m_sceneManager.reset();
 	getInstance().m_input.reset();
 }
 
