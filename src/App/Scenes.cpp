@@ -81,6 +81,15 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 		DTL_ENT("YOOOO");
 	}
 
+	if(AppData::getInput().isKeyClicked("SPACE")) {
+		AppData::getInput().toggleMousePosLock();
+	}
+
+	auto[x, y] = AppData::getInput().getMousePos();
+	if(x != 0 || y != 0) {
+		DTL_ENT("{0}, {0}", x, y);
+	}
+
 	testObj->setPosition(testObj->getPosition().x + speed * deltaT, testObj->getPosition().y);
 }
 

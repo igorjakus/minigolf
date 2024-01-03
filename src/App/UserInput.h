@@ -21,24 +21,22 @@ public:
 	Input &operator=(Input &&) = delete;
 
 	bool isKeyPressed(const std::string& key) const;
-	bool isKeyClicked(const std::string& key) const;
+	bool isKeyClicked(const std::string& key);
 
 	std::pair<float, float> getMousePos() const;
 	float getMouseX() const;
 	float getMouseY() const;
 	bool isLeftMousePressed() const;
-	bool isLeftMouseClicked() const;
+	bool isLeftMouseClicked();
 	bool isRightMousePressed() const;
-	bool isRightMouseClicked() const;
+	bool isRightMouseClicked();
 
-	void toggleMousePosLock() const;
-	std::pair<float, float> getMousePosOffset() const;
-	float getMouseXOffset() const;
-	float getMouseYOffset() const;
+	void toggleMousePosLock();
+	void toggleMouseVisibility();
 
 	float getWheelOffset() const;
 
-	bool isFocused();
+	bool isFocused() const;
 
 	void setTargetWindow(const agl::Window& window);
 	void frameEnd();
@@ -52,12 +50,13 @@ private:
 
 	GLFWwindow* m_window;
 
-	mutable std::unordered_map<std::string, KeyPair> m_keys;
+	std::unordered_map<std::string, KeyPair> m_keys;
 
-	mutable bool m_LmbWasPressed;
-	mutable bool m_RmbWasPressed;
+	bool m_LmbWasPressed;
+	bool m_RmbWasPressed;
 
-	mutable bool m_mouseLocked;
+	bool m_mouseLocked;
+	bool m_mouseVisible;
 
 	double m_scrollOffset;
 

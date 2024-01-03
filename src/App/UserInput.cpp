@@ -16,7 +16,7 @@ bool Input::isKeyPressed(const std::string& key) const {
 	return false;
 }
 
-bool Input::isKeyClicked(const std::string& key) const {
+bool Input::isKeyClicked(const std::string& key) {
 	auto item = m_keys.find(key);
 	if(item != m_keys.end()) {
 		int keyValue = item->second.keyCode;
@@ -54,7 +54,7 @@ bool Input::isLeftMousePressed() const {
 	return glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 }
 
-bool Input::isLeftMouseClicked() const {
+bool Input::isLeftMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS; 
 	bool result = !m_LmbWasPressed && pressedNow;
 	m_LmbWasPressed = pressedNow;
@@ -65,34 +65,41 @@ bool Input::isRightMousePressed() const {
 	return glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 }
 
-bool Input::isRightMouseClicked() const {
+bool Input::isRightMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS; 
 	bool result = !m_RmbWasPressed && pressedNow;
 	m_RmbWasPressed = pressedNow;
 	return result;
 }
 
-void Input::toggleMousePosLock() const {
+void Input::toggleMousePosLock() {
 	m_mouseLocked = !m_mouseLocked;
-}
-
-std::pair<float, float> Input::getMousePosOffset() const {
-	return {0.0f, 0.0f};
-}
-
-float Input::getMouseXOffset() const {
-	return 0.0f;
-}
-
-float Input::getMouseYOffset() const {
-	return 0.0f;
+	m_mouseVisible = true;
+	if(m_mouseLocked) {
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
+			glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+		}
+	} else {
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
+			glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+		}
+	}
 }
 
 float Input::getWheelOffset() const {
 	return static_cast<float>(m_scrollOffset);
 }
 
-bool Input::isFocused() {
+void Input::toggleMouseVisibility() {
+	if(!m_mouseLocked) {
+		m_mouseVisible = !m_mouseVisible;
+		glfwSetInputMode(m_window, GLFW_CURSOR, m_mouseVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
+	}
+}
+
+bool Input::isFocused() const {
 	return glfwGetWindowAttrib(m_window, GLFW_FOCUSED) == GLFW_TRUE;
 }
 
@@ -128,7 +135,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 // }
 
 Input::Input() 
-	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_mouseLocked(false), m_scrollOffset(0.0) {
+	:m_window(nullptr), m_LmbWasPressed(false), m_RmbWasPressed(false), m_mouseLocked(false), m_mouseVisible(false), m_scrollOffset(0.0) {
 	s_instance = this;
 	setKeys();
 }
