@@ -16,11 +16,10 @@ namespace golf {
 	}
 
 
-	void Sus::LoadTexture(const std::string& file) {
+	void Sus::LoadTexture(const std::string& file, int filter, int sWrap, int tWrap) {
 
-		m_Textures.emplace(std::piecewise_construct,std::forward_as_tuple(file),std::forward_as_tuple("assets/textures/" + file, GL_NEAREST, GL_REPEAT, GL_REPEAT));
-		//czemu siê tekstura od razu usuwa???
-		
+		m_Textures.emplace(std::piecewise_construct,std::forward_as_tuple(file),std::forward_as_tuple("assets/textures/" + file, filter, sWrap, tWrap));
+
 	}
 
 	//std::make_pair<std::string, agl::Texture>(file, { "assets/textures/" + file, GL_NEAREST, GL_REPEAT, GL_REPEAT })
@@ -30,7 +29,6 @@ namespace golf {
 
 		auto item = m_Textures.find(file);
 		return &item->second;
-		//return &m_Textures[file];
 		
 	}
 
@@ -41,6 +39,7 @@ namespace golf {
 
 		LoadTexture("sponge.png"); //jak jest Sus:: to nie trzeba tu te¿ Sus::
 		LoadTexture("white.png");
+		LoadTexture("popcat.png");
 
 	}
 

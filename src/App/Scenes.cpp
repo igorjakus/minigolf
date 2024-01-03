@@ -19,16 +19,19 @@ BlankScene::BlankScene()
 	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
 	// temp (should also be black (no racism))
-	testTex = std::make_unique<agl::Texture>("assets/textures/popcat.png", GL_NEAREST, GL_REPEAT, GL_REPEAT);
+
+	AppData::getSus().LoadTexture("popcat.png", GL_LINEAR);
+	AppData::getSus().LoadAllTextures();//starcza w 1 scenie by dla wszystkich by³a
+
 	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
-	testObj->setTexture(*testTex);
+	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
 	m_graphicsLayer.addObject(*testObj);
 	
 }
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
-	if (timer > 3) {
+	if (timer > 150) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
 	}
@@ -58,10 +61,8 @@ TestScene::TestScene()
 
 	AppData::getSus().LoadTexture("popcat.png");
 
-	testObj = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, {0, 0}, {255, 0, 0, 255}));
-
-	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
-
+	testObj = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, {0, 0}, {255, 255, 255, 255}));
+	testObj->setTexture(*AppData::getSus().GetTexture("sponge.png"));
 	m_graphicsLayer.addObject(*testObj);
 }
 
