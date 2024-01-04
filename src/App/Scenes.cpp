@@ -25,6 +25,7 @@ BlankScene::BlankScene()
 	AppData::getSus().GetTexture("test.png");
 	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
 	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
+	testObj->setTexture(*AppData::getSus().GetTexture("popcat2.png"));
 	m_graphicsLayer.addObject(*testObj);
 	
 }

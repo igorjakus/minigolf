@@ -45,6 +45,7 @@ namespace golf {
 		}
 		else {
 			DTL_WAR("Trying to get not loaded texture:(" + file + "). Operation ignored.");
+			return 0;
 		}
 	}
 
