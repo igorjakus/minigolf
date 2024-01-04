@@ -10,21 +10,15 @@ namespace golf {
 
 
 	void Sus::LoadAll() {
-	
 		LoadAllTextures();
 		LoadAllAudio();
-
 	}
 	void Sus::LoadListOfTextures(std::initializer_list<std::string> files) {
-
 		for (auto file : files) {
 			Sus::LoadTexture(file);
 		}
-
 	}
-
 	void Sus::LoadTexture(const std::string& file, int filter, int sWrap, int tWrap) {
-		//czy teksutra jest juz wgrana
 		if (m_Textures.find(file) != m_Textures.end()) {
 			DTL_WAR("Trying to load already loaded texture:("+ file +"). Operation ignored.");
 		}
@@ -37,13 +31,11 @@ namespace golf {
 	}
 
 	void Sus::LoadAllTextures() {
-		//zbieranie po kolei z pliku, na razie tylko case 2 tekstur:
+		//zbieranie po kolei z pliku, na razie tylko case 3 tekstur:
 		LoadTexture("sponge.png");
 		LoadTexture("white.png");
 		LoadTexture("popcat.png");
 	}
-
-
 
 
 	agl::Texture* Sus::GetTexture(const std::string& file){
@@ -56,8 +48,19 @@ namespace golf {
 		}
 	}
 
+
+	void Sus::RemoveListOfTextures(std::initializer_list<std::string> files) {
+		for (auto file : files) {
+			Sus::RemoveTexture(file);
+		}
+	}
 	void Sus::RemoveTexture(const std::string& file) {
-		m_Textures.erase(file);
+		if (m_Textures.find(file) != m_Textures.end()) {
+			m_Textures.erase(file);
+		}
+		else {
+			DTL_WAR("Trying to remove not loaded texture:(" + file + "). Operation ignored.");
+		}
 	}
 
 
@@ -66,7 +69,5 @@ namespace golf {
 	void Sus::LoadAllAudio() {
 
 	}
-
-
 
 }
