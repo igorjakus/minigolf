@@ -150,19 +150,19 @@ std::pair<float, float> Input::getMouseOffset() const {
 	auto[xPos, yPos] = getMousePos();
 	xPos -= m_prevMousePos.first;
 	yPos -= m_prevMousePos.second;
-	return {static_cast<float>(xPos), static_cast<float>(yPos)};
+	return {xPos, yPos};
 }
 
 float Input::getMouseOffsetX() const {
 	float xPos = getMouseX();
 	xPos -= m_prevMousePos.first;
-	return static_cast<float>(xPos);
+	return xPos;
 }
 
 float Input::getMouseOffsetY() const {
 	float yPos = getMouseX();
 	yPos -= m_prevMousePos.second;
-	return static_cast<float>(yPos);
+	return yPos;
 }
 
 //////////////////////////////////////////////
