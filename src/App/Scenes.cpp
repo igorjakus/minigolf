@@ -30,7 +30,7 @@ BlankScene::BlankScene()
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
-	if (timer > 300.0f) {
+	if (timer > 3.0f) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
 	}
