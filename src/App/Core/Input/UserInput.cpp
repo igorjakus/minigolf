@@ -133,6 +133,7 @@ bool Input::isMouseLocked() const {
 
 void Input::updateMouseState() {
 	if(m_mouseLocked) {
+		m_prevMousePos = getMousePos();
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
 			glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);

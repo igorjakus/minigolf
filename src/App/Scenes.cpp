@@ -3,6 +3,9 @@
 
 #include <Agl.h>
 
+#include <cmath>
+#include "Util.hpp"
+
 //Temp:
 //NOLINTBEGIN
 
@@ -49,18 +52,27 @@ TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
+	size = 50.0f;
+	timer = .0f;
+
 	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX), static_cast<float>(tempY));
-	testObj = std::make_unique<agl::Object>(agl::Object(50.0f, 50.0f, {0, 0}, {255, 0, 0, 255}));
+
+	testObj = std::make_unique<agl::Object>(agl::Object(size, size, {0, 0}, {255, 0, 0, 255}));
 	m_graphicsLayer.addObject(*testObj);
 }
 
-void TestScene::update([[maybe_unused]] float deltaT) {
+void TestScene::update(float deltaT) {
+
+	/////////////////////
+	/// Input showcase:
+	/////////////////////
+
 	if(AppData::getInput().isKeyPressed("LEFT")) {
-		speed = -50.0f;
+		speed = -100.0f;
 	} else if(AppData::getInput().isKeyPressed("RIGHT")) {
-		speed = 50.0f;
+		speed = 100.0f;
 	} else {
 		speed = .0f;
 	}
@@ -72,9 +84,6 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 	}
 
 	if(AppData::getInput().getWheelOffset() != 0.0f) {
-		// This obviously doesn't work because we need some lerps and norms and clamps and stuff like that but you get the idea
-		// float scale = AppData::getInput().getWheelOffset();
-		// testObj->setScale(testObj->getScale().x * scale, testObj->getScale().y * scale;
 		DTL_ENT("{0}", AppData::getInput().getWheelOffset());
 	}
 
@@ -98,6 +107,20 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 	}
 
 	testObj->setPosition(testObj->getPosition().x + speed * deltaT, testObj->getPosition().y);
+
+	/////////////////////
+	/// Utils showcase:
+	/////////////////////
+
+	timer += deltaT * 0.3f;
+	if(timer >= 1) {
+		timer = 0;
+	}
+
+	float t = -4 * (timer - 0.5f) * (timer - 0.5f) + 1;
+	size = util::lerp(50.0f, 100.0f, sqrtf(t));
+
+	testObj->setScale(size, size);
 }
 
 void TestScene::render() {

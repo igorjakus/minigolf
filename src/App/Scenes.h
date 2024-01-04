@@ -53,6 +53,8 @@ private:
 	agl::GraphicLayer m_graphicsLayer;
 
 	float speed = 0.0f;
+	float size;
+	float timer;
 	std::unique_ptr<agl::Object> testObj;
 	std::unique_ptr<agl::Texture> testTex;
 
