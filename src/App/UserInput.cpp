@@ -58,19 +58,6 @@ float Input::getMouseY() const {
 	return static_cast<float>(yPos);
 }
 
-std::pair<float, float> Input::getMouseScaledPos() const {
-	auto[xPos, yPos] = getMousePos();
-	return {m_xScale * xPos, m_yScale * yPos};
-}
-
-float Input::getMouseScaledX() const {
-	return m_xScale * getMouseX();
-}
-
-float Input::getMouseScaledY() const {
-	return m_yScale * getMouseY();
-}
-
 //////////////////////////////////////////////
 ///				Mouse Input
 //////////////////////////////////////////////
@@ -179,19 +166,6 @@ float Input::getMouseOffsetY() const {
 	return static_cast<float>(yPos);
 }
 
-std::pair<float, float> Input::getMouseScaledOffset() const {
-	auto[xPos, yPos] = getMouseOffset();
-	return {m_xScale * xPos, m_yScale * yPos};
-}
-
-float Input::getMouseScaledOffsetX() const {
-	return m_xScale * getMouseOffsetX();
-}
-
-float Input::getMouseScaledOffsetY() const {
-	return m_xScale * getMouseOffsetY();
-}
-
 //////////////////////////////////////////////
 ///					Other	
 //////////////////////////////////////////////
@@ -210,11 +184,6 @@ bool Input::isFocused() const {
 
 void Input::setTargetWindow(const agl::Window& window) {
 	m_window = window.passPointer();
-	int width = 0;
-	int height = 0;
-	glfwGetWindowSize(m_window, &width, &height);
-	m_xScale = 1 / static_cast<float>(width);
-	m_yScale = 1 / static_cast<float>(height);
 
 	// glfwSetKeyCallback(m_window, s_keyCallback); 
 	// glfwSetCursorPosCallback(m_window, s_mousePosCallback);
@@ -251,7 +220,9 @@ Input::Input()
 }
 
 Input::~Input() {
-	s_instance = nullptr;
+	if(s_instance == this) {
+		s_instance = nullptr;
+	}
 }
 
 void Input::setKeys() {

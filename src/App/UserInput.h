@@ -26,9 +26,6 @@ public:
 	std::pair<float, float> getMousePos() const;
 	float getMouseX() const;
 	float getMouseY() const;
-	std::pair<float, float> getMouseScaledPos() const;
-	float getMouseScaledX() const;
-	float getMouseScaledY() const;
 
 	bool isLeftMousePressed() const;
 	bool isLeftMouseClicked();
@@ -48,9 +45,6 @@ public:
 	std::pair<float, float> getMouseOffset() const;
 	float getMouseOffsetX() const;
 	float getMouseOffsetY() const;
-	std::pair<float, float> getMouseScaledOffset() const;
-	float getMouseScaledOffsetX() const;
-	float getMouseScaledOffsetY() const;
 
 	float getWheelOffset() const;
 
@@ -69,9 +63,6 @@ private:
 	GLFWwindow* m_window;
 
 	std::unordered_map<std::string, KeyPair> m_keys;
-
-	float m_xScale = 0.0f;
-	float m_yScale = 0.0f;
 
 	bool m_LmbWasPressed = false;
 	bool m_RmbWasPressed = false;
