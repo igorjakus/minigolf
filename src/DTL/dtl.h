@@ -1,3 +1,4 @@
+//NOLINTBEGIN
 #pragma once
 #include<iostream>
 #include<iomanip>
@@ -171,3 +172,4 @@ namespace dtl
 	};
 	extern dtl::Logger& Log;
 }
+//NOLINTEND
