@@ -46,6 +46,8 @@ public:
 	float getMouseOffsetX() const;
 	float getMouseOffsetY() const;
 
+	void setCustomCursor();
+
 	float getWheelOffset() const;
 
 	bool isFocused() const;
@@ -74,6 +76,8 @@ private:
 	bool m_mouseLocked = false;
 
 	std::pair<float, float> m_prevMousePos;
+
+	GLFWcursor* m_customCursor;
 
 	double m_scrollOffset = 0.0;
 

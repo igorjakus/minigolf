@@ -169,6 +169,19 @@ float Input::getMouseOffsetY() const {
 ///					Other	
 //////////////////////////////////////////////
 
+void Input::setCustomCursor() {
+	unsigned char pixels[16 * 16 * 4];
+	memset(pixels, 0xff, sizeof(pixels));
+
+	GLFWimage image;
+	image.width = 16;
+	image.height = 16;
+	image.pixels = pixels;
+
+	m_customCursor = glfwCreateCursor(&image, 0, 0);
+	glfwSetCursor(m_window, m_customCursor);
+}
+
 float Input::getWheelOffset() const {
 	return static_cast<float>(m_scrollOffset);
 }
@@ -213,12 +226,15 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 // }
 
 Input::Input() 
-	:m_window(nullptr) {
+	:m_window(nullptr), m_customCursor(nullptr) {
 	s_instance = this;
 	setKeys();
 }
 
 Input::~Input() {
+	if(m_customCursor != nullptr) {
+		glfwDestroyCursor(m_customCursor);
+	}
 	if(s_instance == this) {
 		s_instance = nullptr;
 	}
