@@ -28,8 +28,7 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	// TEMP
-	int timer = 0;
+	float timer = 0;
 	std::unique_ptr<agl::Object> testObj;
 	std::unique_ptr<agl::Texture> testTex;
 	

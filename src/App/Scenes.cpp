@@ -28,9 +28,9 @@ BlankScene::BlankScene()
 	
 }
 
-void BlankScene::update([[maybe_unused]] float deltaT) {
-	timer ++;
-	if (timer > 300) {
+void BlankScene::update(float deltaT) {
+	timer += deltaT;
+	if (timer > 300.0f) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
 	}
@@ -52,23 +52,23 @@ TestScene::TestScene()
 	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX), static_cast<float>(tempY));
-	testObj = std::make_unique<agl::Object>(agl::Object(20.0f, 20.0f, {0, 0}, {255, 0, 0, 255}));
+	testObj = std::make_unique<agl::Object>(agl::Object(50.0f, 50.0f, {0, 0}, {255, 0, 0, 255}));
 	m_graphicsLayer.addObject(*testObj);
 }
 
 void TestScene::update([[maybe_unused]] float deltaT) {
 	if(AppData::getInput().isKeyPressed("LEFT")) {
-		speed = -0.5f;
+		speed = -50.0f;
 	} else if(AppData::getInput().isKeyPressed("RIGHT")) {
-		speed = 0.5f;
+		speed = 50.0f;
 	} else {
 		speed = .0f;
 	}
 
 	if(AppData::getInput().isKeyClicked("UP")) {
-		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y + 10.0f);
+		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y + 50.0f);
 	} else if(AppData::getInput().isKeyClicked("DOWN")) {
-		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y - 10.0f);
+		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y - 50.0f);
 	}
 
 	if(AppData::getInput().getWheelOffset() != 0.0f) {
@@ -84,18 +84,18 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 		DTL_ENT("YOOOO");
 	}
 
-	// AppData::getInput().setMousePosLock(AppData::getInput().isKeyPressed("SPACE"));
+	AppData::getInput().setMousePosLock(AppData::getInput().isKeyPressed("SPACE"));
 
-	// if(AppData::getInput().isMouseLocked()) {
-	// 	auto[x, y] = AppData::getInput().getMouseOffset();
-	// 	if(x != 0 || y != 0) {
-	// 		DTL_ENT("{0}, {0}", x, y);
-	// 	}
-	// } else {
+	if(AppData::getInput().isMouseLocked()) {
+		auto[x, y] = AppData::getInput().getMouseOffset();
+		if(x != 0 || y != 0) {
+			DTL_ENT("{0}, {0}", x, y);
+		}
+	} else {
 		if(AppData::getInput().isKeyClicked("V")) {
 			AppData::getInput().toggleMouseVisibility();
 		}
-	// }
+	}
 
 	testObj->setPosition(testObj->getPosition().x + speed * deltaT, testObj->getPosition().y);
 }
