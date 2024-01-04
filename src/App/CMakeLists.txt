@@ -3,18 +3,23 @@ set(SOURCES
 	main.cpp
 	App.h 
 	App.cpp
-	AppData.h
-	AppData.cpp 
 
-	SceneManager.h
-	SceneManager.cpp 
-	Scene.h
-
-	UserInput.h
-	UserInput.cpp
-	
 	Scenes.h 
 	Scenes.cpp 
+
+	# Core
+	Core/AppData.h
+	Core/AppData.cpp 
+
+	# SceneManager
+	Core/SceneManager/SceneManager.h
+	Core/SceneManager/SceneManager.cpp 
+	Core/SceneManager/Scene.h
+
+	# Input
+	Core/Input/UserInput.h
+	Core/Input/UserInput.cpp
+	
 
 )
 

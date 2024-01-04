@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include "Agl.h"
-#include "Scene.h"
+#include "Core/SceneManager/Scene.h"
+
+#include <Agl.h>
 
 namespace golf {
 

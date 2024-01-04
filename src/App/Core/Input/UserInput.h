@@ -1,8 +1,9 @@
 // UserInput.h 
 //
-// Wrapper class to access glfw information about user's input.
+// This class is responsible for providing user input in the application
 
-#include "Window.h"
+#include <Window.h>
+
 #include <string>
 #include <unordered_map>
 

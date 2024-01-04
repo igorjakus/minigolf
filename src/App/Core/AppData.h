@@ -5,10 +5,11 @@
 
 #pragma once
 
-#include "SceneManager.h"
-#include "UserInput.h"
-#include "Shader.h"
-#include "Window.h"
+#include "SceneManager/SceneManager.h"
+#include "Input/UserInput.h"
+
+#include <Shader.h>
+#include <Window.h>
 
 namespace golf {
 

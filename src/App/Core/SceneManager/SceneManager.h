@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Scene.h"
+
 #include <memory>
 #include <queue>
 

@@ -1,12 +1,16 @@
-#include"App.h"
-#include "AppData.h"
+#include "App.h"
+
+#include "Core/AppData.h"
 #include "Scenes.h"
-#include<dtl.h>
-#include<pch.h>
-#include<ImGui.h>
-#include<Window.h>
-#include<Shader.h>
-#include<Agl.h>
+
+#include <Agl.h>
+#include <dtl.h>
+#include <ImGui.h>
+#include <Window.h>
+#include <Shader.h>
+#include <pch.h>
+
+
 
 namespace golf {
 

@@ -1,9 +1,8 @@
 // App.h 
 // 
-// the main application class 
+// The main application class 
 
 #pragma once
-
 
 #include <string>
 

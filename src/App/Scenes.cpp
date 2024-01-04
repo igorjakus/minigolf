@@ -1,7 +1,7 @@
 #include "Scenes.h"
+#include "Core/AppData.h"
 
-#include "Agl.h"
-#include "AppData.h"
+#include <Agl.h>
 
 namespace golf {
 

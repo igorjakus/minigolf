@@ -1,7 +1,6 @@
-#include <Agl.h>
-#include <cstdlib>
-
 #include "App.h"
+
+#include <Agl.h>
 
 int main() {
 
