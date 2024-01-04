@@ -55,6 +55,8 @@ public:
 
 private:
 
+	void updateMouseState();
+
 	struct KeyPair {
 		int keyCode;
 		bool wasPressed;

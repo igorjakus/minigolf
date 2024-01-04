@@ -49,23 +49,23 @@ TestScene::TestScene()
 	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX), static_cast<float>(tempY));
-	testObj = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, {0, 0}, {255, 0, 0, 255}));
+	testObj = std::make_unique<agl::Object>(agl::Object(20.0f, 20.0f, {0, 0}, {255, 0, 0, 255}));
 	m_graphicsLayer.addObject(*testObj);
 }
 
 void TestScene::update([[maybe_unused]] float deltaT) {
 	if(AppData::getInput().isKeyPressed("LEFT")) {
-		speed = -0.001f;
+		speed = -0.5f;
 	} else if(AppData::getInput().isKeyPressed("RIGHT")) {
-		speed = 0.001f;
+		speed = 0.5f;
 	} else {
 		speed = .0f;
 	}
 
 	if(AppData::getInput().isKeyClicked("UP")) {
-		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y + 0.1f);
+		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y + 10.0f);
 	} else if(AppData::getInput().isKeyClicked("DOWN")) {
-		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y - 0.1f);
+		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y - 10.0f);
 	}
 
 	if(AppData::getInput().getWheelOffset() != 0.0f) {
@@ -81,14 +81,18 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 		DTL_ENT("YOOOO");
 	}
 
-	AppData::getInput().setMousePosLock(AppData::getInput().isKeyPressed("SPACE"));
+	// AppData::getInput().setMousePosLock(AppData::getInput().isKeyPressed("SPACE"));
 
-	if(AppData::getInput().isMouseLocked()) {
-		auto[x, y] = AppData::getInput().getMouseOffset();
-		if(x != 0 || y != 0) {
-			DTL_ENT("{0}, {0}", x, y);
+	// if(AppData::getInput().isMouseLocked()) {
+	// 	auto[x, y] = AppData::getInput().getMouseOffset();
+	// 	if(x != 0 || y != 0) {
+	// 		DTL_ENT("{0}, {0}", x, y);
+	// 	}
+	// } else {
+		if(AppData::getInput().isKeyClicked("V")) {
+			AppData::getInput().toggleMouseVisibility();
 		}
-	}
+	// }
 
 	testObj->setPosition(testObj->getPosition().x + speed * deltaT, testObj->getPosition().y);
 }

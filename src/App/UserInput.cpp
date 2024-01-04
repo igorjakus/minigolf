@@ -100,10 +100,9 @@ bool Input::isMiddleMouseClicked() {
 //////////////////////////////////////////////
 
 void Input::toggleMouseVisibility() {
-	if(!m_mouseLocked) {
-		m_mouseVisible = !m_mouseVisible;
-		glfwSetInputMode(m_window, GLFW_CURSOR, m_mouseVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
-	}
+	DTL_WAR("toggle visible");
+	m_mouseVisible = !m_mouseVisible;
+	updateMouseState();
 }
 
 void Input::setMouseVisibility(bool visible) {
@@ -118,19 +117,7 @@ bool Input::isMouseVisible() const {
 
 void Input::toggleMousePosLock() {
 	m_mouseLocked = !m_mouseLocked;
-	m_mouseVisible = true;
-	if(m_mouseLocked) {
-		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
-			glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-		}
-		m_prevMousePos = getMousePos();
-	} else {
-		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
-			glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
-		}
-	}
+	updateMouseState();
 }
 
 void Input::setMousePosLock(bool lock) {
@@ -141,6 +128,18 @@ void Input::setMousePosLock(bool lock) {
 
 bool Input::isMouseLocked() const {
 	return m_mouseLocked;
+}
+
+void Input::updateMouseState() {
+	if(m_mouseLocked) {
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		if(glfwRawMouseMotionSupported() == GLFW_TRUE) {
+			glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+		}
+	} else {
+		glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+		glfwSetInputMode(m_window, GLFW_CURSOR, m_mouseVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
+	}
 }
 
 //////////////////////////////////////////////
