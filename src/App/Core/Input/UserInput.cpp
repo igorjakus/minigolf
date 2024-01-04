@@ -170,6 +170,8 @@ float Input::getMouseOffsetY() const {
 ///					Other	
 //////////////////////////////////////////////
 
+//NOLINTBEGIN
+//TODO: Custom cursor support
 void Input::setCustomCursor() {
 	unsigned char pixels[16 * 16 * 4];
 	memset(pixels, 0xff, sizeof(pixels));
@@ -182,6 +184,7 @@ void Input::setCustomCursor() {
 	m_customCursor = glfwCreateCursor(&image, 0, 0);
 	glfwSetCursor(m_window, m_customCursor);
 }
+//NOLINTEND
 
 float Input::getWheelOffset() const {
 	return static_cast<float>(m_scrollOffset);

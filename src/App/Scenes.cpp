@@ -3,6 +3,9 @@
 
 #include <Agl.h>
 
+//Temp:
+//NOLINTBEGIN
+
 namespace golf {
 
 // forward declarations:
@@ -100,5 +103,7 @@ void TestScene::update([[maybe_unused]] float deltaT) {
 void TestScene::render() {
 	m_graphicsLayer.draw();
 }
+
+//NOLINTEND
 
 }
