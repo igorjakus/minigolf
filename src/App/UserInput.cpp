@@ -100,7 +100,6 @@ bool Input::isMiddleMouseClicked() {
 //////////////////////////////////////////////
 
 void Input::toggleMouseVisibility() {
-	DTL_WAR("toggle visible");
 	m_mouseVisible = !m_mouseVisible;
 	updateMouseState();
 }
