@@ -2,6 +2,10 @@
 #include "Agl.h"
 #include <dtl.h>
 
+#define TEXTURE_PATH "assets/textures/"
+#define SHADER_PATH "assets/shaders/"
+#define ANIMATION_PATH "assets/animation/"
+
 namespace golf {
 
 
@@ -18,21 +22,23 @@ namespace golf {
 	}
 	void Sus::LoadTexture(const std::string& file, int filter, int sWrap, int tWrap) {
 		if (m_Textures.find(file) != m_Textures.end()) {
-			DTL_WAR("Trying to load already loaded texture:("+ file +"). Operation ignored.");
+			DTL_WAR("Trying to load already loaded texture:({0}). Operation ignored.",file);
 		}
-		else if (!std::filesystem::exists("assets/textures/" + file)) {
-			DTL_WAR("Trying to open non-existing file:(assets / textures / " + file + "). Operation ignored.");
+		else if (!std::filesystem::exists(TEXTURE_PATH + file)) {
+			DTL_WAR("Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file, filter, sWrap, tWrap));
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple(TEXTURE_PATH + file, filter, sWrap, tWrap));
 		}
 	}
 
 	void Sus::LoadAllTextures() {
-		//zbieranie po kolei z pliku, na razie tylko case 3 tekstur: //nie wiadomo czy bedzie rozwiniety
-		LoadTexture("sponge.png");
-		LoadTexture("white.png");
-		LoadTexture("popcat.png");
+		std::string temp = TEXTURE_PATH;
+		for (const auto& entry : std::filesystem::directory_iterator(TEXTURE_PATH)) {
+			if (std::filesystem::is_regular_file(entry)) {
+				LoadTexture(entry.path().string().erase(0, temp.length()));
+			}
+		}
 	}
 
 	agl::Texture* Sus::GetTexture(const std::string& file){
@@ -41,7 +47,7 @@ namespace golf {
 			return &item->second;
 		}
 		else {
-			DTL_WAR("Trying to get not loaded texture:(" + file + "). Operation ignored.");
+			DTL_WAR("Trying to get not loaded texture:({0}). Operation ignored.", file);
 			return 0;
 		}
 	}
@@ -56,23 +62,21 @@ namespace golf {
 			m_Textures.erase(file);
 		}
 		else {
-			DTL_WAR("Trying to remove not loaded texture:(" + file + "). Operation ignored.");
+			DTL_WAR("Trying to remove not loaded texture:({0}). Operation ignored.", file);
 		}
 	}
 
 	//=====[Shaders]=====
-	
+
 	void Sus::LoadShader(const std::string& file) {
 		if (m_Shaders.find(file) != m_Shaders.end()) {
-			DTL_WAR("Trying to load already loaded shader:(" + file + "). Operation ignored.");
+			DTL_WAR("Trying to load already loaded shader:({0}). Operation ignored.",file);
 		}
-		else if (!std::filesystem::exists("assets/shaders/" + file)) {
-			DTL_WAR("Trying to open non - existing file : (assets / shaders /" + file + "). Operation ignored.");
+		else if (!std::filesystem::exists(SHADER_PATH + file)) {
+			DTL_WAR("Trying to open non - existing file : ({0}{0}). Operation ignored.", SHADER_PATH,file);
 		}
 		else {
-			//m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file));
-
-			m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/shaders/" + file));
+			m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple(SHADER_PATH + file));
 		}
 	}
 	
@@ -82,15 +86,23 @@ namespace golf {
 			return &item->second;
 		}
 		else {
-			DTL_WAR("Trying to get not loaded shader:(" + file + "). Operation ignored.");
+			DTL_WAR("Trying to get not loaded shader:({0}). Operation ignored.", file);
 			return 0;
 		}
 	}
 	
 	agl::Shader* Sus::LoadAndGetShader(const std::string& file) {
 		LoadShader(file);
-
 		return(GetShader(file));
+	}
+
+	void Sus::LoadAllShaders() {
+		std::string temp = SHADER_PATH;
+		for (const auto& entry : std::filesystem::directory_iterator(SHADER_PATH)) {
+			if (std::filesystem::is_regular_file(entry)) {
+				LoadShader(entry.path().string().erase(0, temp.length()));
+			}
+		}
 	}
 	
 	//=====================

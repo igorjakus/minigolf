@@ -26,7 +26,11 @@ BlankScene::BlankScene()
 
 	// temp (should also be black (no racism))
 
-	AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
+	AppData::getSus().LoadAllTextures();
+	AppData::getSus().LoadAllShaders();
+
+	//AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
+
 
 	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
 	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
@@ -57,6 +61,7 @@ void BlankScene::render() {
 TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
+
 
 	size = 50.0f;
 	timer = .0f;
