@@ -22,7 +22,7 @@ class TestScene;
 
 BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
-	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
+	 m_graphicsLayer(*AppData::getSus().LoadAndGetShader("DefaultShader.glsl"), m_camera) {
 
 	// temp (should also be black (no racism))
 

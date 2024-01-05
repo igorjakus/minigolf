@@ -32,16 +32,13 @@ namespace golf {
 		agl::Shader* GetShader(const std::string& file);
 
 		agl::Shader* LoadAndGetShader(const std::string& file);
-		//===========
+
 		void LoadAllAudio();
 		//===========
 	private:
 		std::map<std::string, agl::Texture> m_Textures;
 
 		std::map<std::string, agl::Shader> m_Shaders;
-
-		std::vector < std::string > CurrentSceneTextures;
-		std::vector < std::string > NextSceneTextures;
 
 	};
 

@@ -61,6 +61,7 @@ namespace golf {
 	}
 
 	//=====[Textures]=====
+	
 	void Sus::LoadShader(const std::string& file) {
 		if (m_Shaders.find(file) != m_Shaders.end()) {
 			DTL_WAR("Trying to load already loaded shader:(" + file + "). Operation ignored.");
@@ -69,21 +70,23 @@ namespace golf {
 			DTL_WAR("Trying to open non - existing file : (assets / shaders /" + file + "). Operation ignored.");
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file));
+			//m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file));
+
+			m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file));
 		}
 	}
-
+	
 	agl::Shader* Sus::GetShader(const std::string& file) {
 		auto item = m_Shaders.find(file);
 		if (item != m_Shaders.end()) {
 			return &item->second;
 		}
 		else {
-			DTL_WAR("Trying to get not loaded texture:(" + file + "). Operation ignored.");
+			DTL_WAR("Trying to get not loaded shader:(" + file + "). Operation ignored.");
 			return 0;
 		}
 	}
-
+	
 	agl::Shader* Sus::LoadAndGetShader(const std::string& file) {
 		LoadShader(file);
 		return(GetShader(file));
