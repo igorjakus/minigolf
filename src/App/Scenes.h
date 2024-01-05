@@ -4,8 +4,10 @@
 
 #pragma once
 
-#include "Agl.h"
-#include "Scene.h"
+#include "Core/SceneManager/Scene.h"
+
+#include <Agl.h>
+
 
 namespace golf {
 
@@ -27,8 +29,7 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	// TEMP
-	int timer = 0;
+	float timer = 0;
 	std::unique_ptr<agl::Object> testObj;
 	std::unique_ptr<agl::Texture> testTex;
 	
@@ -52,10 +53,13 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	float speed = 0.001;
-	float pos = 0;
+	float speed = 0.0f;
+	float size;
+	float timer;
 	std::unique_ptr<agl::Object> testObj;
-	std::unique_ptr<agl::Texture> testTex;
+	//std::unique_ptr<agl::Texture> testTex;
+	agl::Texture* temp;
+	
 
 };
 
@@ -69,7 +73,7 @@ public:
 	LevelOneScene& operator=(LevelOneScene&&) = delete;
 	LevelOneScene& operator=(const LevelOneScene&) = delete;
 
-	void update() override;
+	void update(float deltaT) override;
 	void render() override;
 
 private:
@@ -79,6 +83,5 @@ private:
 	std::unique_ptr<agl::Object> WallA;
 	std::unique_ptr<agl::Object> WallB;
 	std::unique_ptr<agl::Texture> WallTex;
-	std::unique_ptr<agl::Texture> testTex;
 };
 }

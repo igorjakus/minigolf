@@ -21,6 +21,9 @@ add_subdirectory(DTL)
 
 set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS})
 
+# Utilities headers:
+include_directories(Util)
+
 # Application source code:
 add_subdirectory(App)
 

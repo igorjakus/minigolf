@@ -1,6 +1,6 @@
 // Scene.h 
 //
-// Klasa stanowiąca bazę dla wszystkich scen w aplikacji
+// A virtual class that makes a base for all scenes in the game
 
 #pragma once
 
