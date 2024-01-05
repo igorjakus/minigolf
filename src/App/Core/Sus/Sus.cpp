@@ -89,6 +89,7 @@ namespace golf {
 	
 	agl::Shader* Sus::LoadAndGetShader(const std::string& file) {
 		LoadShader(file);
+
 		return(GetShader(file));
 	}
 	
