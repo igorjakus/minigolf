@@ -55,9 +55,44 @@ TestScene::TestScene()
 
 void TestScene::update([[maybe_unused]] float deltaT) {
 	//testObj->setPosition(testObj->getPosition().x + speed * deltaT, 0);
+	
 }
 
 void TestScene::render() {
+	m_graphicsLayer.draw();
+}
+
+
+// ===============================
+// LevelOneScene
+// ===============================
+
+LevelOneScene::LevelOneScene()
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+{
+	const int tempX = AppData::getWindow().getWindowSize().x;
+	const int tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
+	testTex = std::make_unique<agl::Texture>("assets/textures/popcat.png", GL_NEAREST, GL_REPEAT, GL_REPEAT);
+	WallA = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, { 0, 0 } ));
+	WallB = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, { 0, 100 }));
+	WallA->setTexture(*testTex);
+	WallB->setTexture(*testTex);
+	m_graphicsLayer.addObject(*WallA);
+	m_graphicsLayer.addObject(*WallB);
+}
+
+void LevelOneScene::update()
+{
+	
+	AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+	AppData::getSceneManager().nextScene();
+	
+}
+
+void LevelOneScene::render()
+{
 	m_graphicsLayer.draw();
 }
 
