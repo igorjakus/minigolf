@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Scene.h"
+
 #include <memory>
 #include <queue>
 
@@ -17,19 +18,11 @@ class SceneManager {
 
 public:
 
-	SceneManager () = default;
-	~SceneManager () = default;
-
 	void update(float deltaT);
 	void render();
 
 	void pushScene(std::shared_ptr<Scene> newScene);
 	void nextScene();
-
-	SceneManager(SceneManager&&) = delete;
-	SceneManager(const SceneManager&) = delete;
-	SceneManager &operator=(SceneManager&&) = delete;
-	SceneManager &operator=(const SceneManager&) = delete;
 
 private:
 

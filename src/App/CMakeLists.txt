@@ -3,17 +3,30 @@ set(SOURCES
 	main.cpp
 	App.h 
 	App.cpp
-	AppData.h
-	AppData.cpp 
 
-	SceneManager.h
-	SceneManager.cpp 
-	Scene.h
-	
 	Scenes.h 
 	Scenes.cpp 
 
- "Sus/Sus.h" "Sus/Sus.cpp")
+
+	# Core
+	Core/AppData.h
+	Core/AppData.cpp 
+
+	# SceneManager
+	Core/SceneManager/SceneManager.h
+	Core/SceneManager/SceneManager.cpp 
+	Core/SceneManager/Scene.h
+
+	#Sus
+	Core/Sus/Sus.h
+	Core/Sus/Sus.cpp
+
+	# Input
+	Core/Input/UserInput.h
+	Core/Input/UserInput.cpp
+	
+
+)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

@@ -1,9 +1,8 @@
 // App.h 
 // 
-// the main application class 
+// The main application class 
 
 #pragma once
-
 
 #include <string>
 
@@ -33,10 +32,12 @@ private:
 
 	void terminate();
 
-	std::string m_title;
+	const std::string m_title;
+	const int32_t m_updatesPerSecond;
 
 	static constexpr unsigned int c_defaultWidth = 1080;
 	static constexpr unsigned int c_defaultHeight = 720;
+	static constexpr unsigned int c_defaultUPS = 256;
 	static const std::string c_defaultTitle;
 
 };

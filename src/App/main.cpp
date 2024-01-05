@@ -1,6 +1,6 @@
-#include <Agl.h>
-
 #include "App.h"
+
+#include <Agl.h>
 
 int main() {
 
@@ -9,12 +9,12 @@ int main() {
 	dtl::Log.setFile("Log_error.txt");
 #endif
 
-	atexit(agl::Terminate);
-
 	agl::Init();
 
 	golf::App application;
 	application.run();
+	
+	agl::Terminate();
 
 	return EXIT_SUCCESS;
 }

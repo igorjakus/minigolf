@@ -1,3 +1,4 @@
+//NOLINTBEGIN
 #pragma once
 #include<iostream>
 #include<iomanip>
@@ -87,7 +88,7 @@ namespace dtl
 			else if (c == 'o') m_msg << std::oct << arg << std::dec;
 			else if (c == 'i') m_msg << static_cast<int>(arg);
 			else if (c == 's') m_msg << std::scientific << arg << std::defaultfloat;
-			else if (c == 'b') { llong val; memcpy(&val, &arg, sizeof(T)); m_msg << std::bitset<sizeof(T) * 8>(val); }
+			else if (c == 'b') { ullong val; memcpy(&val, &arg, sizeof(T)); m_msg << std::bitset<sizeof(T) * 8>(val); }
 		}
 		void processToken(char c, const std::string& arg);
 		void processToken(char c, const char* arg);
@@ -171,3 +172,4 @@ namespace dtl
 	};
 	extern dtl::Logger& Log;
 }
+//NOLINTEND

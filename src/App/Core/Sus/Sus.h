@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 #include <initializer_list>
-#include<dtl.h>
+#include <dtl.h>
 #include <filesystem>
 
 namespace golf {
@@ -15,7 +15,7 @@ namespace golf {
 
 	public:
 		void LoadAll();
-
+		//zastanowic siê jak wgrywaæ tekstury inaczej (aka. zatrzymuje okienko)
 		void LoadListOfTextures(std::initializer_list<std::string> files);
 		void LoadTexture(const std::string& file, int filter = GL_NEAREST, int sWrap = GL_REPEAT, int tWrap = GL_REPEAT);
 
@@ -29,7 +29,8 @@ namespace golf {
 		void RemoveTexture(const std::string& file);
 
 
-		
+		//TODO:
+		//£adowanie Shaderów (glfw image (?))
 
 		//===========
 		void LoadAllAudio();
