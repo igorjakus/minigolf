@@ -1,8 +1,4 @@
 #include "Sus.h"
-#include "Agl.h"
-#include <iostream>
-#include <fstream>
-#include <filesystem>
 
 namespace golf {
 

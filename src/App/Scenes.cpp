@@ -65,8 +65,6 @@ TestScene::TestScene()
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize((float)tempX,(float)tempY);
 
-	AppData::getSus().LoadTexture("sponge.png");
-
 	testObj = std::make_unique<agl::Object>(agl::Object(size, size, { 0, 0 }, { 255, 255, 255, 255 }));
 
 	testObj->setTexture(*AppData::getSus().GetTexture("sponge.png"));
