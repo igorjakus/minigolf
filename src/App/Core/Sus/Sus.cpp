@@ -1,4 +1,6 @@
 #include "Sus.h"
+#include "Agl.h"
+#include <dtl.h>
 
 namespace golf {
 
@@ -7,6 +9,8 @@ namespace golf {
 		LoadAllTextures();
 		LoadAllAudio();
 	}
+
+	//=====[Textures]=====
 	void Sus::LoadListOfTextures(std::initializer_list<std::string> files) {
 		for (auto file : files) {
 			Sus::LoadTexture(file);
@@ -17,7 +21,7 @@ namespace golf {
 			DTL_WAR("Trying to load already loaded texture:("+ file +"). Operation ignored.");
 		}
 		else if (!std::filesystem::exists("assets/textures/" + file)) {
-			DTL_WAR("Trying to open non-existing file:(" + file + "). Operation ignored.");
+			DTL_WAR("Trying to open non-existing file:(assets / textures / " + file + "). Operation ignored.");
 		}
 		else {
 			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file, filter, sWrap, tWrap));
@@ -25,12 +29,11 @@ namespace golf {
 	}
 
 	void Sus::LoadAllTextures() {
-		//zbieranie po kolei z pliku, na razie tylko case 3 tekstur:
+		//zbieranie po kolei z pliku, na razie tylko case 3 tekstur: //nie wiadomo czy bedzie rozwiniety
 		LoadTexture("sponge.png");
 		LoadTexture("white.png");
 		LoadTexture("popcat.png");
 	}
-
 
 	agl::Texture* Sus::GetTexture(const std::string& file){
 		auto item = m_Textures.find(file);
@@ -42,7 +45,6 @@ namespace golf {
 			return 0;
 		}
 	}
-
 
 	void Sus::RemoveListOfTextures(std::initializer_list<std::string> files) {
 		for (auto file : files) {
@@ -58,7 +60,34 @@ namespace golf {
 		}
 	}
 
+	//=====[Textures]=====
+	void Sus::LoadShader(const std::string& file) {
+		if (m_Shaders.find(file) != m_Shaders.end()) {
+			DTL_WAR("Trying to load already loaded shader:(" + file + "). Operation ignored.");
+		}
+		else if (!std::filesystem::exists("assets/shaders/" + file)) {
+			DTL_WAR("Trying to open non - existing file : (assets / shaders /" + file + "). Operation ignored.");
+		}
+		else {
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file));
+		}
+	}
 
+	agl::Shader* Sus::GetShader(const std::string& file) {
+		auto item = m_Shaders.find(file);
+		if (item != m_Shaders.end()) {
+			return &item->second;
+		}
+		else {
+			DTL_WAR("Trying to get not loaded texture:(" + file + "). Operation ignored.");
+			return 0;
+		}
+	}
+
+	agl::Shader* Sus::LoadAndGetShader(const std::string& file) {
+		LoadShader(file);
+		return(GetShader(file));
+	}
 	
 	//=====================
 	void Sus::LoadAllAudio() {
