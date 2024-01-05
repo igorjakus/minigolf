@@ -60,7 +60,7 @@ namespace golf {
 		}
 	}
 
-	//=====[Textures]=====
+	//=====[Shaders]=====
 	
 	void Sus::LoadShader(const std::string& file) {
 		if (m_Shaders.find(file) != m_Shaders.end()) {
@@ -72,7 +72,7 @@ namespace golf {
 		else {
 			//m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file));
 
-			m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file));
+			m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/shaders/" + file));
 		}
 	}
 	
