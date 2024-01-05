@@ -9,7 +9,6 @@
 //Temp:
 //NOLINTBEGIN
 
-
 namespace golf {
 
 // forward declarations:
@@ -29,7 +28,7 @@ BlankScene::BlankScene()
 	AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
 
 	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
-	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
+	testObj->setVisual(*AppData::getSus().GetTexture("popcat.png"));
 	m_graphicsLayer.addObject(*testObj);
 	
 }
@@ -37,7 +36,7 @@ BlankScene::BlankScene()
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
 
-	if (timer > 3.0f) {
+	if (timer > 1.0f) {
 		AppData::getSus().RemoveTexture("popcat.png");
 
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
@@ -58,16 +57,18 @@ TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	size = 50.0f;
+	size = 100.0f;
 	timer = .0f;
 
 	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize((float)tempX,(float)tempY);
 
-	testObj = std::make_unique<agl::Object>(agl::Object(size, size, { 0, 0 }, { 255, 255, 255, 255 }));
-
-	testObj->setTexture(*AppData::getSus().GetTexture("sponge.png"));
+	testObj = std::make_unique<agl::Object>(size, size);
+	testTex = std::make_unique<agl::Animation>("assets/textures/test.png", GL_LINEAR, 97, 0.05f, 10, 10);
+	//testTex = std::make_unique<agl::Texture>("assets/textures/test.png", GL_LINEAR);
+	//testObj->setVisual(*AppData::getSus().GetTexture("sponge.png"));
+	testObj->setVisual(*testTex);
 	m_graphicsLayer.addObject(*testObj);
 }
 
@@ -76,7 +77,7 @@ void TestScene::update(float deltaT) {
 	/////////////////////
 	/// Input showcase:
 	/////////////////////
-
+	testTex->update(deltaT);
 	if(AppData::getInput().isKeyPressed("LEFT")) {
 		speed = -100.0f;
 	} else if(AppData::getInput().isKeyPressed("RIGHT")) {
