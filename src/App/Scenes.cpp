@@ -157,7 +157,10 @@ LevelOneScene::LevelOneScene()
 
 void LevelOneScene::update(float deltaT)
 {
-	
+	if (isFirstUpdate) {
+		DTL_INF("level one scene");
+		isFirstUpdate = false;
+	}
 }
 
 void LevelOneScene::render()
@@ -167,5 +170,38 @@ void LevelOneScene::render()
 
 //NOLINTEND
 
+
+// ===============================
+// MainMenuScene
+// ===============================
+
+MainMenuScene::MainMenuScene()
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+{
+	const int tempX = AppData::getWindow().getWindowSize().x;
+	const int tempY = AppData::getWindow().getWindowSize().y;
+	cokolwiek = std::make_unique<agl::Object>(agl::Object(0.1f, 0.1f, { -0.5f, 0 }));
+	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
+	m_graphicsLayer.addObject(*cokolwiek);
+}
+
+void MainMenuScene::update(float deltaT)
+{
+	if (isFirstUpdate) {
+		DTL_INF("main menu scene -- click n to start a new game");
+		isFirstUpdate = false;
+	}
+	
+	if (AppData::getInput().isKeyClicked("N")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+		AppData::getSceneManager().nextScene();
+	}
+}
+
+void MainMenuScene::render()
+{
+	m_graphicsLayer.draw();
+}
 
 }

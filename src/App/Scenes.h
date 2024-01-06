@@ -64,6 +64,28 @@ private:
 };
 
 
+
+class MainMenuScene : public Scene {
+public:
+	MainMenuScene();
+	~MainMenuScene() override = default;
+	MainMenuScene(MainMenuScene&&) = delete;
+	MainMenuScene(const MainMenuScene&) = delete;
+	MainMenuScene& operator=(MainMenuScene&&) = delete;
+	MainMenuScene& operator=(const MainMenuScene&) = delete;
+
+	void update(float deltaT) override;
+	void render() override;
+
+private:
+	agl::Camera m_camera;
+	agl::GraphicLayer m_graphicsLayer;
+
+	std::unique_ptr<agl::Object> cokolwiek;
+	bool isFirstUpdate = true;
+
+};
+
 class LevelOneScene : public Scene {
 public:
 	LevelOneScene();
@@ -83,5 +105,6 @@ private:
 	std::unique_ptr<agl::Object> WallA;
 	std::unique_ptr<agl::Object> WallB;
 	std::unique_ptr<agl::Texture> WallTex;
+	bool isFirstUpdate = true;
 };
 }
