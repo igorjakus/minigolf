@@ -294,7 +294,7 @@ void ResultsScene::update(float deltaT)
 	//next level
 
 	if (AppData::getInput().isKeyClicked("C")) {
-		startLevel(finishedLevelNumber += 1);
+		startLevel(finishedLevelNumber + 1);
 	}
 
 
