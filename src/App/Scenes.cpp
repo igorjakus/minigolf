@@ -158,9 +158,25 @@ LevelOneScene::LevelOneScene()
 void LevelOneScene::update(float deltaT)
 {
 	if (isFirstUpdate) {
-		DTL_INF("level one scene");
+		DTL_INF("level one scene -- click q to quit, r to play again, w to win");
 		isFirstUpdate = false;
 	}
+	//quit
+	if (AppData::getInput().isKeyClicked("Q")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	//retry
+	if (AppData::getInput().isKeyClicked("R")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	//won
+	if (AppData::getInput().isKeyClicked("W")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	
 }
 
 void LevelOneScene::render()
@@ -172,10 +188,10 @@ void LevelOneScene::render()
 
 
 // ===============================
-// MainMenuScene
+// LevelSelectionScene
 // ===============================
 
-MainMenuScene::MainMenuScene()
+LevelSelectionScene::LevelSelectionScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
 {
@@ -186,20 +202,93 @@ MainMenuScene::MainMenuScene()
 	m_graphicsLayer.addObject(*cokolwiek);
 }
 
-void MainMenuScene::update(float deltaT)
+void LevelSelectionScene::update(float deltaT)
 {
 	if (isFirstUpdate) {
-		DTL_INF("main menu scene -- click n to start a new game");
+		DTL_INF("level selection scene -- click 1 to play lvl 1, 2 to play lvl 2");
 		isFirstUpdate = false;
 	}
-	
-	if (AppData::getInput().isKeyClicked("N")) {
+
+
+	if (AppData::getInput().isKeyClicked("1")) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+		AppData::getSceneManager().nextScene();
+	}
+
+	if (AppData::getInput().isKeyClicked("2")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
 		AppData::getSceneManager().nextScene();
 	}
 }
 
-void MainMenuScene::render()
+void LevelSelectionScene::render()
+{
+	m_graphicsLayer.draw();
+}
+
+
+// ===============================
+// LevelTwoScene
+// ===============================
+
+
+LevelTwoScene::LevelTwoScene()
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+{
+	const int tempX = AppData::getWindow().getWindowSize().x;
+	const int tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
+}
+
+void LevelTwoScene::update(float deltaT)
+{
+	if (isFirstUpdate) {
+		DTL_INF("level two scene -- click q to quit, r to play again");
+		isFirstUpdate = false;
+	}
+
+	if (AppData::getInput().isKeyClicked("Q")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().nextScene();
+	}
+
+	if (AppData::getInput().isKeyClicked("R")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+		AppData::getSceneManager().nextScene();
+	}
+}
+
+void LevelTwoScene::render()
+{
+	m_graphicsLayer.draw();
+}
+
+ResultsScene::ResultsScene()
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+{
+	const int tempX = AppData::getWindow().getWindowSize().x;
+	const int tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
+}
+
+void ResultsScene::update(float deltaT)
+{
+	if (isFirstUpdate) {
+		DTL_INF("results scene -- click q to quit, r to play again, c to continue (next lvl)");
+		isFirstUpdate = false;
+	}
+
+	//quit
+	if (AppData::getInput().isKeyClicked("Q")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().nextScene();
+	}
+
+}
+
+void ResultsScene::render()
 {
 	m_graphicsLayer.draw();
 }

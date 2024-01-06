@@ -65,14 +65,14 @@ private:
 
 
 
-class MainMenuScene : public Scene {
+class LevelSelectionScene : public Scene {
 public:
-	MainMenuScene();
-	~MainMenuScene() override = default;
-	MainMenuScene(MainMenuScene&&) = delete;
-	MainMenuScene(const MainMenuScene&) = delete;
-	MainMenuScene& operator=(MainMenuScene&&) = delete;
-	MainMenuScene& operator=(const MainMenuScene&) = delete;
+	LevelSelectionScene();
+	~LevelSelectionScene() override = default;
+	LevelSelectionScene(LevelSelectionScene&&) = delete;
+	LevelSelectionScene(const LevelSelectionScene&) = delete;
+	LevelSelectionScene& operator=(LevelSelectionScene&&) = delete;
+	LevelSelectionScene& operator=(const LevelSelectionScene&) = delete;
 
 	void update(float deltaT) override;
 	void render() override;
@@ -94,6 +94,47 @@ public:
 	LevelOneScene(const LevelOneScene&) = delete;
 	LevelOneScene& operator=(LevelOneScene&&) = delete;
 	LevelOneScene& operator=(const LevelOneScene&) = delete;
+
+	void update(float deltaT) override;
+	void render() override;
+
+private:
+	agl::Camera m_camera;
+	agl::GraphicLayer m_graphicsLayer;
+
+	std::unique_ptr<agl::Object> WallA;
+	std::unique_ptr<agl::Object> WallB;
+	std::unique_ptr<agl::Texture> WallTex;
+	bool isFirstUpdate = true;
+};
+
+class ResultsScene : public Scene {
+public:
+	ResultsScene();
+	~ResultsScene() override = default;
+	ResultsScene(ResultsScene&&) = delete;
+	ResultsScene(const ResultsScene&) = delete;
+	ResultsScene& operator=(ResultsScene&&) = delete;
+	ResultsScene& operator=(const ResultsScene&) = delete;
+
+	void update(float deltaT) override;
+	void render() override;
+
+private:
+	agl::Camera m_camera;
+	agl::GraphicLayer m_graphicsLayer;
+
+	bool isFirstUpdate = true;
+};
+
+class LevelTwoScene : public Scene {
+public:
+	LevelTwoScene();
+	~LevelTwoScene() override = default;
+	LevelTwoScene(LevelTwoScene&&) = delete;
+	LevelTwoScene(const LevelTwoScene&) = delete;
+	LevelTwoScene& operator=(LevelTwoScene&&) = delete;
+	LevelTwoScene& operator=(const LevelTwoScene&) = delete;
 
 	void update(float deltaT) override;
 	void render() override;
