@@ -1,8 +1,10 @@
-#include "Sus.h"
+#include<pch.h>
+#include"Sus.h"
+#include<dtl.h>
 
-namespace golf {
 
-
+namespace golf 
+{
 	void Sus::LoadAll() {
 		LoadAllTextures();
 		LoadAllAudio();
@@ -27,6 +29,7 @@ namespace golf {
 	void Sus::LoadAllTextures() {
 		//zbieranie po kolei z pliku, na razie tylko case 3 tekstur:
 		LoadTexture("sponge.png");
+		//!to powinno wywalic blad, it dont be doing that tho
 		LoadTexture("white.png");
 		LoadTexture("popcat.png");
 	}
@@ -57,12 +60,9 @@ namespace golf {
 			DTL_WAR("Trying to remove not loaded texture:(" + file + "). Operation ignored.");
 		}
 	}
-
-
 	
 	//=====================
 	void Sus::LoadAllAudio() {
 
 	}
-
 }

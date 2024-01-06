@@ -1,7 +1,6 @@
 #include<pch.h>
 #include<Shader.h>
 
-
 unsigned int agl::Shader::sm_currBind = 0;
 
 unsigned int agl::Shader::CompileShader(unsigned int type, const std::string& src)
@@ -166,7 +165,7 @@ agl::Shader::Shader(const std::string& VertexFilePath, const std::string& Fragme
 	glDeleteShader(fragmentShaderId);
 	if (geometryShaderId) glDeleteShader(geometryShaderId);
 }
-//-floats
+//!floats==================================================================================================================================
 void agl::Shader::setUniform1f(const std::string& varName, float v0)
 {
 	glUseProgram(m_ID);
@@ -222,7 +221,7 @@ void agl::Shader::setUniform4f(const std::string& varName, glm::vec4 v0)
 	glUniform4f(uniformLocs[varName], v0.x, v0.y, v0.z, v0.w);
 	glUseProgram(sm_currBind);
 }
-//-ints
+//!ints==================================================================================================================================
 void agl::Shader::setUniform1i(const std::string& varName, int v0)
 {
 	glUseProgram(m_ID);
@@ -278,7 +277,7 @@ void agl::Shader::setUniform4i(const std::string& varName, glm::ivec4 v0)
 	glUniform4i(uniformLocs[varName], v0.x, v0.y, v0.z, v0.w);
 	glUseProgram(sm_currBind);
 }
-//-uints
+//!uints==================================================================================================================================
 void agl::Shader::setUniform1u(const std::string& varName, uint32_t v0)
 {
 	glUseProgram(m_ID);
@@ -334,7 +333,7 @@ void agl::Shader::setUniform4u(const std::string& varName, glm::uvec4 v0)
 	glUniform4ui(uniformLocs[varName], v0.x, v0.y, v0.z, v0.w);
 	glUseProgram(sm_currBind);
 }
-//-vecs
+//!vecs==================================================================================================================================
 void agl::Shader::setUniform1fv(const std::string& varName, float* ptr, size_t size)
 {
 	glUseProgram(m_ID);
@@ -379,7 +378,7 @@ void agl::Shader::setUniform1uv(const std::string& varName, const std::vector<ui
 	glUniform1uiv(uniformLocs[varName], arr.size(), &arr[0]);
 	glUseProgram(sm_currBind);
 }
-//-matrixes
+//!matrixes==================================================================================================================================
 void agl::Shader::setUniformMatrix3(const std::string& varName, glm::mat3 v0)
 {
 	glUseProgram(m_ID);

@@ -6,10 +6,7 @@
 #include<stb/stb_image.h>
 #include<ImGui.h>
 
-struct BufferData;
-
-struct Vertice
-{
+struct Vertice {
 	glm::vec2 position;
 	glm::vec2 uv;
 	Vertice();
@@ -18,8 +15,7 @@ struct Vertice
 	Vertice(const Vertice&) = default;
 };
 
-struct Color
-{
+struct Color {
 	uchar r, g, b, a;
 	Color();
 	Color(uchar red, uchar green, uchar blue, uchar alpha);
@@ -34,7 +30,7 @@ namespace agl
 {
 	void Init();
 	void Terminate();
-	//visual
+	//!visual==================================================================================================================================
 	class Visual
 	{
 	public:
@@ -81,7 +77,7 @@ namespace agl
 		uint m_w, m_h;
 	};
 
-	//Rendering
+	//!Rendering==================================================================================================================================
 	class Object
 	{
 	public:
@@ -129,7 +125,6 @@ namespace agl
 		glm::vec2 m_pos;
 		glm::vec2 m_size;
 		float m_focalLengh;
-
 	};
 
 	class GraphicLayer
