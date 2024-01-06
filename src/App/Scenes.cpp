@@ -1,6 +1,7 @@
 #include "Scenes.h"
 #include "Core/AppData.h"
 #include "ECS/Entity.h"
+#include "Graphics.h"
 
 #include "Agl.h"
 
@@ -26,7 +27,7 @@ BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
 	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	std::shared_ptr<TextureComponent> catTex = std::make_shared<TextureComponent>(m_graphicsLayer);
+	std::shared_ptr<TextureComponent> catTex = std::make_shared<TextureComponent>(&m_graphicsLayer);
 
 	m_kot.addComponent<TextureComponent>(catTex);
 	m_kot.getComponent<TextureComponent>()->setTexture("popcat.png");

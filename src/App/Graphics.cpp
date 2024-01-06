@@ -5,7 +5,7 @@ namespace golf {
 
 
 TextureComponent::TextureComponent(agl::GraphicLayer* graphicLayer)
-	:m_renderObject(1.f, 1.f), m_rederer(graphicLayer) {
+	: Component(nullptr), m_renderObject(1.f, 1.f), m_rederer(graphicLayer) {
 	m_rederer->addObject(m_renderObject);
 }
 

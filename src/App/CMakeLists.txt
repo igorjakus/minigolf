@@ -7,13 +7,19 @@ set(SOURCES
 	Scenes.h 
 	Scenes.cpp 
 
+	# ECS
+	ECS/Entity.h
+	ECS/Entity.cpp
+	ECS/Component.h
+	ECS/Component.cpp
+	
+	# Components
+	Graphics.h
+	Graphics.cpp
 
 	# Core
 	Core/AppData.h
 	Core/AppData.cpp 
-
-	# ECS
-	ECS/Entity.cpp
 
 	# SceneManager
 	Core/SceneManager/SceneManager.h

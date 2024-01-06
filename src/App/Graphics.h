@@ -6,7 +6,7 @@
 namespace golf {
 
 
-class TextureComponent : Component {
+class TextureComponent : public Component {
 public:
 	explicit TextureComponent(agl::GraphicLayer* graphicLayer);
 	~TextureComponent() override;

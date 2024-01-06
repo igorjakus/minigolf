@@ -40,13 +40,12 @@ public:
 	}
 
 	template <typename T, std::enable_if_t<std::is_base_of_v<Component, T>, bool>>
-	void addComponent(std::shared_ptr<Component> component) {
-		// auto item = m_components.find(typeid(T));
-		// if(item != m_components.end()) {
-		// 	item->second->releaseFromOwner();
-		// }
-		// component->setOwner(this);
-		// m_components[typeid(T)] = component;
+	void addComponent(std::shared_ptr<T> component) {
+		auto item = m_components.find(typeid(T));
+		if(item != m_components.end()) {
+			item->second->releaseFromOwner();
+		}
+		component->setOwner(this);
 		m_components.emplace(typeid(T), component);
 	}
 

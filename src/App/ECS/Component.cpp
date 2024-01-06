@@ -5,6 +5,9 @@
 namespace golf {
 
 
+Component::Component(Entity* entity)
+	:m_owner(entity) {}
+
 void Component::kill() {
 	releaseFromOwner();
 }

@@ -6,7 +6,6 @@
 
 #include "Core/SceneManager/Scene.h"
 #include "ECS/Entity.h"
-#include "Graphics.h"
 
 #include <Agl.h>
 
@@ -32,7 +31,6 @@ private:
 	agl::GraphicLayer m_graphicsLayer;
 
 	Entity m_kot;
-	std::shared_ptr<TextureComponent> m_kotTex;
 
 	float timer = 0;
 	
