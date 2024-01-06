@@ -27,7 +27,7 @@ BlankScene::BlankScene()
 	// temp (should also be black (no racism))
 
 
-	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
+	testObj = std::make_unique<agl::Object>(1.f, 1.f);
 	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
 	m_graphicsLayer.addObject(*testObj);
 	
@@ -37,7 +37,6 @@ void BlankScene::update(float deltaT) {
 	timer += deltaT;
 
 	if (timer > 3.0f) {
-
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
 	}
@@ -61,10 +60,9 @@ TestScene::TestScene()
 
 	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize((float)tempX,(float)tempY);
+	m_camera.setSize(static_cast<float>(tempX),static_cast<float>(tempY));
 
 	testObj = std::make_unique<agl::Object>(agl::Object(size, size, { 0, 0 }, { 255, 255, 255, 255 }));
-
 	testObj->setTexture(*AppData::getSus().GetTexture("sponge.png"));
 	m_graphicsLayer.addObject(*testObj);
 }
@@ -144,9 +142,9 @@ LevelOneScene::LevelOneScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
 {
-	const int tempX = AppData::getWindow().getWindowSize().x;
-	const int tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize((float)tempX / (float)tempY, 1.0F);
+	const uint tempX = AppData::getWindow().getWindowSize().x;
+	const uint tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
 	WallA = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, { -0.5f, 0 } ));
 	WallB = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, { 0, 0 }));
 	WallA->setTexture(*AppData::getSus().GetTexture("sponge.png"));
@@ -155,7 +153,7 @@ LevelOneScene::LevelOneScene()
 	m_graphicsLayer.addObject(*WallB);
 }
 
-void LevelOneScene::update(float deltaT)
+void LevelOneScene::update([[maybe_unused]] float deltaT)
 {
 	
 }
