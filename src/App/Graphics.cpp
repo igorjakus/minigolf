@@ -5,32 +5,17 @@
 
 namespace golf {
 
-
-/// GraphicsLayer
-
-GraphicsLayer::GraphicsLayer()
-	: m_layer(AppData::getSus(), agl::Camera()){
-
-}
-
-void GraphicsLayer::addObject(TextureComponent* component) {
-	m_texturedObjects.push_back(component);
-}
-
-void GraphicsLayer::render() {
-
-}
-
-
-/// TextureComponent
-
-TextureComponent::TextureComponent(GraphicsLayer* graphicsLayer)
+TextureComponent::TextureComponent(agl::GraphicLayer* graphicsLayer)
 	: Component(nullptr), m_renderObject(1.f, 1.f), m_layer(graphicsLayer) {
-	m_layer->addObject(this);
+	m_layer->addObject(m_renderObject);
 }
 
 void TextureComponent::kill() {
 	DTL_WAR("Usuwanie komponentów graficznych obecnie nie jest wspierane");
+}
+
+void TextureComponent::setTexture(const std::string& name) {
+	m_renderObject.setTexture(*AppData::getSus().GetTexture(name));
 }
 
 void TextureComponent::resync() {
@@ -39,8 +24,9 @@ void TextureComponent::resync() {
 	m_renderObject.setScale(getTransform()->xScale, getTransform()->yScale);
 }
 
-void TextureComponent::setTexture(const std::string& name) {
-	m_renderObject.setTexture(*AppData::getSus().GetTexture(name));
+agl::Object& TextureComponent::getAglObj() {
+	return m_renderObject;
 }
+
 
 }

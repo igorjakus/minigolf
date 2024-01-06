@@ -6,6 +6,9 @@
 #include "Agl.h"
 
 #include <cmath>
+#include <cstdlib>
+#include <memory>
+#include <utility>
 #include "Util.hpp"
 
 //Temp:
@@ -27,12 +30,10 @@ BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
 	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-
-
-	m_kot.getTransform()->setScale(0.5f);
 	m_kot.addComponent<TextureComponent>(std::make_shared<TextureComponent>(&m_graphicsLayer));
 	m_kot.getComponent<TextureComponent>()->setTexture("popcat.png");
-	m_kot.getComponent<TextureComponent>()->resync();
+
+	m_kot.getTransform()->setScale(0.5f);
 	
 }
 
@@ -46,6 +47,8 @@ void BlankScene::update(float deltaT) {
 }
 
 void BlankScene::render() {
+	// Tego tu nie powinno być! Tym powinien zajmować się draw call
+	m_kot.getComponent<TextureComponent>()->resync();
 	m_graphicsLayer.draw();
 }
 
@@ -54,6 +57,48 @@ void BlankScene::render() {
 // TestScene
 // ===============================
 
+class BouncyComponent : public Component {
+public:
+	BouncyComponent() = default;
+	~BouncyComponent() override = default;
+	BouncyComponent(BouncyComponent &&) = default;
+	BouncyComponent(const BouncyComponent &) = default;
+	BouncyComponent &operator=(BouncyComponent &&) = delete;
+	BouncyComponent &operator=(const BouncyComponent &) = delete;
+
+	void kill() override {
+		releaseFromOwner(); //No longer bouncing :(
+	}
+
+	void setVelocity(std::pair<float, float> vel) {
+		velocity = vel;
+	}
+
+	void setBoundaries(float min1, float max1,float min2, float max2) {
+		minX = min1; maxX = max1; minY = min2; maxY = max2;
+	}
+
+	void updatePosition(float deltaT) {
+		float& x = getTransform()->x;
+		float& y = getTransform()->y;
+		x += velocity.first * deltaT;
+		y += velocity.second * deltaT;
+		if(x < minX || x > maxX) {
+			velocity.first *= -1;
+			x = util::clamp(minX, maxX, x);
+		}
+		if(y < minY || y > maxY) {
+			velocity.second *= -1;
+			y = util::clamp(minX, maxX, y);
+		}
+	}
+
+private:
+	std::pair<float, float> velocity;
+	float minX, maxX, minY, maxY;
+	
+};
+
 TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
@@ -61,15 +106,30 @@ TestScene::TestScene()
 	size = 50.0f;
 	timer = .0f;
 
-	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
-	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX),static_cast<float>(tempY));
+	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
+	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
+	m_camera.setSize(tempX, tempY);
 
-	testObj = std::make_unique<agl::Object>(agl::Object(size, size, { 0, 0 }, { 255, 255, 255, 255 }));
-	testObj->setTexture(*AppData::getSus().GetTexture("sponge.png"));
-	m_graphicsLayer.addObject(*testObj);
+	testObj.addComponent<TextureComponent>(std::make_shared<TextureComponent>(&m_graphicsLayer));
+	testObj.getComponent<TextureComponent>()->setTexture("popcat.png");
+	testObj.getTransform()->setScale(size);
+
+	srand(2137);
+	const float spoingSize = 75;
+	for(uint i = 0; i < spoingCount; i ++) {
+		std::shared_ptr<TextureComponent> tex = std::make_shared<TextureComponent>(&m_graphicsLayer);
+		someSpoingbobs[i].addComponent<TextureComponent>(tex);
+		tex->setTexture("sponge.png");
+
+		std::shared_ptr<BouncyComponent> bounce = std::make_shared<BouncyComponent>();
+		bounce->setVelocity({rand() % 200 * (i % 2 == 0 ? 1 : -1), rand() % 200 * (i % 3 == 0 ? 1 : -1)});
+		bounce->setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
+		someSpoingbobs[i].addComponent<BouncyComponent>(bounce);
+
+		someSpoingbobs[i].getTransform()->setScale(spoingSize);
+	}
+
 }
-
 
 void TestScene::update(float deltaT) {
 
@@ -84,11 +144,12 @@ void TestScene::update(float deltaT) {
 	} else {
 		speed = .0f;
 	}
+	testObj.getTransform()->x += speed * deltaT;
 
 	if(AppData::getInput().isKeyClicked("UP")) {
-		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y + 50.0f);
+		testObj.getTransform()->y += 50.0f;
 	} else if(AppData::getInput().isKeyClicked("DOWN")) {
-		testObj->setPosition(testObj->getPosition().x, testObj->getPosition().y - 50.0f);
+		testObj.getTransform()->y -= 50.0f;
 	}
 
 	if(AppData::getInput().getWheelOffset() != 0.0f) {
@@ -114,8 +175,6 @@ void TestScene::update(float deltaT) {
 		}
 	}
 
-	testObj->setPosition(testObj->getPosition().x + speed * deltaT, testObj->getPosition().y);
-
 	/////////////////////
 	/// Utils showcase:
 	/////////////////////
@@ -128,11 +187,24 @@ void TestScene::update(float deltaT) {
 	float t = -4 * (timer - 0.5f) * (timer - 0.5f) + 1;
 	size = util::lerp(50.0f, 100.0f, sqrtf(t));
 
-	testObj->setScale(size, size);
+	testObj.getTransform()->setScale(size);
+
+	/////////////////////
+	/// Components in action
+	/////////////////////
+	
+	for(auto spoing : someSpoingbobs) {
+		spoing.getComponent<BouncyComponent>()->updatePosition(deltaT);
+	}
 
 }
 
 void TestScene::render() {
+	// Tego tu nie powinno być! Tym powinien zajmować się draw call
+	testObj.getComponent<TextureComponent>()->resync();
+	for(auto spong : someSpoingbobs) {
+		spong.getComponent<TextureComponent>()->resync();
+	}
 	m_graphicsLayer.draw();
 }
 

@@ -6,9 +6,13 @@
 
 #include "Core/SceneManager/Scene.h"
 #include "ECS/Entity.h"
+#include "Graphics.h"
 
 #include <Agl.h>
+#include <array>
 
+
+//NOLINTBEGIN
 
 namespace golf {
 
@@ -53,15 +57,14 @@ public:
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
-	GraphicsLayer gl;
 
 	float speed = 0.0f;
 	float size;
 	float timer;
-	std::unique_ptr<agl::Object> testObj;
-	//std::unique_ptr<agl::Texture> testTex;
-	agl::Texture* temp;
-	
+
+	Entity testObj;
+	static const uint spoingCount = 30;
+	std::array<Entity, spoingCount> someSpoingbobs;
 
 };
 
@@ -86,4 +89,7 @@ private:
 	std::unique_ptr<agl::Object> WallB;
 	std::unique_ptr<agl::Texture> WallTex;
 };
+
 }
+
+//NOLINTEND
