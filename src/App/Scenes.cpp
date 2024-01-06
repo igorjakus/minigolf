@@ -244,17 +244,23 @@ LevelTwoScene::LevelTwoScene()
 void LevelTwoScene::update(float deltaT)
 {
 	if (isFirstUpdate) {
-		DTL_INF("level two scene -- click q to quit, r to play again");
+		DTL_INF("level two scene -- click q to quit, r to play again, w to win");
 		isFirstUpdate = false;
 	}
-
+	//quit
 	if (AppData::getInput().isKeyClicked("Q")) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
 		AppData::getSceneManager().nextScene();
 	}
-
+	//play again
 	if (AppData::getInput().isKeyClicked("R")) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+		AppData::getSceneManager().nextScene();
+	}
+
+	//won
+	if (AppData::getInput().isKeyClicked("W")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(100, 2)));
 		AppData::getSceneManager().nextScene();
 	}
 }
