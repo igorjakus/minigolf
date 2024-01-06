@@ -12,12 +12,15 @@ set(SOURCES
 	Core/AppData.h
 	Core/AppData.cpp 
 
+	# ECS
+	ECS/Entity.cpp
+
 	# SceneManager
 	Core/SceneManager/SceneManager.h
 	Core/SceneManager/SceneManager.cpp 
 	Core/SceneManager/Scene.h
 
-	#Sus
+	# Sus
 	Core/Sus/Sus.h
 	Core/Sus/Sus.cpp
 

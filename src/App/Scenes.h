@@ -5,6 +5,8 @@
 #pragma once
 
 #include "Core/SceneManager/Scene.h"
+#include "ECS/Entity.h"
+#include "Graphics.h"
 
 #include <Agl.h>
 
@@ -29,9 +31,10 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
+	Entity m_kot;
+	std::shared_ptr<TextureComponent> m_kotTex;
+
 	float timer = 0;
-	std::unique_ptr<agl::Object> testObj;
-	std::unique_ptr<agl::Texture> testTex;
 	
 };
 

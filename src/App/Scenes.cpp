@@ -1,7 +1,8 @@
 #include "Scenes.h"
 #include "Core/AppData.h"
+#include "ECS/Entity.h"
 
-#include <Agl.h>
+#include "Agl.h"
 
 #include <cmath>
 #include "Util.hpp"
@@ -15,6 +16,7 @@ namespace golf {
 // forward declarations:
 class BlankScene;
 class TestScene;
+class LevelOneScene;
 
 // ===============================
 // BlankScene
@@ -24,12 +26,10 @@ BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
 	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	// temp (should also be black (no racism))
+	std::shared_ptr<TextureComponent> catTex = std::make_shared<TextureComponent>(m_graphicsLayer);
 
-
-	testObj = std::make_unique<agl::Object>(1.f, 1.f);
-	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
-	m_graphicsLayer.addObject(*testObj);
+	m_kot.addComponent<TextureComponent>(catTex);
+	m_kot.getComponent<TextureComponent>()->setTexture("popcat.png");
 	
 }
 

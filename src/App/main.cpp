@@ -2,6 +2,8 @@
 
 #include <Agl.h>
 
+void funky() noexcept;
+
 int main() {
 
 #ifdef __DIST__
@@ -10,6 +12,8 @@ int main() {
 #endif
 
 	agl::Init();
+
+	funky();
 
 	golf::App application;
 	application.run();

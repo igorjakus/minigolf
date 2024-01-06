@@ -24,7 +24,7 @@ App::App(uint width, uint height, const std::string& title)
 
 	AppData::init(width, height, title);
 	AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
-	AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+	AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlankScene()));
 	AppData::getSceneManager().nextScene();
 
 	DTL_INF("Application created: {0}", title);
