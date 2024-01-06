@@ -20,7 +20,7 @@ namespace golf {
 			DTL_WAR("Trying to open non-existing file:(" + file + "). Operation ignored.");
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file, filter, sWrap, tWrap));
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file, filter,/*temp*/glm::ivec2(1, 1), sWrap, tWrap));
 		}
 	}
 

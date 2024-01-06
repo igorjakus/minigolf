@@ -57,7 +57,7 @@ private:
 	float size;
 	float timer;
 	std::unique_ptr<agl::Object> testObj;
-	//std::unique_ptr<agl::Texture> testTex;
+	std::unique_ptr<agl::Animation> testTex;
 	agl::Texture* temp;
 	
 
