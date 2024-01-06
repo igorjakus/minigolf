@@ -108,9 +108,11 @@ private:
 	bool isFirstUpdate = true;
 };
 
+void startLevel(int levelNumber);
+
 class ResultsScene : public Scene {
 public:
-	ResultsScene();
+	ResultsScene(int score, int lvlNumber);
 	~ResultsScene() override = default;
 	ResultsScene(ResultsScene&&) = delete;
 	ResultsScene(const ResultsScene&) = delete;
@@ -123,8 +125,9 @@ public:
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
-
+	int playerScore;
 	bool isFirstUpdate = true;
+	int finishedLevelNumber;
 };
 
 class LevelTwoScene : public Scene {

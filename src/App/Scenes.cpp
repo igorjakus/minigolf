@@ -173,7 +173,7 @@ void LevelOneScene::update(float deltaT)
 	}
 	//won
 	if (AppData::getInput().isKeyClicked("W")) {
-		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene()));
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(10, 1)));
 		AppData::getSceneManager().nextScene();
 	}
 	
@@ -264,9 +264,9 @@ void LevelTwoScene::render()
 	m_graphicsLayer.draw();
 }
 
-ResultsScene::ResultsScene()
+ResultsScene::ResultsScene(int score, int lvlNumber)
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
 {
 	const int tempX = AppData::getWindow().getWindowSize().x;
 	const int tempY = AppData::getWindow().getWindowSize().y;
@@ -286,11 +286,38 @@ void ResultsScene::update(float deltaT)
 		AppData::getSceneManager().nextScene();
 	}
 
+	//play again
+	if (AppData::getInput().isKeyClicked("R")) {
+		startLevel(finishedLevelNumber);
+	}
+
+	//next level
+
+	if (AppData::getInput().isKeyClicked("C")) {
+		startLevel(finishedLevelNumber += 1);
+	}
+
+
+
 }
 
 void ResultsScene::render()
 {
 	m_graphicsLayer.draw();
+}
+
+
+//funkcja ktora uruchamia odpowiedni poziom
+void startLevel(int levelNumber)
+{
+	if (levelNumber == 1) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	if (levelNumber == 2) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+		AppData::getSceneManager().nextScene();
+	}
 }
 
 }
