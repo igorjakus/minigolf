@@ -1,18 +1,42 @@
 #include "Graphics.h"
 #include "App/Core/AppData.h"
 
+#include "ECS/Entity.h"
+
 namespace golf {
 
 
-TextureComponent::TextureComponent(agl::GraphicLayer* graphicLayer)
-	: Component(nullptr), m_renderObject(1.f, 1.f), m_rederer(graphicLayer) {
-	m_rederer->addObject(m_renderObject);
+/// GraphicsLayer
+
+GraphicsLayer::GraphicsLayer()
+	: m_layer(AppData::getSus(), agl::Camera()){
+
 }
 
-TextureComponent::~TextureComponent() = default;
+void GraphicsLayer::addObject(TextureComponent* component) {
+	m_texturedObjects.push_back(component);
+}
+
+void GraphicsLayer::render() {
+
+}
+
+
+/// TextureComponent
+
+TextureComponent::TextureComponent(GraphicsLayer* graphicsLayer)
+	: Component(nullptr), m_renderObject(1.f, 1.f), m_layer(graphicsLayer) {
+	m_layer->addObject(this);
+}
 
 void TextureComponent::kill() {
+	DTL_WAR("Usuwanie komponentów graficznych obecnie nie jest wspierane");
+}
 
+void TextureComponent::resync() {
+	m_renderObject.setPosition(getTransform()->x, getTransform()->y);
+	m_renderObject.setRotation(getTransform()->rot);
+	m_renderObject.setScale(getTransform()->xScale, getTransform()->yScale);
 }
 
 void TextureComponent::setTexture(const std::string& name) {

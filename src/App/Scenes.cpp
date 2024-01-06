@@ -27,10 +27,12 @@ BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
 	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	std::shared_ptr<TextureComponent> catTex = std::make_shared<TextureComponent>(&m_graphicsLayer);
 
-	m_kot.addComponent<TextureComponent>(catTex);
+
+	m_kot.getTransform()->setScale(0.5f);
+	m_kot.addComponent<TextureComponent>(std::make_shared<TextureComponent>(&m_graphicsLayer));
 	m_kot.getComponent<TextureComponent>()->setTexture("popcat.png");
+	m_kot.getComponent<TextureComponent>()->resync();
 	
 }
 

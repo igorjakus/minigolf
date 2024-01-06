@@ -2,14 +2,32 @@
 
 #include "Agl.h"
 #include "ECS/Component.h"
+#include <vector>
 
 namespace golf {
+
+class TextureComponent;
+
+class GraphicsLayer {
+public:
+	GraphicsLayer();
+
+	void addObject();
+
+	void render();
+
+private:
+	std::vector<TextureComponent> m_texturedObjects;
+	agl::GraphicLayer m_layer;
+	
+};
+
 
 
 class TextureComponent : public Component {
 public:
-	explicit TextureComponent(agl::GraphicLayer* graphicLayer);
-	~TextureComponent() override;
+	explicit TextureComponent(GraphicsLayer* graphicsLayer);
+	~TextureComponent() override = default;
 	TextureComponent(TextureComponent &&) = default;
 	TextureComponent(const TextureComponent &) = default;
 	TextureComponent &operator=(TextureComponent &&) = default;
@@ -18,11 +36,15 @@ public:
 	void kill() override;
 
 	void setTexture(const std::string& name);
+	void resync();
+
 
 private:
 	agl::Object m_renderObject;
-	agl::GraphicLayer* m_rederer;
+	GraphicsLayer* m_layer;
+
 	
+	friend class GraphicsLayer;
 };
 
 

@@ -49,10 +49,11 @@ public:
 
 	void update(float deltaT) override;
 	void render() override;
-
+	
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
+	GraphicsLayer gl;
 
 	float speed = 0.0f;
 	float size;
