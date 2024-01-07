@@ -53,6 +53,7 @@ void BlankScene::render() {
 // TestScene
 // ===============================
 
+// Przykładowy "skrypt"
 class BouncyComponent : public Component {
 public:
 
@@ -66,16 +67,17 @@ public:
 	void updatePosition(float deltaT) {
 		float& x = getTransform()->x;
 		float& y = getTransform()->y;
+		// uwaga! nie mamy pewności że transform istnieje! (getTransform zwróci pusty shared_ptr jeśli nie ma właściciela (przypisanego Entity))
 		x += velocity.first * deltaT;
 		y += velocity.second * deltaT;
 		if(x < minX || x > maxX) {
 			velocity.first *= -1;
 			x = util::clamp(minX, maxX, x);
-			if(getOwner()->hasComponent<TextureComponent>()) {
+			if(getOwner()->hasComponent<TextureComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
 				getOwner()->getComponent<TextureComponent>()->setTexture("popcat.png");
 			}
 			kill();
-			return;
+			return; // po kill() nie powinniśmy już pracować nad komponentem
 		}
 		if(y < minY || y > maxY) {
 			velocity.second *= -1;
@@ -99,23 +101,38 @@ TestScene::TestScene()
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 	m_camera.setSize(tempX, tempY);
 
-	testObj.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent());
+	std::shared_ptr<TextureComponent> graphics = m_graphicsLayer.addTexComponent();
+	// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 
+	// nie będzie przypisany do żadnej warstwy graficznej i tym samym nie będzie się wyświetlać
+	testObj.addComponent<TextureComponent>(graphics);
+	// Można też bezpośrednio wrzucić wynik m_graphicsLayer.addTexComponent() do addComponent() czyli:
+	// testObj.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent()); jednak wtedy nie 
+	// mamy bezpośredniego wskaźnika na ten komponent i musimy go szukać chcąc z nim coś robić.
 	testObj.getComponent<TextureComponent>()->setTexture("popcat.png");
+	// Jeżeli mamy nasz pointer "graphics" to możemy po prostu:
+	// graphics->setTexture("popcat.png");
+	// co jest szybsze, tym bardziej że przy powyższej metodzie powinniśmy upewnić się najpierw,
+	// że testObj w ogóle posiada TextureComponent poprzez if(testObj.hasComponent<TextureComponent>())
 	testObj.getTransform()->setScale(size);
+	// Tu po prostu biorę transform naszego obiektu (mamy gwarancje że każdy objekt posiada transform)
+	// i ustawiam skalę obietku (pozycja, obrót i skala są przechowywane w trasformie)
+	// Uwaga! Transform technicznie rzecz biorąc nie jest komponentem tzn. np. testObj.hasComponent<Transform>()
+	// zwróci false
 
 	srand(2137);
 	const float spoingSize = 75;
+	// Ciekawszy przykład: iterujemy po elementach listy Entity
 	for(uint i = 0; i < spoingCount; i ++) {
-		std::shared_ptr<TextureComponent> tex = m_graphicsLayer.addTexComponent();
-		someSpoingbobs[i].addComponent<TextureComponent>(tex);
-		tex->setTexture("sponge.png");
+		std::shared_ptr<TextureComponent> tex = m_graphicsLayer.addTexComponent(); // Tworzymy komponent tex
+		someSpoingbobs[i].addComponent<TextureComponent>(tex); // przypisujemy właściciela komponentu
+		tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 
-		std::shared_ptr<BouncyComponent> bounce = std::make_shared<BouncyComponent>();
-		bounce->setVelocity({rand() % 300 * (i % 2 == 0 ? 1 : -1), rand() % 500 * (i % 3 == 0 ? 1 : -1)});
+		std::shared_ptr<BouncyComponent> bounce = std::make_shared<BouncyComponent>(); // Tworzymy komponent bounce (który w sumie jest skryptem)
+		bounce->setVelocity({rand() % 300 * (i % 2 == 0 ? 1 : -1), rand() % 500 * (i % 3 == 0 ? 1 : -1)}); // nadajemy mu jakieś właściwości (losowe)
 		bounce->setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
-		someSpoingbobs[i].addComponent<BouncyComponent>(bounce);
+		someSpoingbobs[i].addComponent<BouncyComponent>(bounce); // przypisujemy właściciela komponentu
 
-		someSpoingbobs[i].getTransform()->setScale(spoingSize);
+		someSpoingbobs[i].getTransform()->setScale(spoingSize); // na koniec zmieniamy skalę każdego entity
 	}
 
 }

@@ -61,9 +61,10 @@ private:
 	float size;
 	float timer;
 
+	// Tak deklarujemy wszystkie entity. Dosłownie tyle wystarczy aby obiekt istniał w świecie.
 	Entity testObj;
 	static const uint spoingCount = 10;
-	std::array<Entity, spoingCount> someSpoingbobs;
+	std::array<Entity, spoingCount> someSpoingbobs; // a tu cała lista entity
 };
 
 
