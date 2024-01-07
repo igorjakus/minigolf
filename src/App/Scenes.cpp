@@ -25,11 +25,10 @@ BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
 	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	m_kot.addComponent<TextureComponent>(std::make_shared<TextureComponent>(&m_graphicsLayer));
+	m_kot.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent());
 	m_kot.getComponent<TextureComponent>()->setTexture("popcat.png");
 
 	m_kot.getTransform()->setScale(0.5f);
-	
 }
 
 void BlankScene::update(float deltaT) {
@@ -42,9 +41,7 @@ void BlankScene::update(float deltaT) {
 }
 
 void BlankScene::render() {
-	// Tego tu nie powinno być! Tym powinien zajmować się draw call
-	m_kot.getComponent<TextureComponent>()->resync();
-	m_graphicsLayer.draw();
+	m_graphicsLayer.render();
 }
 
 
@@ -99,14 +96,14 @@ TestScene::TestScene()
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 	m_camera.setSize(tempX, tempY);
 
-	testObj.addComponent<TextureComponent>(std::make_shared<TextureComponent>(&m_graphicsLayer));
+	testObj.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent());
 	testObj.getComponent<TextureComponent>()->setTexture("popcat.png");
 	testObj.getTransform()->setScale(size);
 
 	srand(2137);
 	const float spoingSize = 75;
 	for(uint i = 0; i < spoingCount; i ++) {
-		std::shared_ptr<TextureComponent> tex = std::make_shared<TextureComponent>(&m_graphicsLayer);
+		std::shared_ptr<TextureComponent> tex = m_graphicsLayer.addTexComponent();
 		someSpoingbobs[i].addComponent<TextureComponent>(tex);
 		tex->setTexture("sponge.png");
 
@@ -137,8 +134,10 @@ void TestScene::update(float deltaT) {
 
 	if(AppData::getInput().isKeyClicked("UP")) {
 		testObj.getTransform()->y += 50.0f;
+		testObj.getComponent<TextureComponent>()->setTexture("popcat.png");
 	} else if(AppData::getInput().isKeyClicked("DOWN")) {
 		testObj.getTransform()->y -= 50.0f;
+		testObj.getComponent<TextureComponent>()->setTexture("sponge.png");
 	}
 
 	if(AppData::getInput().getWheelOffset() != 0.0f) {
@@ -189,12 +188,7 @@ void TestScene::update(float deltaT) {
 }
 
 void TestScene::render() {
-	// Tego tu nie powinno być! Tym powinien zajmować się draw call
-	testObj.getComponent<TextureComponent>()->resync();
-	for(auto spong : someSpoingbobs) {
-		spong.getComponent<TextureComponent>()->resync();
-	}
-	m_graphicsLayer.draw();
+	m_graphicsLayer.render();
 }
 
 

@@ -32,12 +32,11 @@ public:
 
 private:
 	agl::Camera m_camera;
-	agl::GraphicLayer m_graphicsLayer;
+	GraphicsLayer m_graphicsLayer;
 
 	Entity m_kot;
 
 	float timer = 0;
-	
 };
 
 
@@ -56,16 +55,15 @@ public:
 	
 private:
 	agl::Camera m_camera;
-	agl::GraphicLayer m_graphicsLayer;
+	GraphicsLayer m_graphicsLayer;
 
 	float speed = 0.0f;
 	float size;
 	float timer;
 
 	Entity testObj;
-	static const uint spoingCount = 300;
+	static const uint spoingCount = 10;
 	std::array<Entity, spoingCount> someSpoingbobs;
-
 };
 
 
