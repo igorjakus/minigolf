@@ -17,11 +17,6 @@
 
 namespace golf {
 
-// forward declarations:
-class BlankScene;
-class TestScene;
-class LevelOneScene;
-
 // ===============================
 // BlankScene
 // ===============================
@@ -59,12 +54,6 @@ void BlankScene::render() {
 
 class BouncyComponent : public Component {
 public:
-	BouncyComponent() = default;
-	~BouncyComponent() override = default;
-	BouncyComponent(BouncyComponent &&) = default;
-	BouncyComponent(const BouncyComponent &) = default;
-	BouncyComponent &operator=(BouncyComponent &&) = delete;
-	BouncyComponent &operator=(const BouncyComponent &) = delete;
 
 	void kill() override {
 		releaseFromOwner(); //No longer bouncing :(
@@ -193,7 +182,7 @@ void TestScene::update(float deltaT) {
 	/// Components in action
 	/////////////////////
 	
-	for(auto spoing : someSpoingbobs) {
+	for(auto spoing : someSpoingbobs) { // Iterowanie po Entity jest raczej nieoptymalne. Lepiej jest mieć listę komponentów danego typu i iterować po komponentach
 		spoing.getComponent<BouncyComponent>()->updatePosition(deltaT);
 	}
 

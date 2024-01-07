@@ -63,7 +63,7 @@ private:
 	float timer;
 
 	Entity testObj;
-	static const uint spoingCount = 30;
+	static const uint spoingCount = 300;
 	std::array<Entity, spoingCount> someSpoingbobs;
 
 };
