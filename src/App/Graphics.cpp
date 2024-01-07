@@ -1,7 +1,7 @@
 #include "Graphics.h"
 #include "App/Core/AppData.h"
+#include "dtl.h"
 
-#include "ECS/Entity.h"
 #include <memory>
 
 namespace golf {
@@ -24,7 +24,9 @@ std::shared_ptr<TextureComponent> GraphicsLayer::addTexComponent() {
 
 void GraphicsLayer::render() {
 	for(auto obj : m_texturedObjects) {
-		obj->resync();
+		if(obj->m_transform) [[likely]] { // if do usunięcia jak będzie pożądnie napisane TextureComponent::kill();
+			obj->resync();
+		}
 	}
 	m_aglLayer.draw();
 }
@@ -37,7 +39,17 @@ TextureComponent::TextureComponent()
 	: Component(nullptr), m_renderObject(1.f, 1.f) {}
 
 void TextureComponent::kill() {
-	DTL_WAR("Usuwanie komponentów graficznych obecnie nie jest wspierane");
+	Component::kill();
+	m_transform.reset();
+	const float WCHUJDALEKO = 999999.0f;
+	m_renderObject.setPosition(WCHUJDALEKO, WCHUJDALEKO); // Tu pewnie należałoby usuwać m_renderObject z agl::GraphicLayer ale idk jak
+	// bo w tym momencie on dalej jest renderowany i to niepotrzebnie
+	DTL_INF("Killed graphics component");
+}
+
+void TextureComponent::setOwner(Entity *entity) {
+	Component::setOwner(entity);
+	m_transform = getTransform();
 }
 
 void TextureComponent::setTexture(const std::string& name) {
@@ -45,9 +57,13 @@ void TextureComponent::setTexture(const std::string& name) {
 }
 
 void TextureComponent::resync() {
-	m_renderObject.setPosition(getTransform()->x, getTransform()->y);
-	m_renderObject.setRotation(getTransform()->rot);
-	m_renderObject.setScale(getTransform()->xScale, getTransform()->yScale);
+	if(!m_transform) [[unlikely]] {
+		DTL_WAR("Próba zsynchronizowania komponentu graficznego z Transformem, gdy komponent nie ma przypisanego transforma! (sprawdź czy obiekt ma poprawnie przypisanego właściciela)");
+		return;
+	}
+	m_renderObject.setPosition(m_transform->x, m_transform->y);
+	m_renderObject.setRotation(m_transform->rot);
+	m_renderObject.setScale(m_transform->xScale, m_transform->yScale);
 }
 
 

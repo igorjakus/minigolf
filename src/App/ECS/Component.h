@@ -14,12 +14,12 @@ public:
 	Component &operator=(Component &&) = default;
 	Component &operator=(const Component &) = default;
 
-	virtual void kill();
+	virtual void kill(); // Ta funkcja musi wykonwać Component::kill(); po overridowaniu!!!
 
-	void setOwner(Entity* entity);
+	virtual void setOwner(Entity* entity); // Ta funkcja musiy wywoływać Component::setOwner(entity) po overridowaniu!!!
 	void releaseFromOwner();
 	Entity* getOwner();
-	Transform* getTransform();
+	std::shared_ptr<Transform> getTransform();
 
 private:
 	Entity* m_owner;

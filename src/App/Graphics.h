@@ -2,6 +2,7 @@
 
 #include "Agl.h"
 #include "ECS/Component.h"
+#include "ECS/Entity.h"
 
 namespace golf {
 
@@ -27,12 +28,14 @@ public:
 	TextureComponent();
 
 	void kill() override;
+	void setOwner(Entity *entity) override;
 	void setTexture(const std::string& name);
 
 private:
 	void resync();
 
 	agl::Object m_renderObject;
+	std::shared_ptr<Transform> m_transform;
 
 	friend class GraphicsLayer;
 };

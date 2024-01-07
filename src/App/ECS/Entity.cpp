@@ -39,10 +39,19 @@ std::pair<float&, float&> Transform::getScale() {
 // Entity
 
 Entity::Entity(float xPos, float yPos, float rot, float xScale, float yScale) //NOLINT
-	:m_transform(xPos, yPos, rot, xScale, yScale) {}
+	:m_transform(std::make_shared<Transform>(xPos, yPos, rot, xScale, yScale)) {}
 
-Transform* Entity::getTransform() {
-	return &m_transform;
+std::shared_ptr<Transform> Entity::getTransform() {
+	return m_transform;
+}
+
+void Entity::removeComponent(Component& component) {
+	for(auto item = m_components.begin(); item != m_components.end(); item++) {
+		if(item->second.get() == &component) {
+			m_components.erase(item);
+			break;
+		}
+	}
 }
 
 void Entity::kill() {

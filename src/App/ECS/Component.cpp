@@ -9,7 +9,10 @@ Component::Component(Entity* entity)
 	:m_owner(entity) {}
 
 void Component::kill() {
-	releaseFromOwner();
+	if(m_owner != nullptr) {
+		m_owner->removeComponent(*this);
+		releaseFromOwner();
+	}
 }
 
 void Component::setOwner(Entity* entity) {
@@ -17,14 +20,14 @@ void Component::setOwner(Entity* entity) {
 }
 
 void Component::releaseFromOwner() {
-	setOwner(nullptr);
+	m_owner = nullptr;
 }
 
 Entity* Component::getOwner() {
 	return m_owner;
 }
 
-Transform* Component::getTransform() {
+std::shared_ptr<Transform> Component::getTransform() {
 	return m_owner->getTransform();
 }
 

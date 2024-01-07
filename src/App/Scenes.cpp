@@ -34,6 +34,10 @@ BlankScene::BlankScene()
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
 
+	if (timer > 1.0f && timer < 1.01f && m_kot.hasComponent<TextureComponent>()) {
+		m_kot.removeComponent<TextureComponent>();
+	}
+
 	if (timer > 3.0f) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
@@ -52,14 +56,9 @@ void BlankScene::render() {
 class BouncyComponent : public Component {
 public:
 
-	void kill() override {
-		releaseFromOwner(); //No longer bouncing :(
-	}
-
 	void setVelocity(std::pair<float, float> vel) {
 		velocity = vel;
 	}
-
 	void setBoundaries(float min1, float max1,float min2, float max2) {
 		minX = min1; maxX = max1; minY = min2; maxY = max2;
 	}
@@ -72,6 +71,11 @@ public:
 		if(x < minX || x > maxX) {
 			velocity.first *= -1;
 			x = util::clamp(minX, maxX, x);
+			if(getOwner()->hasComponent<TextureComponent>()) {
+				getOwner()->getComponent<TextureComponent>()->setTexture("popcat.png");
+			}
+			kill();
+			return;
 		}
 		if(y < minY || y > maxY) {
 			velocity.second *= -1;
@@ -82,7 +86,6 @@ public:
 private:
 	std::pair<float, float> velocity;
 	float minX, maxX, minY, maxY;
-	
 };
 
 TestScene::TestScene()
@@ -108,7 +111,7 @@ TestScene::TestScene()
 		tex->setTexture("sponge.png");
 
 		std::shared_ptr<BouncyComponent> bounce = std::make_shared<BouncyComponent>();
-		bounce->setVelocity({rand() % 200 * (i % 2 == 0 ? 1 : -1), rand() % 200 * (i % 3 == 0 ? 1 : -1)});
+		bounce->setVelocity({rand() % 300 * (i % 2 == 0 ? 1 : -1), rand() % 500 * (i % 3 == 0 ? 1 : -1)});
 		bounce->setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
 		someSpoingbobs[i].addComponent<BouncyComponent>(bounce);
 
@@ -182,7 +185,9 @@ void TestScene::update(float deltaT) {
 	/////////////////////
 	
 	for(auto spoing : someSpoingbobs) { // Iterowanie po Entity jest raczej nieoptymalne. Lepiej jest mieć listę komponentów danego typu i iterować po komponentach
-		spoing.getComponent<BouncyComponent>()->updatePosition(deltaT);
+		if(spoing.hasComponent<BouncyComponent>()) {
+			spoing.getComponent<BouncyComponent>()->updatePosition(deltaT);
+		}
 	}
 
 }

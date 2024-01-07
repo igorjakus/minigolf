@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "dtl.h"
 
 #include <memory>
 #include <type_traits>
@@ -30,7 +31,7 @@ public:
 	explicit Entity(float xPos, float yPos, float rot);
 	explicit Entity(float xPos, float yPos);
 
-	Transform* getTransform();
+	std::shared_ptr<Transform> getTransform();
 
 	void kill();
 
@@ -50,16 +51,34 @@ public:
 	}
 
 	template <typename T>
-	T* getComponent() {
+	[[nodiscard]] std::shared_ptr<T> getComponent() {
 		auto item = m_components.find(typeid(T));
 		if(item != m_components.end()) {
-			return dynamic_cast<T*>(item->second.get());
+			return std::dynamic_pointer_cast<T>(item->second);
 		}
 		return nullptr;
 	}
 
+
+	template <typename T>
+	bool hasComponent() {
+		return m_components.find(typeid(T)) != m_components.end(); 
+	}
+
+	template <typename T>
+	bool removeComponent() {
+		auto item = m_components.find(typeid(T));
+		bool found = item != m_components.end();
+		if(found) {
+			item->second->kill();
+		}
+		return found;
+	}
+
+	void removeComponent(Component& component);
+
 private:
-	Transform m_transform;
+	std::shared_ptr<Transform> m_transform;
 	std::unordered_map<std::type_index, std::shared_ptr<Component>> m_components;
 	
 };
