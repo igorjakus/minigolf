@@ -27,9 +27,8 @@ BlankScene::BlankScene()
 
 	AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
 
-	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
+	testObj = m_graphicsLayer.newQuad(1.f, 1.f);
 	testObj->setVisual(*AppData::getSus().GetTexture("popcat.png"));
-	m_graphicsLayer.addObject(*testObj);
 	
 }
 
@@ -60,16 +59,16 @@ TestScene::TestScene()
 	size = 100.0f;
 	timer = .0f;
 
+	testObj = m_graphicsLayer.newQuad(1.f, 1.f);
+
 	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
 	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize((float)tempX,(float)tempY);
 
-	testObj = std::make_unique<agl::Object>(size, size);
 	testTex = std::make_unique<agl::Animation>("assets/textures/test.png", GL_LINEAR, 97, 0.05f, 10, 10);
 	//testTex = std::make_unique<agl::Texture>("assets/textures/test.png", GL_LINEAR);
 	//testObj->setVisual(*AppData::getSus().GetTexture("sponge.png"));
 	testObj->setVisual(*testTex);
-	m_graphicsLayer.addObject(*testObj);
 }
 
 void TestScene::update(float deltaT) {

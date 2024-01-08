@@ -5,10 +5,12 @@
 #include<Shader.h>
 #include<stb/stb_image.h>
 #include<ImGui.h>
+#include<glm/glm.hpp>
+#include<vector>
 
-struct BufferData;
+#define Object Quad
 
-struct Vertice
+struct Vertice 
 {
 	glm::vec2 position;
 	glm::vec2 uv;
@@ -82,11 +84,11 @@ namespace agl
 	};
 
 	//Rendering
-	class Object
+	class Quad
 	{
+		Quad(float width, float height, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255});
 	public:
-		Object(float width, float height, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255}, glm::ivec2 texRatio = {1, 1});
-		~Object();
+		~Quad();
 		void setVisual(agl::Visual& visual);
 		void setRotation(float rads);
 		void setScale(float xScale, float yScale);
@@ -98,14 +100,16 @@ namespace agl
 		float getRotation() const;
 		glm::vec2 getScale() const;
 		glm::vec2 getPosition() const;
+
 		friend class GraphicLayer;
+		friend class std::vector;
 	private:
 		glm::vec2 m_pos;
-		glm::ivec2 m_texRatio;
 		float m_xScale, m_yScale;
 		float m_rotation;
 		agl::Visual* m_vis;
 		Color m_color;
+		GLuint m_VBO, m_EBO, m_VAO;
 	};
 
 	class Camera
@@ -137,18 +141,14 @@ namespace agl
 	public:
 		GraphicLayer(const GraphicLayer&) = delete;
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
-		~GraphicLayer();
+		~GraphicLayer() = default;
 		void draw();
-		void addObject(Object& obj);
-		void removeObject(Object& obj);
+		agl::Quad* newQuad(float width, float height, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255});
+		void removeObject(Quad& obj);
 	private:
-		struct BufferData;
 		agl::Shader* m_shader;
 		agl::Camera* m_camera;
-		const uint32_t m_trisStencile[6] = { 0, 1, 2, 2, 3, 1 };
-		std::vector<BufferData> m_bd;
-		struct BufferData
-		{ uint32_t VBO, EBO, VAO; agl::Object* objptr; };
+		std::vector<agl::Quad> m_quads;
 	};
 
 }

@@ -30,7 +30,7 @@ private:
 	agl::GraphicLayer m_graphicsLayer;
 
 	float timer = 0;
-	std::unique_ptr<agl::Object> testObj;
+	agl::Quad* testObj;
 	std::unique_ptr<agl::Texture> testTex;
 	
 };
@@ -56,7 +56,7 @@ private:
 	float speed = 0.0f;
 	float size;
 	float timer;
-	std::unique_ptr<agl::Object> testObj;
+	agl::Quad* testObj;
 	std::unique_ptr<agl::Animation> testTex;
 	agl::Texture* temp;
 	
