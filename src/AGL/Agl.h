@@ -57,6 +57,7 @@ namespace agl
 		Texture(std::string filepath, int filter, glm::ivec2 textureRatio = { 1, 1 }, int sWrap = GL_CLAMP_TO_BORDER, int tWrap = GL_CLAMP_TO_BORDER);
 		~Texture() override;
 		Texture(const Texture&) = delete;
+		Texture &operator=(const Texture &) = delete;
 		void bind(int slot = 0) const override;
 		static void unbind();
 		std::pair<glm::vec2, glm::vec2> getUV() const override;
@@ -71,6 +72,7 @@ namespace agl
 		Animation(std::string filepath, int filter, uint frames, float frametime, uint width, uint heigth);
 		~Animation() override;
 		Animation(const Animation&) = delete;
+		Animation &operator=(const Animation &) = delete;
 		void bind(int slot = 0) const override;
 		static void unbind();
 		std::pair<glm::vec2, glm::vec2> getUV() const override;
@@ -86,26 +88,25 @@ namespace agl
 	//Rendering
 	class Quad
 	{
-		Quad(float width = 0, float height = 0, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255});
+		Quad();
+		Quad(const Quad&) = default;
 	public:
 		~Quad();
-		void setVisual(agl::Visual& visual);
-		void setRotation(float rads);
-		void setScale(float xScale, float yScale);
-		void setPosition(float xPos, float yPos);
-		void setPosition(glm::vec2 pos);
+		Quad(Quad &&) = default;
+		Quad &operator=(Quad &&) = default;
+		Quad &operator=(const Quad &) = delete;
+		void setVisual(agl::Visual* visual);
+		void setPosPtr(float* x, float* y);
+		void setScalePtr(float* xScale, float* yScale);
+		void setRotationPtr(float* rotation);
 		void setColor(uchar red, uchar green, uchar blue, uchar alpha);
 		void setColor(Color color);
 		Color getColor() const;
-		float getRotation() const;
-		glm::vec2 getScale() const;
-		glm::vec2 getPosition() const;
-
 		friend class GraphicLayer;
 	private:
-		glm::vec2 m_pos;
-		float m_xScale, m_yScale;
-		float m_rotation;
+		float* m_x, *m_y;
+		float* m_xScale, *m_yScale;
+		float* m_rotation;
 		agl::Visual* m_vis;
 		Color m_color;
 		GLuint m_VBO, m_EBO, m_VAO;
@@ -142,7 +143,8 @@ namespace agl
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
 		~GraphicLayer() = default;
 		void draw();
-		agl::Quad* newQuad(float width, float height, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255});
+		agl::Quad* newQuad();
+		//it dont be working tho
 		void removeObject(Quad& obj);
 	private:
 		agl::Shader* m_shader;

@@ -6,21 +6,22 @@
 
 namespace golf {
 
-class TextureComponent;
+class VisualComponent;
 
 
-class TextureComponent : public Component {
+class VisualComponent : public Component {
 public:
-	TextureComponent();
+	VisualComponent(agl::GraphicLayer &gl);
+	~VisualComponent();
 
-	void kill() override;
 	void setOwner(Entity *entity) override;
 	void setTexture(const std::string& name);
+	void setAnimation(const std::string& name);
+	void setColor(uchar r, uchar g, uchar b, uchar a);
+	void setColor(Color color);
 
 private:
-	void resync();
-
-	std::shared_ptr<Transform> m_transform;
+	agl::Quad* m_quad;
 };
 
 

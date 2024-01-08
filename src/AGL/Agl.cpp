@@ -78,33 +78,36 @@ agl::Animation::~Animation() { glDeleteTextures(1, &m_textureID); }
 std::pair<glm::vec2, glm::vec2> agl::Animation::getUV() const {
 	const int currframe = m_timePassed / m_frameTime;
 	return {
-		{1.f / m_w * (currframe % m_w)			, 1.f / m_h * (m_h - 1 - (currframe / m_w))},
-		{1.f / m_w * ((currframe % m_w) + 1)	, 1.f / m_h * (m_h - (currframe / m_w))}
+		{1.f / static_cast<float>(m_w * (currframe % m_w))			, 1.f / static_cast<float>(m_h * (m_h - 1 - (currframe / m_w)))},
+		{1.f / static_cast<float>(m_w * ((currframe % m_w) + 1))	, 1.f / static_cast<float>(m_h * (m_h - (currframe / m_w)))}
 	};
 }
 void agl::Animation::update(float deltaT)
-{ m_timePassed += deltaT; if (m_timePassed >= m_frames * m_frameTime) m_timePassed -= m_frames * m_frameTime; }
+{ m_timePassed += deltaT; if (m_timePassed >= static_cast<float>(m_frames) * m_frameTime) { m_timePassed -= m_frames * m_frameTime; } }
 void agl::Animation::bind(int slot/* = 0*/) const { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
 void agl::Animation::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 //?rendering---------------------------------------------------------------------------------------------------------------------------------------
-agl::Quad::Quad(float width, float height, glm::vec2 pos/*= { 0.f, 0.f }*/, Color color/* = {255, 255, 255, 255}*/)
-	:m_pos({pos}), m_xScale(width), m_yScale(height), m_rotation(0.f), m_vis(nullptr), m_color(color), m_VBO(0), m_EBO(0), m_VAO(0) {}
+agl::Quad::Quad()
+	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), m_color({255, 255, 255, 255}), m_VBO(0), m_EBO(0), m_VAO(0) {}
 
 agl::Quad::~Quad() { glDeleteBuffers(1, &m_VBO); glDeleteBuffers(1, &m_EBO); glDeleteVertexArrays(1, &m_VAO); }
 
-//transform funcions
-void agl::Quad::setVisual(agl::Visual& visual) { m_vis = &visual; }
-void agl::Quad::setRotation(float radians) { m_rotation = radians; }
-void agl::Quad::setScale(float xScale, float yScale) { m_xScale = xScale; m_yScale = yScale; }
-void agl::Quad::setPosition(float xPos, float yPos) { m_pos = { xPos, yPos }; }
-void agl::Quad::setPosition(glm::vec2 pos) { m_pos = pos; }
+//! Currently unused
+//transform funcions 
+void agl::Quad::setVisual(agl::Visual* visual) { m_vis = visual; DTL_ENT("{0}", m_vis); 
+if (m_vis == (agl::Visual*)0xDDDDDDDDDDDDDDDD)
+	{
+	DTL_ENT("a");
+	}
+}
+void agl::Quad::setPosPtr(float* x, float* y) { m_x = x; m_y = y; }
+void agl::Quad::setScalePtr(float* xScale, float* yScale) { m_xScale = xScale; m_yScale = yScale; }
+void agl::Quad::setRotationPtr(float* rotation) { m_rotation = rotation; }
 void agl::Quad::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_color = { red, green, blue, alpha }; }
 void agl::Quad::setColor(Color color) { m_color = color; }
 Color agl::Quad::getColor() const { return m_color; }
-float agl::Quad::getRotation() const { return m_rotation; }
-glm::vec2 agl::Quad::getScale() const { return { m_xScale, m_yScale }; }
-glm::vec2 agl::Quad::getPosition() const { return m_pos; }
+
 
 agl::GraphicLayer::GraphicLayer(agl::Shader& shader, agl::Camera& camera)
 	:m_shader(&shader), m_camera(&camera) {}
@@ -120,9 +123,18 @@ void agl::GraphicLayer::draw()
 	m_shader->setUniformMatrix4("u_P", proj);
 	for (int i = 0; i < m_quads.size(); ++i)
 	{
+		if (i == 0)
+		{
+			DTL_ENT("{0}", m_quads[i].m_vis);
+		}
 		glBindVertexArray(m_quads[i].m_VAO);
-		glm::dvec2 blV = m_quads[i].m_vis->getUV().first;
-		glm::dvec2 trV = m_quads[i].m_vis->getUV().second;
+		glm::dvec2 blV;
+		glm::dvec2 trV;
+		if(m_quads[i].m_vis != nullptr)
+		{ blV = m_quads[i].m_vis->getUV().first; trV = m_quads[i].m_vis->getUV().second; }
+		else
+		{ blV = { 1.0, 1.0 }; trV = { 1.0, 1.0 }; }
+
 		Vertice objectData[4] = {
 		{{-.5f, -.5f,}	, static_cast<glm::vec2>(blV)},
 		{{ .5f, -.5f,}	, {static_cast<float>(trV.x), static_cast<float>(blV.y)}},
@@ -130,9 +142,9 @@ void agl::GraphicLayer::draw()
 		{{ .5f,  .5f,}	, static_cast<glm::vec2>(trV)} };
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(Vertice), objectData);
-		m_shader->setUniformMatrix4("u_T", glm::translate(glm::mat4(1.f), glm::vec3(m_quads[i].m_pos, 0.f)));
-		m_shader->setUniformMatrix4("u_R", glm::rotate(glm::mat4(1.f), glm::radians(m_quads[i].m_rotation), glm::vec3(0.f, 0.f, 1.f)));
-		m_shader->setUniformMatrix4("u_S", glm::scale(glm::mat4(1.f), glm::vec3(m_quads[i].m_xScale, m_quads[i].m_yScale, 1.f)));
+		m_shader->setUniformMatrix4("u_T", glm::translate(glm::mat4(1.f), glm::vec3(*m_quads[i].m_x, *m_quads[i].m_y, 0.f)));
+		m_shader->setUniformMatrix4("u_R", glm::rotate(glm::mat4(1.f), glm::radians(*m_quads[i].m_rotation), glm::vec3(0.f, 0.f, 1.f)));
+		m_shader->setUniformMatrix4("u_S", glm::scale(glm::mat4(1.f), glm::vec3(*m_quads[i].m_xScale, *m_quads[i].m_yScale, 1.f)));
 		m_shader->setUniform4f("u_Col", m_quads[i].m_color.getNormalized());
 		if (m_quads[i].m_vis != nullptr) {
 			m_shader->setUniform1i("u_Tex", 0);
@@ -144,10 +156,10 @@ void agl::GraphicLayer::draw()
 	agl::Shader::unbind();
 }
 
-agl::Quad* agl::GraphicLayer::newQuad(float width, float height, glm::vec2 pos, Color color)
+agl::Quad* agl::GraphicLayer::newQuad()
 {
 	const uint32_t m_trisStencile[6] = { 0, 1, 2, 2, 3, 1 };
-	m_quads.push_back(agl::Quad(width, height, pos, color));
+	m_quads.push_back(agl::Quad());
 	//vertex buffer generation and setup
 	glCreateVertexArrays(1, &(*(m_quads.end() - 1)).m_VAO);
 	glBindVertexArray((*(m_quads.end() - 1)).m_VAO);
@@ -179,7 +191,7 @@ agl::Quad* agl::GraphicLayer::newQuad(float width, float height, glm::vec2 pos, 
 	return &(*(m_quads.end() - 1));
 }
 
-//it dont be working tho
+
 void agl::GraphicLayer::removeObject(Quad& obj) //todo make it work somewhat
 {
 	//for (int i = 0; i < m_quads.size(); ++i) 

@@ -35,12 +35,9 @@ private:
 	agl::GraphicLayer m_graphicsLayer;
 
 	Entity m_kot;
+	Entity m_kot2;
 
 	float timer = 0;
-
-	agl::Quad* testObj;
-	std::unique_ptr<agl::Texture> testTex;
-
 };
 
 
@@ -71,35 +68,6 @@ private:
 	std::array<Entity, spoingCount> someSpoingbobs; // a tu cała lista entity
 };
 
-
-class LevelOneScene : public Scene {
-public:
-	LevelOneScene();
-	~LevelOneScene() override = default;
-	LevelOneScene(LevelOneScene&&) = delete;
-	LevelOneScene(const LevelOneScene&) = delete;
-	LevelOneScene& operator=(LevelOneScene&&) = delete;
-	LevelOneScene& operator=(const LevelOneScene&) = delete;
-
-	void update(float deltaT) override;
-	void render() override;
-
-private:
-	agl::Camera m_camera;
-	agl::GraphicLayer m_graphicsLayer;
-
-	agl::Quad* WallA;
-	agl::Quad* WallB;
-	std::unique_ptr<agl::Texture> WallTex;
-
-	float speed = 0.0f;
-	float size;
-	float timer;
-	agl::Quad* testObj;
-	std::unique_ptr<agl::Animation> testTex;
-	agl::Texture* temp;
-
-};
 
 }
 

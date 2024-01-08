@@ -4,35 +4,27 @@
 
 #include <memory>
 
-namespace golf {
-
-///////////////////
-// TextureComponent
-///////////////////
-
-TextureComponent::TextureComponent()
-	: Component(nullptr) {}
-
-void TextureComponent::kill() {
-	Component::kill();
-	m_transform.reset();
-	// bo w tym momencie on dalej jest renderowany i to niepotrzebnie
-	DTL_INF("Killed graphics component");
-}
-
-void TextureComponent::setOwner(Entity *entity) {
-	Component::setOwner(entity);
-	m_transform = getTransform();
-}
-
-void TextureComponent::setTexture([[maybe_unused]] const std::string& name) {}
-
-void TextureComponent::resync() {
-	if(!m_transform) [[unlikely]] {
-		DTL_WAR("Próba zsynchronizowania komponentu graficznego z Transformem, gdy komponent nie ma przypisanego transforma! (sprawdź czy obiekt ma poprawnie przypisanego właściciela)");
-		return;
+namespace golf 
+{	
+	VisualComponent::VisualComponent(agl::GraphicLayer& graphicLayer) { m_quad = graphicLayer.newQuad(); }
+	
+	void VisualComponent::setOwner(Entity *entity) {
+		Component::setOwner(entity);
+		auto trans = getTransform();
+		m_quad->setPosPtr(&trans->x, &trans->y);
+		m_quad->setScalePtr(&trans->xScale, &trans->yScale);
+		m_quad->setRotationPtr(&trans->rot);
 	}
-}
+	VisualComponent::~VisualComponent()
+	{
+		DTL_ENT("Vis destroyed");
+	}
 
-
+	void VisualComponent::setTexture(const std::string& name) { m_quad->setVisual(AppData::getSus().GetTexture(name)); }
+	
+	void VisualComponent::setAnimation([[maybe_unused]] const std::string& name) {/*todo animacje, jak bedzie w nich wspracie w susie*/ }
+	
+	void VisualComponent::setColor(uchar r, uchar g, uchar b, uchar a) { m_quad->setColor(r, g, b, a); }
+	
+	void VisualComponent::setColor(Color color) { m_quad->setColor(color); };
 }
