@@ -14,7 +14,6 @@ include_directories(AGL-Deps/GLAD/include)
 # Precompiled headers:
 include_directories(pch)
 
-
 # Project libraries:
 add_subdirectory(AGL)
 add_subdirectory(DTL)
@@ -28,6 +27,7 @@ include_directories(Util)
 add_subdirectory(App)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE pch/pch.h)
+target_precompile_headers(lib_agl PRIVATE pch/pch.h)
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw glad stb lib_agl lib_dtl)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE imgui)

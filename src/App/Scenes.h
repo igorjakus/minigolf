@@ -32,11 +32,15 @@ public:
 
 private:
 	agl::Camera m_camera;
-	GraphicsLayer m_graphicsLayer;
+	agl::GraphicLayer m_graphicsLayer;
 
 	Entity m_kot;
 
 	float timer = 0;
+
+	agl::Quad* testObj;
+	std::unique_ptr<agl::Texture> testTex;
+
 };
 
 
@@ -55,7 +59,7 @@ public:
 	
 private:
 	agl::Camera m_camera;
-	GraphicsLayer m_graphicsLayer;
+	agl::GraphicLayer m_graphicsLayer;
 
 	float speed = 0.0f;
 	float size;
@@ -84,9 +88,17 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	std::unique_ptr<agl::Object> WallA;
-	std::unique_ptr<agl::Object> WallB;
+	agl::Quad* WallA;
+	agl::Quad* WallB;
 	std::unique_ptr<agl::Texture> WallTex;
+
+	float speed = 0.0f;
+	float size;
+	float timer;
+	agl::Quad* testObj;
+	std::unique_ptr<agl::Animation> testTex;
+	agl::Texture* temp;
+
 };
 
 }

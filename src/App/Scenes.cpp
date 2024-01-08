@@ -14,7 +14,6 @@
 //Temp:
 //NOLINTBEGIN
 
-
 namespace golf {
 
 // ===============================
@@ -25,18 +24,22 @@ BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
 	 m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	m_kot.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent());
+	//m_kot.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent());
 	m_kot.getComponent<TextureComponent>()->setTexture("popcat.png");
 
+
 	m_kot.getTransform()->setScale(0.5f);
+
+	AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
+
+	testObj = m_graphicsLayer.newQuad(1.f, 1.f);
+	testObj->setVisual(*AppData::getSus().GetTexture("popcat.png"));
+	
+
 }
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
-
-	if (timer > 1.0f && timer < 1.01f && m_kot.hasComponent<TextureComponent>()) {
-		m_kot.removeComponent<TextureComponent>();
-	}
 
 	if (timer > 3.0f) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
@@ -45,7 +48,7 @@ void BlankScene::update(float deltaT) {
 }
 
 void BlankScene::render() {
-	m_graphicsLayer.render();
+	m_graphicsLayer.draw();
 }
 
 
@@ -94,26 +97,26 @@ TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	size = 50.0f;
+	size = 100.0f;
 	timer = .0f;
 
 	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 	m_camera.setSize(tempX, tempY);
 
-	std::shared_ptr<TextureComponent> graphics = m_graphicsLayer.addTexComponent();
+	//std::shared_ptr<TextureComponent> graphics = m_graphicsLayer.addTexComponent();
 	// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 
 	// nie będzie przypisany do żadnej warstwy graficznej i tym samym nie będzie się wyświetlać
-	testObj.addComponent<TextureComponent>(graphics);
+	//testObj.addComponent<TextureComponent>(graphics);
 	// Można też bezpośrednio wrzucić wynik m_graphicsLayer.addTexComponent() do addComponent() czyli:
 	// testObj.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent()); jednak wtedy nie 
 	// mamy bezpośredniego wskaźnika na ten komponent i musimy go szukać chcąc z nim coś robić.
-	testObj.getComponent<TextureComponent>()->setTexture("popcat.png");
+	//testObj.getComponent<TextureComponent>()->setTexture("popcat.png");
 	// Jeżeli mamy nasz pointer "graphics" to możemy po prostu:
 	// graphics->setTexture("popcat.png");
 	// co jest szybsze, tym bardziej że przy powyższej metodzie powinniśmy upewnić się najpierw,
 	// że testObj w ogóle posiada TextureComponent poprzez if(testObj.hasComponent<TextureComponent>())
-	testObj.getTransform()->setScale(size);
+	//testObj.getTransform()->setScale(size);
 	// Tu po prostu biorę transform naszego obiektu (mamy gwarancje że każdy objekt posiada transform)
 	// i ustawiam skalę obietku (pozycja, obrót i skala są przechowywane w trasformie)
 	// Uwaga! Transform technicznie rzecz biorąc nie jest komponentem tzn. np. testObj.hasComponent<Transform>()
@@ -123,9 +126,9 @@ TestScene::TestScene()
 	const float spoingSize = 75;
 	// Ciekawszy przykład: iterujemy po elementach listy Entity
 	for(uint i = 0; i < spoingCount; i ++) {
-		std::shared_ptr<TextureComponent> tex = m_graphicsLayer.addTexComponent(); // Tworzymy komponent tex
-		someSpoingbobs[i].addComponent<TextureComponent>(tex); // przypisujemy właściciela komponentu
-		tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
+		//std::shared_ptr<TextureComponent> tex = m_graphicsLayer.addTexComponent(); // Tworzymy komponent tex
+		//someSpoingbobs[i].addComponent<TextureComponent>(tex); // przypisujemy właściciela komponentu
+		//tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 
 		std::shared_ptr<BouncyComponent> bounce = std::make_shared<BouncyComponent>(); // Tworzymy komponent bounce (który w sumie jest skryptem)
 		bounce->setVelocity({rand() % 300 * (i % 2 == 0 ? 1 : -1), rand() % 500 * (i % 3 == 0 ? 1 : -1)}); // nadajemy mu jakieś właściwości (losowe)
@@ -135,6 +138,13 @@ TestScene::TestScene()
 		someSpoingbobs[i].getTransform()->setScale(spoingSize); // na koniec zmieniamy skalę każdego entity
 	}
 
+
+	//testObj = m_graphicsLayer.newQuad(1.f, 1.f);
+
+	//testTex = std::make_unique<agl::Animation>("assets/textures/test.png", GL_LINEAR, 97, 0.05f, 10, 10);
+	//testTex = std::make_unique<agl::Texture>("assets/textures/test.png", GL_LINEAR);
+	//testObj->setVisual(*AppData::getSus().GetTexture("sponge.png"));
+	//testObj->setVisual(*testTex);
 }
 
 void TestScene::update(float deltaT) {
@@ -142,7 +152,7 @@ void TestScene::update(float deltaT) {
 	/////////////////////
 	/// Input showcase:
 	/////////////////////
-
+	//testTex->update(deltaT);
 	if(AppData::getInput().isKeyPressed("LEFT")) {
 		speed = -100.0f;
 	} else if(AppData::getInput().isKeyPressed("RIGHT")) {
@@ -210,7 +220,7 @@ void TestScene::update(float deltaT) {
 }
 
 void TestScene::render() {
-	m_graphicsLayer.render();
+	m_graphicsLayer.draw();
 }
 
 
@@ -225,12 +235,12 @@ LevelOneScene::LevelOneScene()
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
-	WallA = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, { -0.5f, 0 } ));
-	WallB = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, { 0, 0 }));
-	WallA->setTexture(*AppData::getSus().GetTexture("sponge.png"));
-	WallB->setTexture(*AppData::getSus().GetTexture("sponge.png"));
-	m_graphicsLayer.addObject(*WallA);
-	m_graphicsLayer.addObject(*WallB);
+	//WallA = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, { -0.5f, 0 } ));
+	//WallB = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, { 0, 0 }));
+	//WallA->setTexture(*AppData::getSus().GetTexture("sponge.png"));
+	//WallB->setTexture(*AppData::getSus().GetTexture("sponge.png"));
+	//m_graphicsLayer.addObject(*WallA);
+	//m_graphicsLayer.addObject(*WallB);
 }
 
 void LevelOneScene::update([[maybe_unused]] float deltaT)
