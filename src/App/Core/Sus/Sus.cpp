@@ -21,14 +21,23 @@ namespace golf {
 		}
 	}
 	void Sus::LoadTexture(const std::string& file, int filter, int sWrap, int tWrap) {
-		if (m_Textures.find(file) != m_Textures.end()) {
-			DTL_WAR("Trying to load already loaded texture:({0}). Operation ignored.",file);
+		//sprawdzanie formatu danej i zmienienie nazwy adekwatnie:
+		std::string fileName;
+		if (file.std::string::find(".png") != std::string::npos){
+			fileName = file.std::string::substr(0, file.std::string::size() - 4);
 		}
-		else if (!std::filesystem::exists(TEXTURE_PATH + file)) {
+		else {
+			fileName = file;
+		}
+		
+		if (m_Textures.find(fileName) != m_Textures.end()) {
+			DTL_WAR("Trying to load already loaded texture:({0}). Operation ignored.", file);
+		}
+		else if (!std::filesystem::exists(TEXTURE_PATH + file) && !std::filesystem::exists(TEXTURE_PATH + fileName+ ".png")) {
 			DTL_WAR("Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple(TEXTURE_PATH + file, filter, sWrap, tWrap));
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, sWrap, tWrap));
 		}
 	}
 

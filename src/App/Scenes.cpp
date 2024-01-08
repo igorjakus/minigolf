@@ -26,14 +26,15 @@ BlankScene::BlankScene()
 
 	// temp (should also be black (no racism))
 
+	AppData::getSus().LoadTexture("sponge");
+
 	AppData::getSus().LoadAllTextures();
 	AppData::getSus().LoadAllShaders();
 
-	//AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
 
 
 	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
-	testObj->setTexture(*AppData::getSus().GetTexture("popcat.png"));
+	testObj->setTexture(*AppData::getSus().GetTexture("popcat"));
 	m_graphicsLayer.addObject(*testObj);
 	
 }
@@ -42,7 +43,7 @@ void BlankScene::update(float deltaT) {
 	timer += deltaT;
 
 	if (timer > 3.0f) {
-		AppData::getSus().RemoveTexture("popcat.png");
+		AppData::getSus().RemoveTexture("popcat");
 
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
@@ -72,7 +73,7 @@ TestScene::TestScene()
 
 	testObj = std::make_unique<agl::Object>(agl::Object(size, size, { 0, 0 }, { 255, 255, 255, 255 }));
 
-	testObj->setTexture(*AppData::getSus().GetTexture("sponge.png"));
+	testObj->setTexture(*AppData::getSus().GetTexture("sponge"));
 	m_graphicsLayer.addObject(*testObj);
 }
 

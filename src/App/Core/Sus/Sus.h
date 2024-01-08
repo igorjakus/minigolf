@@ -34,7 +34,14 @@ namespace golf {
 		agl::Shader* LoadAndGetShader(const std::string& file);
 
 		void LoadAllShaders();
-		//==========
+
+		//=====[Data File]=====
+
+
+
+
+
+		//=====[Audio (Igor :3)]
 		void LoadAllAudio();
 		//===========
 	private:
