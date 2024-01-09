@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "GML/LinearAlgebra/Vec2f.h"
 #include "GML/LinearAlgebra/Vec3f.h"
+#include "GML/Constants.h"
 
 
 namespace golf {
@@ -26,7 +27,7 @@ namespace golf {
         //get rotation
 
         //aktualnie rotacja skosna nie jest przechowywana w transformie, trzeba to zmienic
-        m_rotation.set(0,0,rotation); //to be changed
+        m_rotation.z = rotation; //to be changed
 
         m_acceleration += m_net_force / m_mas;
         m_velocity += m_acceleration;
@@ -36,10 +37,14 @@ namespace golf {
         m_angular_velocity += m_angular_acceleration;
         m_rotation += m_angular_velocity * deltaT;
 
+        m_rotation.x = util::clamp(m_rotation.x,0,2*GML::M_PI);
+        m_rotation.y = util::clamp(m_rotation.y,0,2*GML::M_PI);
+        m_rotation.z = util::clamp(m_rotation.z,0,2*GML::M_PI);
 
         x = m_position.x;
         y = m_position.y;
         //set rotation
+        
         rotation = m_rotation.z; //to be changed!!!
 
         m_net_force.set(0,0); //suma wszystkich sil
