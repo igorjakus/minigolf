@@ -88,11 +88,11 @@ namespace agl
 	//Rendering
 	class Quad
 	{
-		Quad();
-		Quad(const Quad&) = default;
 	public:
+		Quad();
 		~Quad();
-		Quad(Quad &&) = default;
+		Quad(Quad && other) noexcept;
+		Quad(const Quad&) = delete;
 		Quad &operator=(Quad &&) = default;
 		Quad &operator=(const Quad &) = delete;
 		void setVisual(agl::Visual* visual);
@@ -142,12 +142,13 @@ namespace agl
 	public:
 		GraphicLayer(const GraphicLayer&) = delete;
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
-		~GraphicLayer() = default;
+		~GraphicLayer();
 		void draw();
 		agl::Quad* newQuad();
 		//it dont be working tho
-		void removeObject(Quad& obj);
+		void removeObject(agl::Quad* &obj);
 	private:
+		static uint32_t s_;
 		agl::Shader* m_shader;
 		agl::Camera* m_camera;
 		std::vector<agl::Quad> m_quads;

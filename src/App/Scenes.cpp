@@ -36,6 +36,7 @@ namespace golf {
 		test->setRotationPtr(&r1);
 		test->setVisual(AppData::getSus().GetTexture("popcat.png"));
 
+
 	}
 
 	void BlankScene::update(float deltaT) {
@@ -60,6 +61,10 @@ namespace golf {
 			test2->setPosPtr(&x2, &y2);
 			test2->setScalePtr(&sx2, &sy2);
 			test2->setRotationPtr(&r2);
+		}
+		if (AppData::getInput().isKeyClicked("LEFT"))
+		{
+			m_graphicsLayer.removeObject(test2);
 		}
 
 		if (AppData::getInput().isKeyClicked("ENTER")) {
