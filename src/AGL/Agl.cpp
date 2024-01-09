@@ -93,13 +93,10 @@ agl::Quad::Quad()
 
 agl::Quad::~Quad() { glDeleteBuffers(1, &m_VBO); glDeleteBuffers(1, &m_EBO); glDeleteVertexArrays(1, &m_VAO); }
 
-//! Currently unused
 //transform funcions 
 void agl::Quad::setVisual(agl::Visual* visual) { m_vis = visual; DTL_ENT("{0}", m_vis); 
-if (m_vis == (agl::Visual*)0xDDDDDDDDDDDDDDDD)
-	{
-	DTL_ENT("a");
-	}
+lol = !lol;
+DTL_ENT("{0}", lol);
 }
 void agl::Quad::setPosPtr(float* x, float* y) { m_x = x; m_y = y; }
 void agl::Quad::setScalePtr(float* xScale, float* yScale) { m_xScale = xScale; m_yScale = yScale; }
@@ -123,10 +120,6 @@ void agl::GraphicLayer::draw()
 	m_shader->setUniformMatrix4("u_P", proj);
 	for (int i = 0; i < m_quads.size(); ++i)
 	{
-		if (i == 0)
-		{
-			DTL_ENT("{0}", m_quads[i].m_vis);
-		}
 		glBindVertexArray(m_quads[i].m_VAO);
 		glm::dvec2 blV;
 		glm::dvec2 trV;
@@ -152,6 +145,9 @@ void agl::GraphicLayer::draw()
 			m_quads[i].m_vis->bind(0); }
 		else { m_shader->setUniform1i("u_Texuse", 0); }
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
+	}
+	if (m_quads[0].lol) {
+		DTL_ENT("lol");
 	}
 	agl::Shader::unbind();
 }

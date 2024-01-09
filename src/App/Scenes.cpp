@@ -22,37 +22,44 @@ namespace golf {
 
 	BlankScene::BlankScene()
 		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-		m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
+		m_graphicsLayer(AppData::getGlobalShader(), m_camera),
+		x1(-.3f), y1(0), sx1(.3f), sy1(.3f), r1(0), 
+		x2(0), y2(0), sx2(.2f), sy2(.2f), r2(0) {
 
-		AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
+		//m_kot.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+		//m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
+		//m_kot.getTransform()->setScale(0.5f);
 
-		m_kot.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
-		m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
-
-
-		m_kot.getTransform()->setScale(0.5f);
+		test = m_graphicsLayer.newQuad();
+		test->setPosPtr(&x1, &y1);
+		test->setScalePtr(&sx1, &sy1);
+		test->setRotationPtr(&r1);
+		test->setVisual(AppData::getSus().GetTexture("popcat.png"));
 
 	}
 
 	void BlankScene::update(float deltaT) {
 		timer += deltaT;
 
-
-		
-
-		if (AppData::getInput().isKeyPressed("UP"))
+		if (AppData::getInput().isKeyClicked("UP"))
 		{
-			m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
+			//m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
+			test->setVisual(AppData::getSus().GetTexture("popcat.png"));
 		}
-		if (AppData::getInput().isKeyPressed("DOWN"))
+		if (AppData::getInput().isKeyClicked("DOWN"))
 		{
-			m_kot.getComponent<VisualComponent>()->setTexture("sponge.png");
+			//m_kot.getComponent<VisualComponent>()->setTexture("sponge.png");
+			test->setVisual(AppData::getSus().GetTexture("sponge.png"));
 		}
 		if (AppData::getInput().isKeyClicked("RIGHT"))
 		{
-			std::shared_ptr<VisualComponent> graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
-			m_kot2.addComponent<VisualComponent>(graphics);
-			m_kot2.getTransform()->setScale(.2f);
+			//std::shared_ptr<VisualComponent> graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
+			//m_kot2.addComponent<VisualComponent>(graphics);
+			//m_kot2.getTransform()->setScale(.2f);
+			test2 = m_graphicsLayer.newQuad();
+			test2->setPosPtr(&x2, &y2);
+			test2->setScalePtr(&sx2, &sy2);
+			test2->setRotationPtr(&r2);
 		}
 
 		if (AppData::getInput().isKeyClicked("ENTER")) {
@@ -146,7 +153,7 @@ namespace golf {
 			tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 		
 			std::shared_ptr<BouncyComponent> bounce = std::make_shared<BouncyComponent>(); // Tworzymy komponent bounce (który w sumie jest skryptem)
-			bounce->setVelocity({ rand() % 300 * (i % 2 == 0 ? 1 : -1), rand() % 500 * (i % 3 == 0 ? 1 : -1) }); // nadajemy mu jakieś właściwości (losowe)
+			bounce->setVelocity({ rand() % 300 * (i % 2 == 0 ? 1.f : -1.f), rand() % 500 * (i % 3 == 0 ? 1.f : -1.f) }); // nadajemy mu jakieś właściwości (losowe)
 			bounce->setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
 			someSpoingbobs[i].addComponent<BouncyComponent>(bounce); // przypisujemy właściciela komponentu
 		

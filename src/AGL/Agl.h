@@ -110,6 +110,7 @@ namespace agl
 		agl::Visual* m_vis;
 		Color m_color;
 		GLuint m_VBO, m_EBO, m_VAO;
+		bool lol = true;
 	};
 
 	class Camera

@@ -34,8 +34,14 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	Entity m_kot;
-	Entity m_kot2;
+	//Entity m_kot;
+	//Entity m_kot2;
+
+	agl::Quad* test;
+	agl::Quad* test2;
+
+	float x1, y1, sx1, sy1, r1;
+	float x2, y2, sx2, sy2, r2;
 
 	float timer = 0;
 };
