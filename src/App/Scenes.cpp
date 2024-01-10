@@ -21,9 +21,9 @@ namespace golf {
 		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 		m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-		m_kot.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+		m_kot.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
-		m_kot.getTransform()->setScale(0.5f);
+		m_kot.getTransform()->setScale(.5f);
 
 	}
 
@@ -34,6 +34,20 @@ namespace golf {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 			AppData::getSceneManager().nextScene();
 		}
+		if (AppData::getInput().isKeyClicked("UP")) {
+			m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
+		}
+		if (AppData::getInput().isKeyClicked("DOWN")) {
+			m_kot.getComponent<VisualComponent>()->setTexture("sponge.png");
+		}
+		if (AppData::getInput().isKeyClicked("LEFT")) {
+			m_kot2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+			m_kot2.getTransform()->setScale(.2f);
+		}
+		if (AppData::getInput().isKeyClicked("RIGHT")) {
+			m_kot2.removeComponent<VisualComponent>();
+		}
+
 	}
 
 	void BlankScene::render() {
@@ -93,7 +107,7 @@ namespace golf {
 		const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 		m_camera.setSize(tempX, tempY);
 
-		std::shared_ptr<VisualComponent> graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
+		std::shared_ptr<VisualComponent> graphics = std::make_shared<VisualComponent>(&m_graphicsLayer);
 		// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 
 		// nie będzie przypisany do żadnej warstwy graficznej i tym samym nie będzie się wyświetlać
 		testObj.addComponent<VisualComponent>(graphics);
@@ -115,7 +129,7 @@ namespace golf {
 		const float spoingSize = 75;
 		// Ciekawszy przykład: iterujemy po elementach listy Entity
 		for (uint i = 0; i < spoingCount; i++) {
-			std::shared_ptr<VisualComponent> tex = std::make_shared<VisualComponent>(m_graphicsLayer); // Tworzymy komponent tex
+			std::shared_ptr<VisualComponent> tex = std::make_shared<VisualComponent>(&m_graphicsLayer); // Tworzymy komponent tex
 			someSpoingbobs[i].addComponent<VisualComponent>(tex); // przypisujemy właściciela komponentu
 			tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 		

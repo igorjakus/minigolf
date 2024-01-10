@@ -11,8 +11,9 @@ class VisualComponent;
 
 class VisualComponent : public Component {
 public:
-	VisualComponent(agl::GraphicLayer &graphicLayer);
+	explicit VisualComponent(agl::GraphicLayer* graphicLayer);
 
+	void onKill() override;
 	void onOwnerSet(Entity* entity) override;
 	void setTexture(const std::string& name);
 	void setAnimation(const std::string& name);
@@ -20,7 +21,8 @@ public:
 	void setColor(Color color);
 
 private:
-	agl::Quad* m_quad;
+	uint32_t m_ID;
+	agl::GraphicLayer* m_GL;
 };
 
 
