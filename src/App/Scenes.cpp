@@ -6,6 +6,7 @@
 #include "Agl.h"
 
 #include <cmath>
+#include <memory>
 #include "Util.hpp"
 
 //Temp:
@@ -21,9 +22,16 @@ namespace golf {
 		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 		m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-		m_kot.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+		const uint tempX = AppData::getWindow().getWindowSize().x;
+		const uint tempY = AppData::getWindow().getWindowSize().y;
+		m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+
+		auto comp = std::make_shared<VisualComponent>(m_graphicsLayer);
+		m_kot.addComponent<VisualComponent>(comp);
 		m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
 		m_kot.getTransform()->setScale(0.5f);
+		// m_kot.getTransform()->xScale = 0.8f;
+		// m_kot.getTransform()->yScale = 0.3f;
 
 	}
 
@@ -63,13 +71,11 @@ namespace golf {
 		if (x < minX || x > maxX) {
 			velocity.first *= -1;
 			x = util::clamp(x, minX, maxX);
-			//if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
-			//	getOwner()->getComponent<VisualComponent>()->setTexture("popcat.png");
-			//}
+			// if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
+			// 	getOwner()->getComponent<VisualComponent>()->setTexture("popcat.png");
+			// }
 			getTransform()->rot += 1.0f;
 			getTransform()->xScale *= 1.1f;
-			kill();
-			return;
 		}
 		if (y < minY || y > maxY) {
 			velocity.second *= -1;
@@ -92,7 +98,7 @@ namespace golf {
 		const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 		m_camera.setSize(tempX, tempY);
 
-		std::shared_ptr<VisualComponent> graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
+		auto graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
 		// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 
 		// nie będzie przypisany do żadnej warstwy graficznej i tym samym nie będzie się wyświetlać
 		testObj.addComponent<VisualComponent>(graphics);
@@ -118,11 +124,11 @@ namespace golf {
 			someSpoingbobs[i].addComponent<VisualComponent>(tex); // przypisujemy właściciela komponentu
 			tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 		
-			BouncyComponent& bounce = comps[i];
-			someSpoingbobs[i].addComponent<BouncyComponent>(bounce); // przypisujemy właściciela komponentu
+			// someSpoingbobs[i].addComponent<BouncyComponent>(std::make_shared<BouncyComponent>());
+			someSpoingbobs[i].addComponent<BouncyComponent>(comps[i]); // przypisujemy właściciela komponentu
 
-			bounce.setVelocity({ rand() % 300 * (i % 2 == 0 ? 1.f : -1.f), rand() % 500 * (i % 3 == 0 ? 1.f : -1.f) }); // nadajemy mu jakieś właściwości (losowe)
-			bounce.setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
+			comps[i].setVelocity({ rand() % 300 * (i % 2 == 0 ? 1.f : -1.f), rand() % 500 * (i % 3 == 0 ? 1.f : -1.f) }); // nadajemy mu jakieś właściwości (losowe)
+			comps[i].setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
 		
 			someSpoingbobs[i].getTransform()->setScale(spoingSize); // na koniec zmieniamy skalę każdego entity
 		}
@@ -198,11 +204,11 @@ namespace golf {
 		/// Components in action
 		/////////////////////
 
-		for (auto& c : comps) { // Iterowanie po Entity jest raczej nieoptymalne. Lepiej jest mieć listę komponentów danego typu i iterować po komponentach
+		for (auto& comp : comps) { // Iterowanie po Entity jest raczej nieoptymalne. Lepiej jest mieć listę komponentów danego typu i iterować po komponentach
 			//if (spoing.hasComponent<BouncyComponent>()) {
 			//	spoing.getComponent<BouncyComponent>()->updatePosition(deltaT); // No ale można
 			//}
-			c.updatePosition(deltaT);
+			comp.updatePosition(deltaT);
 		}
 
 	}
@@ -222,6 +228,17 @@ LevelOneScene::LevelOneScene()
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+
+	wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+	wallA.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
+	wallA.getTransform()->setPos(0.3f, 0.0f);
+	wallA.getTransform()->setScale(0.05f, 0.2f);
+
+	wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+	wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
+	wallB.getTransform()->setPos(0.1f, 0.0f);
+	wallB.getTransform()->setScale(0.05f, 0.2f);
+
 }
 
 void LevelOneScene::update([[maybe_unused]] float deltaT)

@@ -75,7 +75,9 @@ private:
 	// Tak deklarujemy wszystkie entity. Dosłownie tyle wystarczy aby obiekt istniał w świecie.
 	Entity testObj;
 	static const uint spoingCount = 10;
+
 	std::array<Entity, spoingCount> someSpoingbobs; // a tu cała lista entity
+	
 	std::array<BouncyComponent, spoingCount> comps;
 };
 
@@ -116,9 +118,8 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	std::unique_ptr<agl::Object> WallA;
-	std::unique_ptr<agl::Object> WallB;
-	std::unique_ptr<agl::Texture> WallTex;
+	Entity wallA;
+	Entity wallB;
 	bool isFirstUpdate = true;
 };
 

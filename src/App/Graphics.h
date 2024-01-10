@@ -11,7 +11,7 @@ class VisualComponent;
 
 class VisualComponent : public Component {
 public:
-	VisualComponent(agl::GraphicLayer &graphicLayer);
+	explicit VisualComponent(agl::GraphicLayer &graphicLayer);
 
 	void onOwnerSet(Entity* entity) override;
 	void setTexture(const std::string& name);
