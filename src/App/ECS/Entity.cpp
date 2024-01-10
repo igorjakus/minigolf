@@ -58,7 +58,7 @@ void Entity::removeComponent(Component* component) {
 	}
 }
 
-void Entity::kill() {
+void Entity::kill() { //NOLINT
 	auto component = m_components.begin();
 	if (component != m_components.end()) {
 		component->second->kill();

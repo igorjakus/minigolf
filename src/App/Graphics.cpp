@@ -6,10 +6,10 @@
 
 namespace golf 
 {	
-	VisualComponent::VisualComponent(agl::GraphicLayer& graphicLayer) { m_quad = graphicLayer.newQuad(); }
+	VisualComponent::VisualComponent(agl::GraphicLayer& graphicLayer) : m_quad(graphicLayer.newQuad()) {}
 	
 	void VisualComponent::onOwnerSet([[maybe_unused]]Entity *entity) {
-		auto trans = getTransform();
+		auto* trans = getTransform();
 		m_quad->setPosPtr(&trans->x, &trans->y);
 		m_quad->setScalePtr(&trans->xScale, &trans->yScale);
 		m_quad->setRotationPtr(&trans->rot);
@@ -21,7 +21,7 @@ namespace golf
 	
 	void VisualComponent::setAnimation([[maybe_unused]] const std::string& name) {}
 	
-	void VisualComponent::setColor(uchar r, uchar g, uchar b, uchar a) { m_quad->setColor(r, g, b, a); }
+	void VisualComponent::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_quad->setColor(red, green, blue, alpha); }
 	
 	void VisualComponent::setColor(Color color) { m_quad->setColor(color); };
 }
