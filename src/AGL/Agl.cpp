@@ -94,10 +94,7 @@ agl::Quad::Quad()
 agl::Quad::~Quad() { glDeleteBuffers(1, &m_VBO); glDeleteBuffers(1, &m_EBO); glDeleteVertexArrays(1, &m_VAO); }
 
 //transform funcions 
-void agl::Quad::setVisual(agl::Visual* visual) { m_vis = visual; DTL_ENT("{0}", m_vis); 
-lol = !lol;
-DTL_ENT("{0}", lol);
-}
+void agl::Quad::setVisual(agl::Visual* visual) { m_vis = visual; }
 void agl::Quad::setPosPtr(float* x, float* y) { m_x = x; m_y = y; }
 void agl::Quad::setScalePtr(float* xScale, float* yScale) { m_xScale = xScale; m_yScale = yScale; }
 void agl::Quad::setRotationPtr(float* rotation) { m_rotation = rotation; }
@@ -146,9 +143,7 @@ void agl::GraphicLayer::draw()
 		else { m_shader->setUniform1i("u_Texuse", 0); }
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
 	}
-	if (m_quads[0].lol) {
-		DTL_ENT("lol");
-	}
+	
 	agl::Shader::unbind();
 }
 

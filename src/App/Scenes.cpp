@@ -6,9 +6,6 @@
 #include "Agl.h"
 
 #include <cmath>
-#include <cstdlib>
-#include <memory>
-#include <utility>
 #include "Util.hpp"
 
 //Temp:
@@ -22,45 +19,16 @@ namespace golf {
 
 	BlankScene::BlankScene()
 		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-		m_graphicsLayer(AppData::getGlobalShader(), m_camera),
-		x1(-.3f), y1(0), sx1(.3f), sy1(.3f), r1(0), 
-		x2(0), y2(0), sx2(.2f), sy2(.2f), r2(0) {
+		m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-		//m_kot.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
-		//m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
-		//m_kot.getTransform()->setScale(0.5f);
-
-		test = m_graphicsLayer.newQuad();
-		test->setPosPtr(&x1, &y1);
-		test->setScalePtr(&sx1, &sy1);
-		test->setRotationPtr(&r1);
-		test->setVisual(AppData::getSus().GetTexture("popcat.png"));
+		m_kot.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+		m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
+		m_kot.getTransform()->setScale(0.5f);
 
 	}
 
 	void BlankScene::update(float deltaT) {
 		timer += deltaT;
-
-		if (AppData::getInput().isKeyClicked("UP"))
-		{
-			//m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
-			test->setVisual(AppData::getSus().GetTexture("popcat.png"));
-		}
-		if (AppData::getInput().isKeyClicked("DOWN"))
-		{
-			//m_kot.getComponent<VisualComponent>()->setTexture("sponge.png");
-			test->setVisual(AppData::getSus().GetTexture("sponge.png"));
-		}
-		if (AppData::getInput().isKeyClicked("RIGHT"))
-		{
-			//std::shared_ptr<VisualComponent> graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
-			//m_kot2.addComponent<VisualComponent>(graphics);
-			//m_kot2.getTransform()->setScale(.2f);
-			test2 = m_graphicsLayer.newQuad();
-			test2->setPosPtr(&x2, &y2);
-			test2->setScalePtr(&sx2, &sy2);
-			test2->setRotationPtr(&r2);
-		}
 
 		if (AppData::getInput().isKeyClicked("ENTER")) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
@@ -77,43 +45,42 @@ namespace golf {
 	// TestScene
 	// ===============================
 
-	// Przykładowy "skrypt"
-	class BouncyComponent : public Component {
-	public:
+	void BouncyComponent::setVelocity(std::pair<float, float> vel) {
+		velocity = vel;
+	}
+	void BouncyComponent::setBoundaries(float min1, float max1, float min2, float max2) {
+		minX = min1; maxX = max1; minY = min2; maxY = max2;
+	}
 
-		void setVelocity(std::pair<float, float> vel) {
-			velocity = vel;
+	void BouncyComponent::updatePosition(float deltaT) {
+		if (!getOwner()) {
+			return;
 		}
-		void setBoundaries(float min1, float max1, float min2, float max2) {
-			minX = min1; maxX = max1; minY = min2; maxY = max2;
+		// uwaga! nie mamy pewności że transform istnieje! (getTransform zwróci nullptr jeśli nie ma właściciela (przypisanego Entity))
+		float& x = getTransform()->x;
+		float& y = getTransform()->y;
+		x += velocity.first * deltaT;
+		y += velocity.second * deltaT;
+		if (x < minX || x > maxX) {
+			velocity.first *= -1;
+			x = util::clamp(x, minX, maxX);
+			//if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
+			//	getOwner()->getComponent<VisualComponent>()->setTexture("popcat.png");
+			//}
+			getTransform()->rot += 1.0f;
+			getTransform()->xScale *= 1.1f;
+			kill();
+			return;
 		}
+		if (y < minY || y > maxY) {
+			velocity.second *= -1;
+			y = util::clamp(y, minY, maxY);
+			getTransform()->rot += -10.0f;
+			getTransform()->xScale *= 1.1f;
+		}
+	}
 
-		void updatePosition(float deltaT) {
-			float& x = getTransform()->x;
-			float& y = getTransform()->y;
-			// uwaga! nie mamy pewności że transform istnieje! (getTransform zwróci pusty shared_ptr jeśli nie ma właściciela (przypisanego Entity))
-			x += velocity.first * deltaT;
-			y += velocity.second * deltaT;
-			if (x < minX || x > maxX) {
-				velocity.first *= -1;
-				x = util::clamp(minX, maxX, x);
-				if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
-					getOwner()->getComponent<VisualComponent>()->setTexture("popcat.png");
-					DTL_ENT("Dupa");
-				}
-				kill();
-				return; // po kill() nie powinniśmy już pracować nad komponentem
-			}
-			if (y < minY || y > maxY) {
-				velocity.second *= -1;
-				y = util::clamp(minX, maxX, y);
-			}
-		}
-
-	private:
-		std::pair<float, float> velocity;
-		float minX, maxX, minY, maxY;
-	};
+	// Faktyczna scena poniżej vvv
 
 	TestScene::TestScene()
 		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
@@ -152,10 +119,11 @@ namespace golf {
 			someSpoingbobs[i].addComponent<VisualComponent>(tex); // przypisujemy właściciela komponentu
 			tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 		
-			std::shared_ptr<BouncyComponent> bounce = std::make_shared<BouncyComponent>(); // Tworzymy komponent bounce (który w sumie jest skryptem)
-			bounce->setVelocity({ rand() % 300 * (i % 2 == 0 ? 1.f : -1.f), rand() % 500 * (i % 3 == 0 ? 1.f : -1.f) }); // nadajemy mu jakieś właściwości (losowe)
-			bounce->setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
+			BouncyComponent& bounce = comps[i];
 			someSpoingbobs[i].addComponent<BouncyComponent>(bounce); // przypisujemy właściciela komponentu
+
+			bounce.setVelocity({ rand() % 300 * (i % 2 == 0 ? 1.f : -1.f), rand() % 500 * (i % 3 == 0 ? 1.f : -1.f) }); // nadajemy mu jakieś właściwości (losowe)
+			bounce.setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
 		
 			someSpoingbobs[i].getTransform()->setScale(spoingSize); // na koniec zmieniamy skalę każdego entity
 		}
@@ -187,60 +155,57 @@ namespace golf {
 			testObj.getTransform()->y -= 50.0f;
 			testObj.getComponent<VisualComponent>()->setTexture("sponge.png");
 		}
-//
-//		if (AppData::getInput().getWheelOffset() != 0.0f) {
-//			DTL_ENT("{0}", AppData::getInput().getWheelOffset());
-//		}
-//
-//		if (AppData::getInput().isLeftMouseClicked()) {
-//			DTL_ENT("Hello!");
-//		}
-//		else if (AppData::getInput().isRightMousePressed()) {
-//			DTL_ENT("YOOOO");
-//		}
-//
-//		AppData::getInput().setMousePosLock(AppData::getInput().isKeyPressed("SPACE"));
-//
-//		if (AppData::getInput().isMouseLocked()) {
-//			auto [x, y] = AppData::getInput().getMouseOffset();
-//			if (x != 0 || y != 0) {
-//				DTL_ENT("{0}, {0}", x, y);
-//			}
-//		}
-//		else {
-//			if (AppData::getInput().isKeyClicked("V")) {
-//				AppData::getInput().toggleMouseVisibility();
-//			}
-//		}
-//
-//		/////////////////////
-//		/// Utils showcase:
-//		/////////////////////
-//
-//		timer += deltaT * 0.3f;
-//		if (timer >= 1) {
-//			timer = 0;
-//		}
-//
-//		float t = -4 * (timer - 0.5f) * (timer - 0.5f) + 1;
-//		size = util::lerp(50.0f, 100.0f, sqrtf(t));
-//
-//		testObj.getTransform()->setScale(size);
-//
-//		/////////////////////
-//		/// Components in action
-//		/////////////////////
-//
-//		for (auto spoing : someSpoingbobs) { // Iterowanie po Entity jest raczej nieoptymalne. Lepiej jest mieć listę komponentów danego typu i iterować po komponentach
-//			if (spoing.hasComponent<BouncyComponent>()) {
-//				spoing.getComponent<BouncyComponent>()->updatePosition(deltaT);
-//			}
-//			if(!spoing.hasComponent<VisualComponent>())
-//			{
-//
-//			}
-//		}
-//
+
+		if (AppData::getInput().getWheelOffset() != 0.0f) {
+			DTL_ENT("{0}", AppData::getInput().getWheelOffset());
+		}
+
+		if (AppData::getInput().isLeftMouseClicked()) {
+			DTL_ENT("Hello!");
+		}
+		else if (AppData::getInput().isRightMousePressed()) {
+			DTL_ENT("YOOOO");
+		}
+
+		AppData::getInput().setMousePosLock(AppData::getInput().isKeyPressed("SPACE"));
+
+		if (AppData::getInput().isMouseLocked()) {
+			auto [x, y] = AppData::getInput().getMouseOffset();
+			if (x != 0 || y != 0) {
+				DTL_ENT("{0}, {0}", x, y);
+			}
+		}
+		else {
+			if (AppData::getInput().isKeyClicked("V")) {
+				AppData::getInput().toggleMouseVisibility();
+			}
+		}
+
+		/////////////////////
+		/// Utils showcase:
+		/////////////////////
+
+		timer += deltaT * 0.3f;
+		if (timer >= 1) {
+			timer = 0;
+		}
+
+		float t = -4 * (timer - 0.5f) * (timer - 0.5f) + 1;
+		size = util::lerp(50.0f, 100.0f, sqrtf(t));
+
+		testObj.getTransform()->setScale(size);
+
+		/////////////////////
+		/// Components in action
+		/////////////////////
+
+		for (auto& c : comps) { // Iterowanie po Entity jest raczej nieoptymalne. Lepiej jest mieć listę komponentów danego typu i iterować po komponentach
+			//if (spoing.hasComponent<BouncyComponent>()) {
+			//	spoing.getComponent<BouncyComponent>()->updatePosition(deltaT); // No ale można
+			//}
+			c.updatePosition(deltaT);
+		}
+
 	}
 
 	void TestScene::render() {
