@@ -7,6 +7,8 @@
 #define ANIMATION_PATH "assets/animation/"
 #define LEVELS "assets/data/Levels.txt"
 
+//NOLINTBEGIN
+
 namespace golf 
 {
 	void Sus::LoadAll() {
@@ -37,7 +39,7 @@ namespace golf
 			DTL_WAR("Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, sWrap, tWrap));
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, glm::ivec2(1, 1), sWrap, tWrap));
 		}
 	}
 
@@ -138,3 +140,5 @@ namespace golf
 
 	}
 }
+
+//NOLINTEND

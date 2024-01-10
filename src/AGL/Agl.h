@@ -5,8 +5,13 @@
 #include<Shader.h>
 #include<stb/stb_image.h>
 #include<ImGui.h>
+#include<glm/glm.hpp>
+#include<vector>
 
-struct Vertice {
+#define Object Quad
+
+struct Vertice 
+{
 	glm::vec2 position;
 	glm::vec2 uv;
 	Vertice();
@@ -51,6 +56,7 @@ namespace agl
 		Texture(std::string filepath, int filter, glm::ivec2 textureRatio = { 1, 1 }, int sWrap = GL_CLAMP_TO_BORDER, int tWrap = GL_CLAMP_TO_BORDER);
 		~Texture() override;
 		Texture(const Texture&) = delete;
+		Texture &operator=(const Texture &) = delete;
 		void bind(int slot = 0) const override;
 		static void unbind();
 		std::pair<glm::vec2, glm::vec2> getUV() const override;
@@ -65,6 +71,7 @@ namespace agl
 		Animation(std::string filepath, int filter, uint frames, float frametime, uint width, uint heigth);
 		~Animation() override;
 		Animation(const Animation&) = delete;
+		Animation &operator=(const Animation &) = delete;
 		void bind(int slot = 0) const override;
 		static void unbind();
 		std::pair<glm::vec2, glm::vec2> getUV() const override;
@@ -77,31 +84,32 @@ namespace agl
 		uint m_w, m_h;
 	};
 
-	//!Rendering==================================================================================================================================
-	class Object
+	//Rendering
+	class Quad
 	{
 	public:
-		Object(float width, float height, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255}, glm::ivec2 texRatio = {1, 1});
-		~Object();
-		void setVisual(agl::Visual& visual);
-		void setRotation(float rads);
-		void setScale(float xScale, float yScale);
-		void setPosition(float xPos, float yPos);
-		void setPosition(glm::vec2 pos);
+		Quad();
+		~Quad();
+		Quad(Quad && other) noexcept;
+		Quad(const Quad&) = delete;
+		Quad &operator=(Quad &&) = default;
+		Quad &operator=(const Quad &) = delete;
+		void setVisual(agl::Visual* visual);
+		void setPosPtr(float* x, float* y);
+		void setScalePtr(float* xScale, float* yScale);
+		void setRotationPtr(float* rotation);
 		void setColor(uchar red, uchar green, uchar blue, uchar alpha);
 		void setColor(Color color);
 		Color getColor() const;
-		float getRotation() const;
-		glm::vec2 getScale() const;
-		glm::vec2 getPosition() const;
 		friend class GraphicLayer;
 	private:
-		glm::vec2 m_pos;
-		glm::ivec2 m_texRatio;
-		float m_xScale, m_yScale;
-		float m_rotation;
+		float* m_x, *m_y;
+		float* m_xScale, *m_yScale;
+		float* m_rotation;
 		agl::Visual* m_vis;
 		Color m_color;
+		GLuint m_VBO, m_EBO, m_VAO;
+		bool lol = true;
 	};
 
 	class Camera
@@ -134,16 +142,14 @@ namespace agl
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
 		~GraphicLayer();
 		void draw();
-		void addObject(Object& obj);
-		void removeObject(Object& obj);
+		agl::Quad* newQuad();
+		//it dont be working tho
+		void removeObject(agl::Quad* &obj);
 	private:
-		struct BufferData;
+		static uint32_t s_;
 		agl::Shader* m_shader;
 		agl::Camera* m_camera;
-		const uint32_t m_trisStencile[6] = { 0, 1, 2, 2, 3, 1 };
-		std::vector<BufferData> m_bd;
-		struct BufferData
-		{ uint32_t VBO, EBO, VAO; agl::Object* objptr; };
+		std::vector<agl::Quad> m_quads;
 	};
 
 }

@@ -1,74 +1,140 @@
+#include <pch.h>
 #include "Scenes.h"
 #include "Core/AppData.h"
+
+#include "ECS/Entity.h"
+#include "Graphics.h"
+
+#include <cmath>
+#include <memory>
 #include "Util.hpp"
-#include <Agl.h>
-#include <pch.h>
 
 // Temp:
 // NOLINTBEGIN
 
 namespace golf {
-// forward declarations:
-class BlankScene;
-class TestScene;
 
 // ===============================
 // BlankScene
 // ===============================
 
 BlankScene::BlankScene()
-	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F), 
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(*AppData::getSus().LoadAndGetShader("DefaultShader.glsl"), m_camera) {
 
-	// temp (should also be black (no racism))
+	const uint tempX = AppData::getWindow().getWindowSize().x;
+	const uint tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
 
-	AppData::getSus().LoadTexture("sponge");
-
-	AppData::getSus().LoadAllTextures();
-	AppData::getSus().LoadAllShaders();
-
-	testObj = std::make_unique<agl::Object>(agl::Object(1.f, 1.f));
-	testObj->setVisual(*AppData::getSus().GetTexture("popcat"));
-	m_graphicsLayer.addObject(*testObj);
+	auto comp = std::make_shared<VisualComponent>(m_graphicsLayer);
+	m_kot.addComponent<VisualComponent>(comp);
+	m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
+	m_kot.getTransform()->setScale(0.5f);
+	// m_kot.getTransform()->xScale = 0.8f;
+	// m_kot.getTransform()->yScale = 0.3f;
 
 }
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
 
-	if (timer > 1.0f) {
-
-		AppData::getSceneManager().pushScene(
-			std::shared_ptr<Scene>(new TestScene()));
+	if (AppData::getInput().isKeyClicked("ENTER")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
 	}
 }
 
-void BlankScene::render() { m_graphicsLayer.draw(); }
+void BlankScene::render() {
+	m_graphicsLayer.draw();
+}
 
 // ===============================
 // TestScene
 // ===============================
 
+void BouncyComponent::setVelocity(std::pair<float, float> vel) {
+	velocity = vel;
+}
+void BouncyComponent::setBoundaries(float min1, float max1, float min2, float max2) {
+	minX = min1; maxX = max1; minY = min2; maxY = max2;
+}
+
+void BouncyComponent::updatePosition(float deltaT) {
+	if (!getOwner()) {
+		return;
+	}
+	// uwaga! nie mamy pewności że transform istnieje! (getTransform zwróci nullptr jeśli nie ma właściciela (przypisanego Entity))
+	float& x = getTransform()->x;
+	float& y = getTransform()->y;
+	x += velocity.first * deltaT;
+	y += velocity.second * deltaT;
+	if (x < minX || x > maxX) {
+		velocity.first *= -1;
+		x = util::clamp(x, minX, maxX);
+		// if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
+		// 	getOwner()->getComponent<VisualComponent>()->setTexture("popcat.png");
+		// }
+		getTransform()->rot += 1.0f;
+		getTransform()->xScale *= 1.1f;
+	}
+	if (y < minY || y > maxY) {
+		velocity.second *= -1;
+		y = util::clamp(y, minY, maxY);
+		getTransform()->rot += -10.0f;
+		getTransform()->xScale *= 1.1f;
+	}
+}
+
+// Faktyczna scena poniżej vvv
+
 TestScene::TestScene()
-	: m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
-	size = 100.f;
-	timer = 0.f;
+	size = 100.0f;
+	timer = .0f;
 
-	const unsigned int tempX = AppData::getWindow().getWindowSize().x;
-	const unsigned int tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX), static_cast<float>(tempY));
+	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
+	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
+	m_camera.setSize(tempX, tempY);
 
-	testObj = std::make_unique<agl::Object>(size, size);
-	testTex = std::make_unique<agl::Animation>("assets/textures/test.png",
-											GL_LINEAR, 97, 0.05f, 10, 10);
-	// testTex = std::make_unique<agl::Texture>("assets/textures/test.png",
-	// GL_LINEAR);
-	// testObj->setVisual(*AppData::getSus().GetTexture("sponge.png"));
-	testObj->setVisual(*testTex);
-	m_graphicsLayer.addObject(*testObj);
+	auto graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
+	// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 
+	// nie będzie przypisany do żadnej warstwy graficznej i tym samym nie będzie się wyświetlać
+	testObj.addComponent<VisualComponent>(graphics);
+	// Można też bezpośrednio wrzucić wynik m_graphicsLayer.addTexComponent() do addComponent() czyli:
+	// testObj.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent()); jednak wtedy nie 
+	// mamy bezpośredniego wskaźnika na ten komponent i musimy go szukać chcąc z nim coś robić.
+	testObj.getComponent<VisualComponent>()->setTexture("popcat.png");
+	// Jeżeli mamy nasz pointer "graphics" to możemy po prostu:
+	// graphics->setTexture("popcat.png");
+	// co jest szybsze, tym bardziej że przy powyższej metodzie powinniśmy upewnić się najpierw,
+	// że testObj w ogóle posiada TextureComponent poprzez if(testObj.hasComponent<TextureComponent>())
+	testObj.getTransform()->setScale(size);
+	// Tu po prostu biorę transform naszego obiektu (mamy gwarancje że każdy objekt posiada transform)
+	// i ustawiam skalę obietku (pozycja, obrót i skala są przechowywane w trasformie)
+	// Uwaga! Transform technicznie rzecz biorąc nie jest komponentem tzn. np. testObj.hasComponent<Transform>()
+	// zwróci false
+
+	srand(2137);
+	const float spoingSize = 75;
+	// Ciekawszy przykład: iterujemy po elementach listy Entity
+	for (uint i = 0; i < spoingCount; i++) {
+		std::shared_ptr<VisualComponent> tex = std::make_shared<VisualComponent>(m_graphicsLayer); // Tworzymy komponent tex
+		someSpoingbobs[i].addComponent<VisualComponent>(tex); // przypisujemy właściciela komponentu
+		tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
+
+		// someSpoingbobs[i].addComponent<BouncyComponent>(std::make_shared<BouncyComponent>());
+		someSpoingbobs[i].addComponent<BouncyComponent>(comps[i]); // przypisujemy właściciela komponentu
+
+		float xVel = static_cast<float>(rand() % 300) * (i % 2 == 0 ? 1.f : -1.f);
+		float yVel = static_cast<float>(rand() % 500) * (i % 3 == 0 ? 1.f : -1.f);
+		comps[i].setVelocity({xVel, yVel}); // nadajemy mu jakieś właściwości (losowe)
+		comps[i].setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
+
+		someSpoingbobs[i].getTransform()->setScale(spoingSize); // na koniec zmieniamy skalę każdego entity
+	}
+
 }
 
 void TestScene::update(float deltaT) {
@@ -76,21 +142,25 @@ void TestScene::update(float deltaT) {
 	/////////////////////
 	/// Input showcase:
 	/////////////////////
-	testTex->update(deltaT);
+	//testTex->update(deltaT);
 	if (AppData::getInput().isKeyPressed("LEFT")) {
 		speed = -100.0f;
-	} else if (AppData::getInput().isKeyPressed("RIGHT")) {
+	}
+	else if (AppData::getInput().isKeyPressed("RIGHT")) {
 		speed = 100.0f;
-	} else {
+	}
+	else {
 		speed = .0f;
 	}
+	testObj.getTransform()->x += speed * deltaT;
 
 	if (AppData::getInput().isKeyClicked("UP")) {
-		testObj->setPosition(testObj->getPosition().x,
-					   testObj->getPosition().y + 50.0f);
-	} else if (AppData::getInput().isKeyClicked("DOWN")) {
-		testObj->setPosition(testObj->getPosition().x,
-					   testObj->getPosition().y - 50.0f);
+		testObj.getTransform()->y += 50.0f;
+		testObj.getComponent<VisualComponent>()->setTexture("popcat.png");
+	}
+	else if (AppData::getInput().isKeyClicked("DOWN")) {
+		testObj.getTransform()->y -= 50.0f;
+		testObj.getComponent<VisualComponent>()->setTexture("sponge.png");
 	}
 
 	if (AppData::getInput().getWheelOffset() != 0.0f) {
@@ -99,26 +169,24 @@ void TestScene::update(float deltaT) {
 
 	if (AppData::getInput().isLeftMouseClicked()) {
 		DTL_ENT("Hello!");
-	} else if (AppData::getInput().isRightMousePressed()) {
+	}
+	else if (AppData::getInput().isRightMousePressed()) {
 		DTL_ENT("YOOOO");
 	}
 
-	AppData::getInput().setMousePosLock(
-		AppData::getInput().isKeyPressed("SPACE"));
+	AppData::getInput().setMousePosLock(AppData::getInput().isKeyPressed("SPACE"));
 
 	if (AppData::getInput().isMouseLocked()) {
 		auto [x, y] = AppData::getInput().getMouseOffset();
 		if (x != 0 || y != 0) {
 			DTL_ENT("{0}, {0}", x, y);
 		}
-	} else {
+	}
+	else {
 		if (AppData::getInput().isKeyClicked("V")) {
 			AppData::getInput().toggleMouseVisibility();
 		}
 	}
-
-	testObj->setPosition(testObj->getPosition().x + speed * deltaT,
-					  testObj->getPosition().y);
 
 	/////////////////////
 	/// Utils showcase:
@@ -132,9 +200,24 @@ void TestScene::update(float deltaT) {
 	float t = -4 * (timer - 0.5f) * (timer - 0.5f) + 1;
 	size = util::lerp(50.0f, 100.0f, sqrtf(t));
 
-	testObj->setScale(size, size);
+	testObj.getTransform()->setScale(size);
+
+	/////////////////////
+	/// Components in action
+	/////////////////////
+
+	for (auto& comp : comps) { // Iterowanie po Entity jest raczej nieoptymalne. Lepiej jest mieć listę komponentów danego typu i iterować po komponentach
+		//if (spoing.hasComponent<BouncyComponent>()) {
+		//	spoing.getComponent<BouncyComponent>()->updatePosition(deltaT); // No ale można
+		//}
+		comp.updatePosition(deltaT);
+	}
+
 }
-void TestScene::render() { m_graphicsLayer.draw(); }
+
+void TestScene::render() {
+	m_graphicsLayer.draw();
+}
 
 // ===============================
 // LevelOneScene
@@ -146,17 +229,182 @@ LevelOneScene::LevelOneScene()
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
-	WallA = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, {-0.5f, 0}));
-	WallB = std::make_unique<agl::Object>(agl::Object(0.01f, 0.1f, {0, 0}));
-	WallA->setVisual(*AppData::getSus().GetTexture("sponge.png"));
-	WallB->setVisual(*AppData::getSus().GetTexture("sponge.png"));
-	m_graphicsLayer.addObject(*WallA);
-	m_graphicsLayer.addObject(*WallB);
+
+	wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+	wallA.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
+	wallA.getTransform()->setPos(0.3f, 0.0f);
+	wallA.getTransform()->setScale(0.05f, 0.2f);
+
+	wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+	wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
+	wallB.getTransform()->setPos(0.1f, 0.0f);
+	wallB.getTransform()->setScale(0.05f, 0.2f);
+
 }
 
-void LevelOneScene::update([[maybe_unused]] float deltaT) {}
+void LevelOneScene::update([[maybe_unused]] float deltaT)
+{
+	if (isFirstUpdate) {
+		DTL_INF("level one scene -- click q to quit, r to play again, w to win");
+		isFirstUpdate = false;
+	}
+	//quit
+	if (AppData::getInput().isKeyClicked("Q")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	//retry
+	if (AppData::getInput().isKeyClicked("R")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	//won
+	if (AppData::getInput().isKeyClicked("W")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(10, 1)));
+		AppData::getSceneManager().nextScene();
+	}
+
+}
 
 void LevelOneScene::render() { m_graphicsLayer.draw(); }
-} // namespace golf
+
+// ===============================
+// LevelSelectionScene
+// ===============================
+
+LevelSelectionScene::LevelSelectionScene()
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+{
+	const uint tempX = AppData::getWindow().getWindowSize().x;
+	const uint tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+}
+
+void LevelSelectionScene::update([[maybe_unused]] float deltaT)
+{
+	if (isFirstUpdate) {
+		DTL_INF("level selection scene -- click 1 to play lvl 1, 2 to play lvl 2");
+		isFirstUpdate = false;
+	}
+
+
+	if (AppData::getInput().isKeyClicked("1")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+		AppData::getSceneManager().nextScene();
+	}
+
+	if (AppData::getInput().isKeyClicked("2")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+		AppData::getSceneManager().nextScene();
+	}
+}
+
+void LevelSelectionScene::render()
+{
+	m_graphicsLayer.draw();
+}
+
+
+// ===============================
+// LevelTwoScene
+// ===============================
+
+
+LevelTwoScene::LevelTwoScene()
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+{
+	const uint tempX = AppData::getWindow().getWindowSize().x;
+	const uint tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+}
+
+void LevelTwoScene::update([[maybe_unused]] float deltaT)
+{
+	if (isFirstUpdate) {
+		DTL_INF("level two scene -- click q to quit, r to play again, w to win");
+		isFirstUpdate = false;
+	}
+	//quit
+	if (AppData::getInput().isKeyClicked("Q")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	//play again
+	if (AppData::getInput().isKeyClicked("R")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+		AppData::getSceneManager().nextScene();
+	}
+
+	//won
+	if (AppData::getInput().isKeyClicked("W")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(100, 2)));
+		AppData::getSceneManager().nextScene();
+	}
+}
+
+void LevelTwoScene::render()
+{
+	m_graphicsLayer.draw();
+}
+
+ResultsScene::ResultsScene(int score, int lvlNumber)
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(AppData::getGlobalShader(), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
+{
+	const uint tempX = AppData::getWindow().getWindowSize().x;
+	const uint tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+}
+
+void ResultsScene::update([[maybe_unused]] float deltaT)
+{
+	if (isFirstUpdate) {
+		DTL_INF("results scene -- click q to quit, r to play again, c to continue (next lvl)");
+		isFirstUpdate = false;
+	}
+
+	//quit
+	if (AppData::getInput().isKeyClicked("Q")) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().nextScene();
+	}
+
+	//play again
+	if (AppData::getInput().isKeyClicked("R")) {
+		startLevel(finishedLevelNumber);
+	}
+
+	//next level
+
+	if (AppData::getInput().isKeyClicked("C")) {
+		startLevel(finishedLevelNumber + 1);
+	}
+
+
+
+}
+
+void ResultsScene::render()
+{
+	m_graphicsLayer.draw();
+}
+
+
+//funkcja ktora uruchamia odpowiedni poziom
+void startLevel(int levelNumber)
+{
+	if (levelNumber == 1) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+		AppData::getSceneManager().nextScene();
+	}
+	if (levelNumber == 2) {
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+		AppData::getSceneManager().nextScene();
+	}
+}
 
 //NOLINTEND
+
+} // namespace golf
