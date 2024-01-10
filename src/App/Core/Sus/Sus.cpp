@@ -5,6 +5,7 @@
 #define TEXTURE_PATH "assets/textures/"
 #define SHADER_PATH "assets/shaders/"
 #define ANIMATION_PATH "assets/animation/"
+#define LEVELS "assets/data/Levels.txt"
 
 namespace golf {
 
@@ -113,7 +114,30 @@ namespace golf {
 			}
 		}
 	}
-	
+	//=====[Data File]=====
+
+	void Sus::ReadLevelFile() {
+
+		std::ifstream file(LEVELS);
+		std::filesystem::path p = std::filesystem::current_path();
+		std::cout << p.relative_path() <<"\n";
+
+		std::string linia;
+		while (std::getline(file,linia)) {
+			int nr = std::stoi(linia.substr(linia.find("Level ")+6, linia.find_first_of(":")-linia.find("Level ")-6));
+			int isUnlocked = std::stoi(linia.substr(linia.find("isUnlocked: ")+11, linia.find_last_of(":") - linia.find("isUnlocked: ") - 11));
+
+
+			DTL_ERR(linia);
+			DTL_ERR("{0} {0} {0}",nr,isUnlocked,nr);
+		}
+		file.close();
+
+
+	}
+
+
+
 	//=====================
 	void Sus::LoadAllAudio() {
 

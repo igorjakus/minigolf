@@ -47,6 +47,9 @@ namespace agl
 		void bind(int slot = 0) const;
 		static void unbind();
 	};
+
+
+
 	//Rendering
 	class Object
 	{

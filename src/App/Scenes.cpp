@@ -63,6 +63,7 @@ TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
 
+	AppData::getSus().ReadLevelFile();
 
 	size = 50.0f;
 	timer = .0f;

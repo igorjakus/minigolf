@@ -37,7 +37,7 @@ namespace golf {
 
 		//=====[Data File]=====
 
-
+		void ReadLevelFile();
 
 
 
@@ -48,6 +48,8 @@ namespace golf {
 		std::map<std::string, agl::Texture> m_Textures;
 
 		std::map<std::string, agl::Shader> m_Shaders;
+
+		std::map<int, std::pair<bool, int>> m_Levels;
 
 	};
 

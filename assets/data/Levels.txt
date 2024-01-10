@@ -1,0 +1,3 @@
+Level 1: HighScore: 3, isUnlocked: 1
+Level 25: HighScore: -1, isUnlocked: 1
+Level 3: HighScore: -1, isUnlocked: 0
