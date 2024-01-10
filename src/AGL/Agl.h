@@ -6,10 +6,7 @@
 #include<stb/stb_image.h>
 #include<ImGui.h>
 
-struct BufferData;
-
-struct Vertice
-{
+struct Vertice {
 	glm::vec2 position;
 	glm::vec2 uv;
 	Vertice();
@@ -18,8 +15,7 @@ struct Vertice
 	Vertice(const Vertice&) = default;
 };
 
-struct Color
-{
+struct Color {
 	uchar r, g, b, a;
 	Color();
 	Color(uchar red, uchar green, uchar blue, uchar alpha);
@@ -34,32 +30,60 @@ namespace agl
 {
 	void Init();
 	void Terminate();
-	//textures
-	class Texture
+	//!visual==================================================================================================================================
+	class Visual
 	{
-		uint32_t m_textureID;
-		int m_widthImg, m_heightImg, m_BPP;
-		uint8_t* m_bytesData;
 	public:
-		Texture(std::string filepath,int filter,int sWrap,int tWrap);
-		~Texture();
-		Texture(const Texture&) = delete;
-		void bind(int slot = 0) const;
+		Visual() = default;
+		virtual ~Visual() = default;
+		Visual(const Visual&) = delete;
+		Visual(Visual&&) = delete;
+		Visual& operator=(const Visual&) = delete;
+		Visual& operator=(Visual&&) = delete;
+		virtual void bind(int slot = 0) const = 0;
+		virtual std::pair<glm::vec2, glm::vec2> getUV() const = 0;
 		static void unbind();
 	};
-	//Rendering
+
+	class Texture : public Visual
+	{
+	public:
+		Texture(std::string filepath, int filter, glm::ivec2 textureRatio = { 1, 1 }, int sWrap = GL_CLAMP_TO_BORDER, int tWrap = GL_CLAMP_TO_BORDER);
+		~Texture() override;
+		Texture(const Texture&) = delete;
+		void bind(int slot = 0) const override;
+		static void unbind();
+		std::pair<glm::vec2, glm::vec2> getUV() const override;
+	private:
+		uint32_t m_textureID;
+		glm::ivec2 m_texRat;
+	};
+
+	class Animation : public Visual
+	{
+	public:
+		Animation(std::string filepath, int filter, uint frames, float frametime, uint width, uint heigth);
+		~Animation() override;
+		Animation(const Animation&) = delete;
+		void bind(int slot = 0) const override;
+		static void unbind();
+		std::pair<glm::vec2, glm::vec2> getUV() const override;
+		void update(float deltaT);
+	private:
+		uint32_t m_textureID;
+		uint m_frames;
+		float m_frameTime;
+		float m_timePassed;
+		uint m_w, m_h;
+	};
+
+	//!Rendering==================================================================================================================================
 	class Object
 	{
-		glm::vec2 m_pos;
-		glm::ivec2 m_texRatio;
-		float m_xScale, m_yScale;
-		float m_rotation;
-		agl::Texture* m_tex;
-		Color m_color;
 	public:
 		Object(float width, float height, glm::vec2 pos = { 0.f, 0.f }, Color color = {255, 255, 255, 255}, glm::ivec2 texRatio = {1, 1});
 		~Object();
-		void setTexture(agl::Texture& texture);
+		void setVisual(agl::Visual& visual);
 		void setRotation(float rads);
 		void setScale(float xScale, float yScale);
 		void setPosition(float xPos, float yPos);
@@ -71,13 +95,17 @@ namespace agl
 		glm::vec2 getScale() const;
 		glm::vec2 getPosition() const;
 		friend class GraphicLayer;
+	private:
+		glm::vec2 m_pos;
+		glm::ivec2 m_texRatio;
+		float m_xScale, m_yScale;
+		float m_rotation;
+		agl::Visual* m_vis;
+		Color m_color;
 	};
 
 	class Camera
 	{
-		glm::vec2 m_pos;
-		glm::vec2 m_size;
-		float m_focalLengh;
 	public:
 		Camera(const Camera&) = default;
 		Camera(float x, float y, glm::vec2 size, float focalLength);
@@ -93,17 +121,14 @@ namespace agl
 		float getFocalLength();
 		glm::vec2 getPosition();
 		glm::vec2 getSize();
+	private:
+		glm::vec2 m_pos;
+		glm::vec2 m_size;
+		float m_focalLengh;
 	};
 
 	class GraphicLayer
 	{
-		struct BufferData;
-		agl::Shader* m_shader;
-		agl::Camera* m_camera;
-		const uint32_t m_trisStencile[6] = {0, 1, 2, 2, 3, 1};
-		std::vector<BufferData> m_bd;
-		struct BufferData
-		{ uint32_t VBO, EBO, VAO; agl::Object* objptr; };
 	public:
 		GraphicLayer(const GraphicLayer&) = delete;
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
@@ -111,6 +136,14 @@ namespace agl
 		void draw();
 		void addObject(Object& obj);
 		void removeObject(Object& obj);
+	private:
+		struct BufferData;
+		agl::Shader* m_shader;
+		agl::Camera* m_camera;
+		const uint32_t m_trisStencile[6] = { 0, 1, 2, 2, 3, 1 };
+		std::vector<BufferData> m_bd;
+		struct BufferData
+		{ uint32_t VBO, EBO, VAO; agl::Object* objptr; };
 	};
 
 }

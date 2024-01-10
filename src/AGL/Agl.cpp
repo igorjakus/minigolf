@@ -5,18 +5,20 @@ void agl::Init()
 {
 	//gfwd init
 	if (glfwInit() == GLFW_FALSE)
-	{ dtl::Log.error("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
+	{ DTL_ERR("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
 	//imgui init
 	const bool imguiInit = IMGUI_INIT;
-	if (!imguiInit) {/*todo Logging*/ };
+	if (!imguiInit) { DTL_ERR("Failed to initialize ImGui"); };
 }
 void agl::Terminate()
 {
 	IMGUI_TERMINATE;
 	glfwTerminate();
 }
-//?data structures---------------------------------------------------------------------------------------------------------------------------------------
-Vertice::Vertice() :position({ 0.f, 0.f }), uv({0.f, 0.f}) {}
+
+
+//!data structures==================================================================================================================================
+Vertice::Vertice() :position({ 0.f, 0.f }), uv({ 0.f, 0.f }) {}
 Vertice::Vertice(glm::vec2 pos, glm::vec2 UV)
 	:position(pos), uv(UV) {}
 Color::Color() : r(255), g(255),b(255),a(255) {}
@@ -30,13 +32,18 @@ Color Color::operator+(Color c) const
 { return { static_cast<uchar>(r + c.r), static_cast<uchar>(g + c.g), static_cast<uchar>(b + c.b), static_cast<uchar>(a + c.a) }; }
 
 
-//?textures---------------------------------------------------------------------------------------------------------------------------------------
-agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
-	:m_textureID(0), m_widthImg(0), m_heightImg(0), m_BPP(0), m_bytesData(nullptr)
-{ 
+
+
+//!visual==================================================================================================================================
+void agl::Visual::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
+
+agl::Texture::Texture(std::string filepath, int filter, glm::ivec2 textureRatio/*= {1, 1}*/, int sWrap/* = GL_CLAMP_TO_BORDER*/, int tWrap/* = GL_CLAMP_TO_BORDER*/)
+	:m_textureID(0), m_texRat(textureRatio)
+{
+	int w, h, bpp;
 	stbi_set_flip_vertically_on_load(1);
-	m_bytesData = stbi_load(filepath.c_str(), &m_widthImg, &m_heightImg, &m_BPP, 4);
-	if(m_bytesData == nullptr) dtl::Log.error("Faild to load texture: \"{0}\"", filepath);
+	uint8_t* data = stbi_load(filepath.c_str(), &w, &h, &bpp, 4);
+	if (data == nullptr) { DTL_ERR("Faild to load texture: \"{0}\"", filepath); return; }
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
 
@@ -45,24 +52,54 @@ agl::Texture::Texture(std::string filepath, int filter, int sWrap, int tWrap)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sWrap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tWrap);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_widthImg, m_heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_bytesData);
-	
-	if(m_bytesData != nullptr)	stbi_image_free(m_bytesData);
-	stbi_set_flip_vertically_on_load(0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	stbi_image_free(data);
 }
 agl::Texture::~Texture() { glDeleteTextures(1, &m_textureID); }
-
+std::pair<glm::vec2, glm::vec2> agl::Texture::getUV() const { return { {0.f, 0.f}, m_texRat}; }
 void agl::Texture::bind(int slot/*= 0*/) const { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
 void agl::Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
-//?rendering---------------------------------------------------------------------------------------------------------------------------------------
-agl::Object::Object(float width, float height, glm::vec2 pos/*= { 0.f, 0.f }*/, Color color/* = {255, 255, 255, 255}*/, glm::ivec2 texRatio/*= {1, 1}*/)
-	:m_pos({pos}), m_texRatio(texRatio), m_xScale(width), m_yScale(height), m_rotation(0.f), m_tex(nullptr), m_color(color) {}
+agl::Animation::Animation(std::string filepath, int filter, uint frames, float frametime, uint width, uint heigth)
+	:m_textureID(0), m_frames(frames), m_frameTime(frametime), m_timePassed(0.f), m_w(width), m_h(heigth)
+{
+	int w, h, bpp;
+	stbi_set_flip_vertically_on_load(1);
+	uint8_t* data = stbi_load(filepath.c_str(), &w, &h, &bpp, 4);
+	if (data == nullptr) { DTL_ERR("Faild to load texture: \"{0}\"", filepath); return; }
+	glGenTextures(1, &m_textureID);
+	glBindTexture(GL_TEXTURE_2D, m_textureID);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	stbi_image_free(data);
+}
+agl::Animation::~Animation() { glDeleteTextures(1, &m_textureID); }
+std::pair<glm::vec2, glm::vec2> agl::Animation::getUV() const {
+	const int currframe = m_timePassed / m_frameTime;
+	return {
+		{1.f / m_w * (currframe % m_w)			, 1.f / m_h * (m_h - 1 - (currframe / m_w))},
+		{1.f / m_w * ((currframe % m_w) + 1)	, 1.f / m_h * (m_h - (currframe / m_w))}
+	};
+}
+void agl::Animation::update(float deltaT)
+{ m_timePassed += deltaT; if (m_timePassed >= m_frames * m_frameTime) m_timePassed -= m_frames * m_frameTime; }
+void agl::Animation::bind(int slot/* = 0*/) const { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
+void agl::Animation::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
+
+
+
+//!rendering==================================================================================================================================
+agl::Object::Object(float width, float height, glm::vec2 pos/*= { 0.f, 0.f }*/, Color color/* = {255, 255, 255, 255}*/, glm::ivec2 texRatio/*= {1, 1}*/)
+	:m_pos({pos}), m_texRatio(texRatio), m_xScale(width), m_yScale(height), m_rotation(0.f), m_vis(nullptr), m_color(color) {}
 agl::Object::~Object(){}
 
 //transform funcions
-void agl::Object::setTexture(agl::Texture& texture) { m_tex = &texture; }
+void agl::Object::setVisual(agl::Visual& visual) { m_vis = &visual; }
 void agl::Object::setRotation(float radians) { m_rotation = radians; }
 void agl::Object::setScale(float xScale, float yScale) { m_xScale = xScale; m_yScale = yScale; }
 void agl::Object::setPosition(float xPos, float yPos) { m_pos = { xPos, yPos }; }
@@ -99,17 +136,24 @@ void agl::GraphicLayer::draw()
 	for (int i = 0; i < m_bd.size(); ++i)
 	{
 		glBindVertexArray(m_bd[i].VAO);
+		glm::dvec2 blV = m_bd[i].objptr->m_vis->getUV().first;
+		glm::dvec2 trV = m_bd[i].objptr->m_vis->getUV().second;
+		Vertice objectData[4] = {
+		{{-.5f, -.5f,}	, static_cast<glm::vec2>(blV)},
+		{{ .5f, -.5f,}	, {static_cast<float>(trV.x), static_cast<float>(blV.y)}},
+		{{-.5f,  .5f,}	, {static_cast<float>(blV.x), static_cast<float>(trV.y)}},
+		{{ .5f,  .5f,}	, static_cast<glm::vec2>(trV)} };
+
+		glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(Vertice), objectData);
 		m_shader->setUniformMatrix4("u_T", glm::translate(glm::mat4(1.f), glm::vec3(m_bd[i].objptr->m_pos, 0.f)));
 		m_shader->setUniformMatrix4("u_R", glm::rotate(glm::mat4(1.f), glm::radians(m_bd[i].objptr->m_rotation), glm::vec3(0.f, 0.f, 1.f)));
 		m_shader->setUniformMatrix4("u_S", glm::scale(glm::mat4(1.f), glm::vec3(m_bd[i].objptr->m_xScale, m_bd[i].objptr->m_yScale, 1.f)));
 		m_shader->setUniform4f("u_Col", m_bd[i].objptr->m_color.getNormalized());
-		if (m_bd[i].objptr->m_tex != nullptr) {
-			m_shader->setUniform1i("u_Tex", 1);
+		if (m_bd[i].objptr->m_vis != nullptr) {
+			m_shader->setUniform1i("u_Tex", 0);
 			m_shader->setUniform1i("u_Texuse", 1);
-			m_bd[i].objptr->m_tex->bind(1); }
-		else {
-			m_shader->setUniform1i("u_Tex", 0); 
-			m_shader->setUniform1i("u_Texuse", 0); }
+			m_bd[i].objptr->m_vis->bind(0); }
+		else { m_shader->setUniform1i("u_Texuse", 0); }
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
 	}
 	agl::Shader::unbind();
@@ -117,8 +161,8 @@ void agl::GraphicLayer::draw()
 
 void agl::GraphicLayer::addObject(Object& obj)
 {
-	m_bd.push_back({0, 0, 0, nullptr});
-	//vertex buffer generation and setup
+	m_bd.push_back({ 0, 0, 0, nullptr });
+	// vertex buffer generation and setup
 	glCreateVertexArrays(1, &(*(m_bd.end() - 1)).VAO);
 	glBindVertexArray((*(m_bd.end() - 1)).VAO);
 	glGenBuffers(1, &(*(m_bd.end() - 1)).VBO);
@@ -130,7 +174,7 @@ void agl::GraphicLayer::addObject(Object& obj)
 	// uv attribute
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-	//element buffer generation and setup
+	// element buffer generation and setup
 	glGenBuffers(1, &(*(m_bd.end() - 1)).EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*(m_bd.end() - 1)).EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(uint32_t), nullptr, GL_STATIC_DRAW);
@@ -139,9 +183,9 @@ void agl::GraphicLayer::addObject(Object& obj)
 
 	Vertice objectData[4] = {
 		{{-.5f, -.5f,}	, {0.f, 0.f}},
-		{{ .5f, -.5f,}	, {obj.m_texRatio.x, 0.f}},
-		{{-.5f,  .5f,}	, {0.f, obj.m_texRatio.y}},
-		{{ .5f,  .5f,}	, obj.m_texRatio}};
+		{{ .5f, -.5f,}	, {1.f, 0.f}},
+		{{-.5f,  .5f,}	, {0.f, 1.f}},
+		{{ .5f,  .5f,}	, {1.f, 1.f}} };
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(Vertice), &objectData[0]);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, 6 * sizeof(uint32_t), &m_trisStencile[0]);
@@ -182,4 +226,3 @@ void agl::Camera::setSize(glm::vec2 size) { m_size = size; }
 float agl::Camera::getFocalLength() { return m_focalLengh; }
 glm::vec2 agl::Camera::getPosition() { return m_pos; }
 glm::vec2 agl::Camera::getSize() { return m_size; }
-

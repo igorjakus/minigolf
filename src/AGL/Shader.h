@@ -8,14 +8,6 @@ namespace agl
 {
 	class Shader
 	{
-	private:
-		unsigned int m_ID;
-		static unsigned int sm_currBind;
-		std::unordered_map<std::string, int> uniformLocs;
-		enum shaderType
-		{ vertex, fragment, geometry, none };
-		bool getUniformLoc(const std::string& varName, uint32_t id);
-		static unsigned int CompileShader(unsigned int type, const std::string& src);
 	public:
 		Shader(const Shader&) = delete;
 		Shader(const std::string& FilePath);
@@ -83,6 +75,14 @@ namespace agl
 		}
 				
 		void setUniformMatrix3(const std::string& varName, glm::mat3 v0);
-		void setUniformMatrix4(const std::string& varName, glm::mat4 v0);		
+		void setUniformMatrix4(const std::string& varName, glm::mat4 v0);
+	private:
+		unsigned int m_ID;
+		static unsigned int sm_currBind;
+		std::unordered_map<std::string, int> uniformLocs;
+		enum shaderType
+		{ vertex, fragment, geometry, none };
+		bool getUniformLoc(const std::string& varName, uint32_t id);
+		static unsigned int CompileShader(unsigned int type, const std::string& src);
 	};
 }

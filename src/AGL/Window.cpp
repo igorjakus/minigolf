@@ -7,7 +7,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 { glViewport(0, 0, width, height); }
 
 agl::Window::Window(uint32_t width, uint32_t height, std::string title)
-	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height), m_temp(true) {}
+	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height) {}
 agl::Window::~Window()
 { glfwDestroyWindow(m_ID); }
 
@@ -219,12 +219,3 @@ bool agl::Window::getVSync() const
 GLFWwindow* agl::Window::passPointer() const
 { return m_ID; }
 
-
-//temp
-bool agl::Window::IsKeyPressed(int key)
-{
-	if (m_temp) { DTL_WAR("Using funcion IsKeyPressed is dangerous since it will be deprecated"); m_temp = false; }
-	if (m_ID == nullptr)
-	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get button press callback."); return false; }
-	return glfwGetKey(m_ID, key);
-}
