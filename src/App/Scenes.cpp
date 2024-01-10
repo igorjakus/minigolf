@@ -20,7 +20,7 @@ namespace golf {
 
 BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-	m_graphicsLayer(*AppData::getSus().LoadAndGetShader("DefaultShader.glsl"), m_camera) {
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;
@@ -28,7 +28,7 @@ BlankScene::BlankScene()
 
 	auto comp = std::make_shared<VisualComponent>(m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
-	m_kot.getComponent<VisualComponent>()->setTexture("popcat.png");
+	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
 	m_kot.getTransform()->setScale(0.5f);
 	// m_kot.getTransform()->xScale = 0.8f;
 	// m_kot.getTransform()->yScale = 0.3f;
@@ -37,7 +37,7 @@ BlankScene::BlankScene()
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
-
+	
 	if (AppData::getInput().isKeyClicked("ENTER")) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
@@ -72,7 +72,7 @@ void BouncyComponent::updatePosition(float deltaT) {
 		velocity.first *= -1;
 		x = util::clamp(x, minX, maxX);
 		// if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
-		// 	getOwner()->getComponent<VisualComponent>()->setTexture("popcat.png");
+		// 	getOwner()->getComponent<VisualComponent>()->setTexture("popcat");
 		// }
 		getTransform()->rot += 1.0f;
 		getTransform()->xScale *= 1.1f;
@@ -89,7 +89,7 @@ void BouncyComponent::updatePosition(float deltaT) {
 
 TestScene::TestScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 
 	size = 100.0f;
 	timer = .0f;
@@ -105,9 +105,9 @@ TestScene::TestScene()
 	// Można też bezpośrednio wrzucić wynik m_graphicsLayer.addTexComponent() do addComponent() czyli:
 	// testObj.addComponent<TextureComponent>(m_graphicsLayer.addTexComponent()); jednak wtedy nie 
 	// mamy bezpośredniego wskaźnika na ten komponent i musimy go szukać chcąc z nim coś robić.
-	testObj.getComponent<VisualComponent>()->setTexture("popcat.png");
+	testObj.getComponent<VisualComponent>()->setTexture("popcat");
 	// Jeżeli mamy nasz pointer "graphics" to możemy po prostu:
-	// graphics->setTexture("popcat.png");
+	// graphics->setTexture("popcat");
 	// co jest szybsze, tym bardziej że przy powyższej metodzie powinniśmy upewnić się najpierw,
 	// że testObj w ogóle posiada TextureComponent poprzez if(testObj.hasComponent<TextureComponent>())
 	testObj.getTransform()->setScale(size);
@@ -122,7 +122,7 @@ TestScene::TestScene()
 	for (uint i = 0; i < spoingCount; i++) {
 		std::shared_ptr<VisualComponent> tex = std::make_shared<VisualComponent>(m_graphicsLayer); // Tworzymy komponent tex
 		someSpoingbobs[i].addComponent<VisualComponent>(tex); // przypisujemy właściciela komponentu
-		tex->setTexture("sponge.png"); // ustawiamy komponentowi tex texturę jaką ma trzymać
+		tex->setTexture("sponge"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 
 		// someSpoingbobs[i].addComponent<BouncyComponent>(std::make_shared<BouncyComponent>());
 		someSpoingbobs[i].addComponent<BouncyComponent>(comps[i]); // przypisujemy właściciela komponentu
@@ -156,11 +156,11 @@ void TestScene::update(float deltaT) {
 
 	if (AppData::getInput().isKeyClicked("UP")) {
 		testObj.getTransform()->y += 50.0f;
-		testObj.getComponent<VisualComponent>()->setTexture("popcat.png");
+		testObj.getComponent<VisualComponent>()->setTexture("popcat");
 	}
 	else if (AppData::getInput().isKeyClicked("DOWN")) {
 		testObj.getTransform()->y -= 50.0f;
-		testObj.getComponent<VisualComponent>()->setTexture("sponge.png");
+		testObj.getComponent<VisualComponent>()->setTexture("sponge");
 	}
 
 	if (AppData::getInput().getWheelOffset() != 0.0f) {
@@ -225,7 +225,7 @@ void TestScene::render() {
 
 LevelOneScene::LevelOneScene()
 	: m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
-	m_graphicsLayer(AppData::getGlobalShader(), m_camera) {
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
@@ -274,7 +274,7 @@ void LevelOneScene::render() { m_graphicsLayer.draw(); }
 
 LevelSelectionScene::LevelSelectionScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 {
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;
@@ -313,7 +313,7 @@ void LevelSelectionScene::render()
 
 LevelTwoScene::LevelTwoScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-	m_graphicsLayer(AppData::getGlobalShader(), m_camera)
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 {
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;
@@ -351,7 +351,7 @@ void LevelTwoScene::render()
 
 ResultsScene::ResultsScene(int score, int lvlNumber)
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-	m_graphicsLayer(AppData::getGlobalShader(), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
 {
 	const uint tempX = AppData::getWindow().getWindowSize().x;
 	const uint tempY = AppData::getWindow().getWindowSize().y;

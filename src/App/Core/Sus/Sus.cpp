@@ -13,7 +13,7 @@ namespace golf
 {
 	void Sus::LoadAll() {
 		LoadAllTextures();
-		LoadAllAudio();
+		LoadAllShaders();
 	}
 
 	//=====[Textures]=====
@@ -41,6 +41,7 @@ namespace golf
 		else {
 			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, glm::ivec2(1, 1), sWrap, tWrap));
 		}
+		DTL_INF("SUS: Texture loaded \"{0}\"", fileName);
 	}
 
 	void Sus::LoadAllTextures() {

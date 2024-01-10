@@ -16,8 +16,8 @@ namespace golf
 		:m_title(title), m_updatesPerSecond(c_defaultUPS) {
 	
 		AppData::init(width, height, title);
-		AppData::getSus().LoadListOfTextures({ "popcat.png","sponge.png" });
-		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlankScene()));
 		AppData::getSceneManager().nextScene();
 	
 		DTL_INF("Application created: {0}", title);
