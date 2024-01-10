@@ -1,9 +1,7 @@
 #include "SceneManager.h"
-
 #include <dtl.h>
 
-namespace golf {
-
+namespace golf {	
 
 void SceneManager::pushScene(std::shared_ptr<Scene> newScene) {
 	m_sceneQueueBuffer.push(newScene);

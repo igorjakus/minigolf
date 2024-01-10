@@ -20,8 +20,7 @@ struct Vertice
 	Vertice(const Vertice&) = default;
 };
 
-struct Color
-{
+struct Color {
 	uchar r, g, b, a;
 	Color();
 	Color(uchar red, uchar green, uchar blue, uchar alpha);
@@ -36,7 +35,7 @@ namespace agl
 {
 	void Init();
 	void Terminate();
-	//visual
+	//!visual==================================================================================================================================
 	class Visual
 	{
 	public:
@@ -88,11 +87,11 @@ namespace agl
 	//Rendering
 	class Quad
 	{
-		Quad();
-		Quad(const Quad&) = default;
 	public:
+		Quad();
 		~Quad();
-		Quad(Quad &&) = default;
+		Quad(Quad && other) noexcept;
+		Quad(const Quad&) = delete;
 		Quad &operator=(Quad &&) = default;
 		Quad &operator=(const Quad &) = delete;
 		void setVisual(agl::Visual* visual);
@@ -134,7 +133,6 @@ namespace agl
 		glm::vec2 m_pos;
 		glm::vec2 m_size;
 		float m_focalLengh;
-
 	};
 
 	class GraphicLayer
@@ -142,12 +140,13 @@ namespace agl
 	public:
 		GraphicLayer(const GraphicLayer&) = delete;
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
-		~GraphicLayer() = default;
+		~GraphicLayer();
 		void draw();
 		agl::Quad* newQuad();
 		//it dont be working tho
-		void removeObject(Quad& obj);
+		void removeObject(agl::Quad* &obj);
 	private:
+		static uint32_t s_;
 		agl::Shader* m_shader;
 		agl::Camera* m_camera;
 		std::vector<agl::Quad> m_quads;

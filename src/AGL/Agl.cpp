@@ -5,17 +5,19 @@ void agl::Init()
 {
 	//gfwd init
 	if (glfwInit() == GLFW_FALSE)
-	{ dtl::Log.error("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
+	{ DTL_ERR("Failed to initialize GLFW"); exit(EXIT_FAILURE); }
 	//imgui init
 	const bool imguiInit = IMGUI_INIT;
-	if (!imguiInit) {/*todo Logging*/ };
+	if (!imguiInit) { DTL_ERR("Failed to initialize ImGui"); };
 }
 void agl::Terminate()
 {
 	IMGUI_TERMINATE;
 	glfwTerminate();
 }
-//?data structures---------------------------------------------------------------------------------------------------------------------------------------
+
+
+//!data structures==================================================================================================================================
 Vertice::Vertice() :position({ 0.f, 0.f }), uv({ 0.f, 0.f }) {}
 Vertice::Vertice(glm::vec2 pos, glm::vec2 UV)
 	:position(pos), uv(UV) {}
@@ -30,7 +32,9 @@ Color Color::operator+(Color c) const
 { return { static_cast<uchar>(r + c.r), static_cast<uchar>(g + c.g), static_cast<uchar>(b + c.b), static_cast<uchar>(a + c.a) }; }
 
 
-//?visual---------------------------------------------------------------------------------------------------------------------------------------
+
+
+//!visual==================================================================================================================================
 void agl::Visual::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 agl::Texture::Texture(std::string filepath, int filter, glm::ivec2 textureRatio/*= {1, 1}*/, int sWrap/* = GL_CLAMP_TO_BORDER*/, int tWrap/* = GL_CLAMP_TO_BORDER*/)
@@ -42,7 +46,6 @@ agl::Texture::Texture(std::string filepath, int filter, glm::ivec2 textureRatio/
 	if (data == nullptr) { DTL_ERR("Faild to load texture: \"{0}\"", filepath); return; }
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sWrap);
@@ -76,7 +79,7 @@ agl::Animation::Animation(std::string filepath, int filter, uint frames, float f
 }
 agl::Animation::~Animation() { glDeleteTextures(1, &m_textureID); }
 std::pair<glm::vec2, glm::vec2> agl::Animation::getUV() const {
-	const int currframe = m_timePassed / m_frameTime;
+	const int currframe = static_cast<float>(m_timePassed) / m_frameTime;
 	return {
 		{1.f / static_cast<float>(m_w * (currframe % m_w))			, 1.f / static_cast<float>(m_h * (m_h - 1 - (currframe / m_w)))},
 		{1.f / static_cast<float>(m_w * ((currframe % m_w) + 1))	, 1.f / static_cast<float>(m_h * (m_h - (currframe / m_w)))}
@@ -88,16 +91,38 @@ void agl::Animation::bind(int slot/* = 0*/) const { glActiveTexture(GL_TEXTURE0 
 void agl::Animation::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 //?rendering---------------------------------------------------------------------------------------------------------------------------------------
-agl::Quad::Quad()
-	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), m_color({255, 255, 255, 255}), m_VBO(0), m_EBO(0), m_VAO(0) {}
+agl::Quad::Quad() 
+	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), m_color({ 255, 255, 255, 255 }), m_VBO(0), m_EBO(0), m_VAO(0) { DTL_INF("Created quad"); }
 
-agl::Quad::~Quad() { glDeleteBuffers(1, &m_VBO); glDeleteBuffers(1, &m_EBO); glDeleteVertexArrays(1, &m_VAO); }
+agl::Quad::~Quad() {DTL_INF("Destroyed quad");}
+
+agl::Quad::Quad(Quad&& other) noexcept
+{
+	m_x = other.m_x;
+	m_y	= other.m_y;
+	m_xScale = other.m_xScale;
+	m_yScale = other.m_yScale;
+	m_rotation= other.m_rotation;
+	m_VBO = other.m_VBO;
+	m_EBO = other.m_EBO;
+	m_VAO = other.m_VAO;
+	m_vis = other.m_vis;
+	m_color = other.m_color;
+	other.m_vis = nullptr;
+	other.m_VBO = 0;
+	other.m_EBO = 0;
+	other.m_VAO = 0;
+	other.m_x = nullptr;
+	other.m_y = nullptr;
+	other.m_xScale = nullptr;
+	other.m_yScale = nullptr;
+	other.m_rotation = nullptr;
+}
+
+
 
 //transform funcions 
-void agl::Quad::setVisual(agl::Visual* visual) { m_vis = visual; DTL_ENT("{0}", m_vis); 
-lol = !lol;
-DTL_ENT("{0}", lol);
-}
+void agl::Quad::setVisual(agl::Visual* visual) { m_vis = visual; }
 void agl::Quad::setPosPtr(float* x, float* y) { m_x = x; m_y = y; }
 void agl::Quad::setScalePtr(float* xScale, float* yScale) { m_xScale = xScale; m_yScale = yScale; }
 void agl::Quad::setRotationPtr(float* rotation) { m_rotation = rotation; }
@@ -107,7 +132,19 @@ Color agl::Quad::getColor() const { return m_color; }
 
 
 agl::GraphicLayer::GraphicLayer(agl::Shader& shader, agl::Camera& camera)
-	:m_shader(&shader), m_camera(&camera) {}
+	:m_shader(&shader), m_camera(&camera) {
+	m_quads.reserve(100); //!temporary solution qet rid of it asap
+}
+
+agl::GraphicLayer::~GraphicLayer()
+{
+	for (auto& a : m_quads)
+	{
+		if (a.m_VBO != 0) { glDeleteBuffers(1, &a.m_VBO); }
+		if (a.m_EBO != 0) { glDeleteBuffers(1, &a.m_EBO); }
+		if (a.m_VAO != 0) { glDeleteVertexArrays(1, &a.m_VAO); }
+	}
+}
 
 void agl::GraphicLayer::draw()
 {
@@ -142,25 +179,25 @@ void agl::GraphicLayer::draw()
 		if (m_quads[i].m_vis != nullptr) {
 			m_shader->setUniform1i("u_Tex", 0);
 			m_shader->setUniform1i("u_Texuse", 1);
-			m_quads[i].m_vis->bind(0); }
+			m_quads[i].m_vis->bind(0); 
+		}
 		else { m_shader->setUniform1i("u_Texuse", 0); }
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
 	}
-	if (m_quads[0].lol) {
-		DTL_ENT("lol");
-	}
+
 	agl::Shader::unbind();
 }
 
 agl::Quad* agl::GraphicLayer::newQuad()
 {
 	const uint32_t m_trisStencile[6] = { 0, 1, 2, 2, 3, 1 };
-	m_quads.push_back(agl::Quad());
+	m_quads.emplace_back();
 	//vertex buffer generation and setup
-	glCreateVertexArrays(1, &(*(m_quads.end() - 1)).m_VAO);
-	glBindVertexArray((*(m_quads.end() - 1)).m_VAO);
-	glGenBuffers(1, &(*(m_quads.end() - 1)).m_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, (*(m_quads.end() - 1)).m_VBO);
+	agl::Quad* quad = &m_quads[m_quads.size() - 1];
+	glCreateVertexArrays(1, &quad->m_VAO);
+	glBindVertexArray(quad->m_VAO);
+	glGenBuffers(1, &quad->m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, quad->m_VBO);
 	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertice), nullptr, GL_STATIC_DRAW);
 	// position attribute
 	glEnableVertexAttribArray(0);
@@ -169,8 +206,8 @@ agl::Quad* agl::GraphicLayer::newQuad()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	//element buffer generation and setup
-	glGenBuffers(1, &(*(m_quads.end() - 1)).m_EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*(m_quads.end() - 1)).m_EBO);
+	glGenBuffers(1, &quad->m_EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quad->m_EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(uint32_t), nullptr, GL_STATIC_DRAW);
 
 	const Vertice objectData[4] = {
@@ -184,23 +221,29 @@ agl::Quad* agl::GraphicLayer::newQuad()
 
 	glBindVertexArray(0);
 
-	return &(*(m_quads.end() - 1));
+	return quad; //todo this whole shit
+	// bug report 
+	// the quad is a pointer to an element inside a vector whis is moved to another location when this vector resizes.
+	// introduce a system that returns an index of an element iside a vector and a funcion that return a pointer to the vector 
+	// removing an element doesnt erases an element from a vector just removes it and leaves a hole
+	// indexys of holes will be stored and given when createing a new quad
+	// hope it makes sense (sory for orthos)
 }
 
 
-void agl::GraphicLayer::removeObject(Quad& obj) //todo make it work somewhat
+void agl::GraphicLayer::removeObject(agl::Quad* &obj) //todo make it work somewhat
 {
-	//for (int i = 0; i < m_quads.size(); ++i) 
-	//{ 
-	//	if (m_quads[i].quad == &obj)
-	//	{
-	//		glDeleteBuffers(1, &m_quads[i].VBO);
-	//		glDeleteBuffers(1, &m_quads[i].EBO);
-	//		glDeleteVertexArrays(1, &m_quads[i].VAO);
-	//		m_quads.erase(m_quads.begin() + i); 
-	//		break;
-	//	} 
-	//}
+	for (int i = 0; i < m_quads.size(); ++i) 
+	{ 
+		if (&m_quads[i] == obj)
+		{
+			if (obj->m_VBO != 0) { glDeleteBuffers(1, &obj->m_VBO); }
+			if (obj->m_EBO != 0) { glDeleteBuffers(1, &obj->m_EBO); }
+			if (obj->m_VAO != 0) { glDeleteVertexArrays(1, &obj->m_VAO); }
+			m_quads.erase(m_quads.begin() + i); 
+			break;
+		} 
+	}
 }
 
 agl::Camera::Camera(float x, float y, glm::vec2 size, float focalLength)
@@ -221,4 +264,3 @@ void agl::Camera::setSize(glm::vec2 size) { m_size = size; }
 float agl::Camera::getFocalLength() { return m_focalLengh; }
 glm::vec2 agl::Camera::getPosition() { return m_pos; }
 glm::vec2 agl::Camera::getSize() { return m_size; }
-
