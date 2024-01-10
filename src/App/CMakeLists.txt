@@ -7,6 +7,15 @@ set(SOURCES
 	Scenes.h 
 	Scenes.cpp 
 
+	# ECS
+	ECS/Entity.h
+	ECS/Entity.cpp
+	ECS/Component.h
+	ECS/Component.cpp
+	
+	# Components
+	Graphics.h
+	Graphics.cpp
 
 	# Core
 	Core/AppData.h
@@ -17,7 +26,7 @@ set(SOURCES
 	Core/SceneManager/SceneManager.cpp 
 	Core/SceneManager/Scene.h
 
-	#Sus
+	# Sus
 	Core/Sus/Sus.h
 	Core/Sus/Sus.cpp
 

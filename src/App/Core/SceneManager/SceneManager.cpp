@@ -17,6 +17,7 @@ void SceneManager::nextScene() {
 	}
 #endif
 
+	m_currentScene.reset();
 	m_currentScene = m_sceneQueueBuffer.front();
 	m_sceneQueueBuffer.pop();
 

@@ -13,14 +13,11 @@ namespace golf {
 		}
 	}
 	void Sus::LoadTexture(const std::string& file, int filter, int sWrap, int tWrap) {
-		if (m_Textures.find(file) != m_Textures.end()) {
+		if (m_Textures.find(file) != m_Textures.end() || !std::filesystem::exists("assets/textures/" + file)) {
 			DTL_WAR("Trying to load already loaded texture:("+ file +"). Operation ignored.");
 		}
-		else if (!std::filesystem::exists("assets/textures/" + file)) {
-			DTL_WAR("Trying to open non-existing file:(" + file + "). Operation ignored.");
-		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file, filter, sWrap, tWrap));
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple("assets/textures/" + file, filter,/*temp*/glm::ivec2(1, 1), sWrap, tWrap));
 		}
 	}
 
@@ -37,10 +34,9 @@ namespace golf {
 		if (item != m_Textures.end()) {
 			return &item->second;
 		}
-		else {
-			DTL_WAR("Trying to get not loaded texture:(" + file + "). Operation ignored.");
-			return 0;
-		}
+		
+		DTL_WAR("Trying to get not loaded texture:(" + file + "). Operation ignored.");
+		return nullptr;
 	}
 
 
