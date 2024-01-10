@@ -88,7 +88,7 @@ void agl::Animation::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 //?rendering---------------------------------------------------------------------------------------------------------------------------------------
 agl::Quad::Quad() 
-	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), m_color({255, 255, 255, 255}), m_VBO(0), m_EBO(0), m_VAO(0) {DTL_INF("Created quad")}
+	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), m_color({ 255, 255, 255, 255 }), m_VBO(0), m_EBO(0), m_VAO(0) { DTL_INF("Created quad"); }
 
 agl::Quad::~Quad() {DTL_INF("Destroyed quad");}
 

@@ -34,18 +34,22 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	//Entity m_kot;
-	//Entity m_kot2;
-
-	agl::Quad* test;
-	agl::Quad* test2;
-
-	float x1, y1, sx1, sy1, r1;
-	float x2, y2, sx2, sy2, r2;
+	Entity m_kot;
 
 	float timer = 0;
 };
 
+// Przykładowy "skrypt"
+class BouncyComponent : public Component {
+public:
+	void setVelocity(std::pair<float, float> vel);
+	void setBoundaries(float min1, float max1, float min2, float max2);
+	void updatePosition(float deltaT);
+
+private:
+	std::pair<float, float> velocity;
+	float minX, maxX, minY, maxY;
+};
 
 class TestScene : public Scene {
 
@@ -72,6 +76,7 @@ private:
 	Entity testObj;
 	static const uint spoingCount = 10;
 	std::array<Entity, spoingCount> someSpoingbobs; // a tu cała lista entity
+	std::array<BouncyComponent, spoingCount> comps;
 };
 
 
