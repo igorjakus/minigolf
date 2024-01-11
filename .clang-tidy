@@ -1,6 +1,7 @@
 ---
 Checks: '-*,
   bugprone-*,
+  -bugprone-easily-swappable-parameters,
   cert-dcl50-cpp,
   cert-env33-c,
   cert-err34-c,
@@ -29,6 +30,7 @@ Checks: '-*,
   -modernize-use-trailing-return-type,
   readability-*,
   -readability-named-parameter,
+  -readability-identifier-length,
   -readability-uppercase-literal-suffix,
   -readability-convert-member-functions-to-static'
 WarningsAsErrors: ''

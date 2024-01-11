@@ -1,5 +1,7 @@
 // A set of useful development utilities
 
+//NOLINTBEGIN(bugprone-easily-swappable-parameters)
+
 namespace util {
 
 // ========================== float ==========================
@@ -65,3 +67,5 @@ inline double cnorm(double startVal, double endVal, double value) {
 }
 
 }
+
+//NOLINTEND(bugprone-easily-swappable-parameters)

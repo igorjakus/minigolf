@@ -1,11 +1,12 @@
 set(GML_SOURCES
 
 	GML/Constants.h
+	GML/Utils.h
 
 	GML/Numbers/Complex.h
 	GML/Numbers/Complex.cpp
-	GML/Numbers/Quaternion.h
-	GML/Numbers/Quaternion.cpp
+	#GML/Numbers/Quaternion.h
+	#GML/Numbers/Quaternion.cpp
 
 	GML/LinearAlgebra/Vec2f.h
 	GML/LinearAlgebra/Vec2f.cpp

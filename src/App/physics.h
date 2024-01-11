@@ -17,15 +17,13 @@ namespace golf {
         };
         void set_position(float x,float y);
         void set_rotation(float rot);
-        virtual ~PhysicsComponent() = default;
-        virtual PC_ID getType();
+        ~PhysicsComponent() override = default;
+        virtual PC_ID getType() = 0;
     protected:
         GML::Vec2f m_position; //nadpisuje
         GML::Vec3f m_rotation; //nadpisuje
         
     };
-
-    
 
     class DynamicPhysicsComponent : public PhysicsComponent{
     public:
