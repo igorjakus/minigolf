@@ -3,11 +3,15 @@
 #include "GML/LinearAlgebra/Vec2f.h"
 #include "GML/LinearAlgebra/Vec3f.h"
 #include "GML/Constants.h"
+#include "physics.h"
 
 
 namespace golf {
 
     //dynamic
+    PC_ID DynamicPhysicsComponent::getType(){
+        return Dynamic;
+    }
     void DynamicPhysicsComponent::apply_force(GML::Vec3f force, GML::Vec3f apply_point){   //zmienia acceleration
         m_net_force += force;
         m_net_torque += GML::Vec3f::crossProduct(apply_point,force);
@@ -30,7 +34,7 @@ namespace golf {
         //aktualnie rotacja skosna nie jest przechowywana w transformie, trzeba to zmienic
         m_rotation.z = rotation; //to be changed
 
-        m_acceleration += m_net_force / m_mas;
+        m_acceleration += m_net_force / m_mass;
         m_velocity += m_acceleration;
         m_position += m_velocity * deltaT;
 
@@ -51,11 +55,11 @@ namespace golf {
         m_net_force.set(0,0); //suma wszystkich sil
         m_net_torque.set(0,0,0); //suma wszystkich sil obrotowych
     }
-    DynamicPhysicsComponent::set_position(float x,float y){
+    void DynamicPhysicsComponent::set_position(float x,float y){
         m_position.x = x;
         m_position.y = y;
     }
-    DynamicPhysicsComponent::set_rotation(float rot){
+    void DynamicPhysicsComponent::set_rotation(float rot){
         m_rotation.z = rot;
     }
     DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia){
@@ -65,11 +69,6 @@ namespace golf {
 
 
     //kinematic
-    void KinematicPhysicsComponent::apply_force(GML::Vec3f force, GML::Vec3f apply_point){   //zmienia acceleration
-        m_net_force += force;
-        m_net_torque += GML::Vec3f::crossProduct(apply_point,force);
-    }
-
     void KinematicPhysicsComponent::update_positions(float deltaT){                          //apply net_force and net_torque i zeruj
         float& x = getTransform()->x;
 		float& y = getTransform()->y;
@@ -83,7 +82,7 @@ namespace golf {
         //aktualnie rotacja skosna nie jest przechowywana w transformie, trzeba to zmienic
         m_rotation.z = rotation; //to be changed
 
-        m_acceleration += m_net_force / m_mas;
+        m_acceleration += m_net_force / m_mass;
         m_velocity += m_acceleration;
         m_position += m_velocity * deltaT;
 
@@ -105,11 +104,11 @@ namespace golf {
         m_net_torque.set(0,0,0); //suma wszystkich sil obrotowych
     }
     
-    KinematicPhysicsComponent::set_position(float x,float y){
+    void KinematicPhysicsComponent::set_position(float x,float y){
         m_position.x = x;
         m_position.y = y;
     }
-    KinematicPhysicsComponent::set_rotation(float rot){
+    void KinematicPhysicsComponent::set_rotation(float rot){
         m_rotation.z = rot;
     }
 
@@ -120,11 +119,11 @@ namespace golf {
 
     //static
     
-    StaticPhysicsComponent::set_position(float x,float y){
+    void StaticPhysicsComponent::set_position(float x,float y){
         m_position.x = x;
         m_position.y = y;
     }
-    StaticPhysicsComponent::set_rotation(float rot){
+    void StaticPhysicsComponent::set_rotation(float rot){
         m_rotation.z = rot;
     }
     StaticPhysicsComponent::StaticPhysicsComponent(float mass,float inertia){
