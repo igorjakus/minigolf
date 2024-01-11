@@ -1,3 +1,4 @@
+#include <pch.h>
 #include "Entity.h"
 
 namespace golf {
@@ -39,25 +40,36 @@ std::pair<float&, float&> Transform::getScale() {
 // Entity
 
 Entity::Entity(float xPos, float yPos, float rot, float xScale, float yScale) //NOLINT
-	:m_transform(std::make_shared<Transform>(xPos, yPos, rot, xScale, yScale)) {}
+	:m_transform(xPos, yPos, rot, xScale, yScale) {}
 
-std::shared_ptr<Transform> Entity::getTransform() {
-	return m_transform;
+Entity::~Entity() {
+	kill();
 }
 
-void Entity::removeComponent(Component& component) {
+Transform* Entity::getTransform() {
+	return &m_transform;
+}
+
+void Entity::removeComponent(Component* component) {
 	for(auto item = m_components.begin(); item != m_components.end(); item++) {
-		if(item->second.get() == &component) {
+		if(item->second.get() == component) {
 			m_components.erase(item);
 			break;
 		}
 	}
 }
 
-void Entity::kill() {
-	for(auto item : m_components) {
-		item.second->kill();
+void Entity::kill() { //NOLINT
+	auto component = m_components.begin();
+	if (component != m_components.end()) {
+		component->second->kill();
+		kill();
 	}
+	//for(auto item = m_components.begin(); item != m_components.end(); item++) {
+	//	if (item->second) {
+	//		item->second->kill();
+	//	}
+	//}
 }
 
 }

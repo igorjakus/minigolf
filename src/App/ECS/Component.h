@@ -9,17 +9,19 @@ class Component {
 public:
 	explicit Component(Entity* entity = nullptr);
 	virtual ~Component() = default;
-	Component(Component &&) = default;
-	Component(const Component &) = default;
-	Component &operator=(Component &&) = default;
-	Component &operator=(const Component &) = default;
+	Component(Component &&) = delete;
+	Component(const Component &) = delete;
+	Component &operator=(Component &&) = delete;
+	Component &operator=(const Component &) = delete;
 
-	virtual void kill(); // Ta funkcja musi wykonwać Component::kill(); po overridowaniu!!!
+	virtual void kill() final;
+	virtual void setOwner(Entity* entity) final;
+	[[nodiscard]] virtual Entity* getOwner() final;
+	[[nodiscard]] virtual Transform* getTransform() final;
 
-	virtual void setOwner(Entity* entity); // Ta funkcja musiy wywoływać Component::setOwner(entity) po overridowaniu!!!
-	void releaseFromOwner();
-	Entity* getOwner();
-	std::shared_ptr<Transform> getTransform();
+protected:
+	virtual void onKill();
+	virtual void onOwnerSet(Entity* entity);
 
 private:
 	Entity* m_owner;
