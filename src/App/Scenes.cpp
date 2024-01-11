@@ -5,12 +5,61 @@
 #include "ECS/Entity.h"
 #include "Graphics.h"
 
+#include "physics.h"
+
 #include "Util.hpp"
 
 // Temp:
 // NOLINTBEGIN
 
 namespace golf {
+
+
+// ===============================
+// PhysicsTestingScene
+// ===============================
+
+PhysicsTestingScene::PhysicsTestingScene()
+	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
+
+	const uint tempX = AppData::getWindow().getWindowSize().x;
+	const uint tempY = AppData::getWindow().getWindowSize().y;
+	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+
+	auto visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
+	m_kot.addComponent<VisualComponent>(visual);
+	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
+	m_kot.getTransform()->setScale(0.1f);
+	
+	auto physics = std::make_shared<DynamicPhysicsComponent>(1,1);
+	m_kot.addComponent<DynamicPhysicsComponent>(physics);
+
+}
+
+void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
+	
+	if (AppData::getInput().isKeyClicked("UP")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,1,0},{0,0,0});
+	}
+	if (AppData::getInput().isKeyClicked("DOWN")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,-1,0},{0,0,0});
+		
+	}
+	if (AppData::getInput().isKeyClicked("LEFT")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({-1,0,0},{0,0,0});
+		
+	}
+	if (AppData::getInput().isKeyClicked("RIGHT")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({1,0,0},{0,0,0});
+		
+	}
+}
+
+void PhysicsTestingScene::render() {
+	m_graphicsLayer.draw();
+}
+
 
 // ===============================
 // BlankScene

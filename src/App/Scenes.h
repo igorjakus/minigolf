@@ -161,6 +161,29 @@ private:
 	bool isFirstUpdate = true;
 };
 
+
+
+class PhysicsTestingScene : public Scene {
+
+public:
+	PhysicsTestingScene();
+	~PhysicsTestingScene() override = default;
+	PhysicsTestingScene(PhysicsTestingScene &&) = delete;
+	PhysicsTestingScene(const PhysicsTestingScene &) = delete;
+	PhysicsTestingScene &operator=(PhysicsTestingScene &&) = delete;
+	PhysicsTestingScene &operator=(const PhysicsTestingScene &) = delete;
+
+	void update(float deltaT) override;
+	void render() override;
+
+private:
+	agl::Camera m_camera;
+	agl::GraphicLayer m_graphicsLayer;
+
+	Entity m_kot;
+	Entity m_kot2;
+};
+
 }
 
 //NOLINTEND
