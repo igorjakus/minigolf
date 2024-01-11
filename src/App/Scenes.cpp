@@ -26,7 +26,7 @@ BlankScene::BlankScene()
 	const uint tempY = AppData::getWindow().getWindowSize().y;
 	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
 
-	auto comp = std::make_shared<VisualComponent>(m_graphicsLayer);
+	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
 	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
 	m_kot.getTransform()->setScale(0.5f);
@@ -41,6 +41,19 @@ void BlankScene::update(float deltaT) {
 	if (AppData::getInput().isKeyClicked("ENTER")) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
+	}
+	if (AppData::getInput().isKeyClicked("UP")) {
+		m_kot.getComponent<VisualComponent>()->setTexture("popcat");
+	}
+	if (AppData::getInput().isKeyClicked("DOWN")) {
+		m_kot.getComponent<VisualComponent>()->setTexture("sponge");
+	}
+	if (AppData::getInput().isKeyClicked("LEFT")) {
+		m_kot2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		m_kot2.getTransform()->setScale(.2f);
+	}
+	if (AppData::getInput().isKeyClicked("RIGHT")) {
+		m_kot2.removeComponent<VisualComponent>();
 	}
 }
 
@@ -71,17 +84,16 @@ void BouncyComponent::updatePosition(float deltaT) {
 	if (x < minX || x > maxX) {
 		velocity.first *= -1;
 		x = util::clamp(x, minX, maxX);
-		// if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
-		// 	getOwner()->getComponent<VisualComponent>()->setTexture("popcat");
-		// }
-		getTransform()->rot += 1.0f;
-		getTransform()->xScale *= 1.1f;
+		if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
+			getOwner()->getComponent<VisualComponent>()->setTexture("popcat");
+		}
 	}
 	if (y < minY || y > maxY) {
 		velocity.second *= -1;
 		y = util::clamp(y, minY, maxY);
-		getTransform()->rot += -10.0f;
-		getTransform()->xScale *= 1.1f;
+		if (getOwner()->hasComponent<VisualComponent>()) { // again powinniśmy się upewniać że komponent do którego chcemy się odwołać wgl istnieje
+			getOwner()->getComponent<VisualComponent>()->setTexture("sponge");
+		}
 	}
 }
 
@@ -98,7 +110,7 @@ TestScene::TestScene()
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 	m_camera.setSize(tempX, tempY);
 
-	auto graphics = std::make_shared<VisualComponent>(m_graphicsLayer);
+	auto graphics = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 
 	// nie będzie przypisany do żadnej warstwy graficznej i tym samym nie będzie się wyświetlać
 	testObj.addComponent<VisualComponent>(graphics);
@@ -120,16 +132,16 @@ TestScene::TestScene()
 	const float spoingSize = 75;
 	// Ciekawszy przykład: iterujemy po elementach listy Entity
 	for (uint i = 0; i < spoingCount; i++) {
-		std::shared_ptr<VisualComponent> tex = std::make_shared<VisualComponent>(m_graphicsLayer); // Tworzymy komponent tex
+		std::shared_ptr<VisualComponent> tex = std::make_shared<VisualComponent>(&m_graphicsLayer); // Tworzymy komponent tex
 		someSpoingbobs[i].addComponent<VisualComponent>(tex); // przypisujemy właściciela komponentu
 		tex->setTexture("sponge"); // ustawiamy komponentowi tex texturę jaką ma trzymać
 
-		// someSpoingbobs[i].addComponent<BouncyComponent>(std::make_shared<BouncyComponent>());
-		someSpoingbobs[i].addComponent<BouncyComponent>(comps[i]); // przypisujemy właściciela komponentu
-
+		BouncyComponent& bounce = comps[i];
+		someSpoingbobs[i].addComponent<BouncyComponent>(bounce); // przypisujemy właściciela komponentu
+		// nadajemy mu jakieś właściwości (losowe)
 		float xVel = static_cast<float>(rand() % 300) * (i % 2 == 0 ? 1.f : -1.f);
 		float yVel = static_cast<float>(rand() % 500) * (i % 3 == 0 ? 1.f : -1.f);
-		comps[i].setVelocity({xVel, yVel}); // nadajemy mu jakieś właściwości (losowe)
+		comps[i].setVelocity({xVel, yVel});
 		comps[i].setBoundaries((tempX - spoingSize) / -2, (tempX - spoingSize) / 2, (tempY - spoingSize) / -2, (tempY - spoingSize) / 2);
 
 		someSpoingbobs[i].getTransform()->setScale(spoingSize); // na koniec zmieniamy skalę każdego entity
@@ -226,16 +238,16 @@ void TestScene::render() {
 LevelOneScene::LevelOneScene()
 	: m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
 	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
-	const uint tempX = AppData::getWindow().getWindowSize().x;
-	const uint tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
+	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
+	m_camera.setSize(tempX / tempY, 1.0f);
 
-	wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+	wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 	wallA.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 	wallA.getTransform()->setPos(0.3f, 0.0f);
 	wallA.getTransform()->setScale(0.05f, 0.2f);
 
-	wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(m_graphicsLayer));
+	wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 	wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 	wallB.getTransform()->setPos(0.1f, 0.0f);
 	wallB.getTransform()->setScale(0.05f, 0.2f);
@@ -315,9 +327,9 @@ LevelTwoScene::LevelTwoScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 {
-	const uint tempX = AppData::getWindow().getWindowSize().x;
-	const uint tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
+	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
+	m_camera.setSize(tempX / tempY, 1.0f);
 }
 
 void LevelTwoScene::update([[maybe_unused]] float deltaT)
@@ -353,9 +365,9 @@ ResultsScene::ResultsScene(int score, int lvlNumber)
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
 {
-	const uint tempX = AppData::getWindow().getWindowSize().x;
-	const uint tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
+	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
+	m_camera.setSize(tempX / tempY, 1.0f);
 }
 
 void ResultsScene::update([[maybe_unused]] float deltaT)
