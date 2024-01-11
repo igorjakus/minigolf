@@ -17,17 +17,13 @@ struct Vertice
 	glm::vec2 uv;
 	Vertice();
 	Vertice(glm::vec2 pos, glm::vec2 UV = { 0.0f, 0.0f });
-	~Vertice() = default;
-	Vertice(const Vertice&) = default;
 };
 
 struct Color {
 	uchar r, g, b, a;
 	Color();
 	Color(uchar red, uchar green, uchar blue, uchar alpha);
-	~Color() = default;
-	Color(const Color&) = default;
-	glm::vec4 getNormalized() const;
+	[[nodiscard]] glm::vec4 getNormalized() const;
 	Color operator+(Color c) const;
 };
 
@@ -47,7 +43,7 @@ namespace agl
 		Visual& operator=(Visual&&) = delete;
 		Visual& operator=(const Visual&) = delete;
 		virtual void bind(int slot = 0) const = 0;
-		virtual std::pair<glm::vec2, glm::vec2> getUV() const = 0;
+		[[nodiscard]] virtual std::pair<glm::vec2, glm::vec2> getUV() const = 0;
 		static void unbind();
 	};
 
@@ -62,7 +58,7 @@ namespace agl
 		Texture& operator=(const Texture&) = delete;
 		void bind(int slot = 0) const override;
 		static void unbind();
-		std::pair<glm::vec2, glm::vec2> getUV() const override;
+		[[nodiscard]] std::pair<glm::vec2, glm::vec2> getUV() const override;
 	private:
 		uint32_t m_textureID;
 		glm::ivec2 m_texRat;
@@ -80,7 +76,7 @@ namespace agl
 
 		void bind(int slot = 0) const override;
 		static void unbind();
-		std::pair<glm::vec2, glm::vec2> getUV() const override;
+		[[nodiscard]] std::pair<glm::vec2, glm::vec2> getUV() const override;
 		void update(float deltaT);
 	private:
 		uint32_t m_textureID;
@@ -108,7 +104,7 @@ namespace agl
 		void setRotationPtr(float* rotation);
 		void setColor(uchar red, uchar green, uchar blue, uchar alpha);
 		void setColor(Color color);
-		Color getColor() const;
+		[[nodiscard]] Color getColor() const;
 
 		friend class GraphicLayer;
 	private:
@@ -140,9 +136,9 @@ namespace agl
 		void setPosition(glm::vec2 position);
 		void setSize(float w, float h);
 		void setSize(glm::vec2 size);
-		float getFocalLength() const;
-		glm::vec2 getPosition() const;
-		glm::vec2 getSize() const;
+		[[nodiscard]] float getFocalLength() const;
+		[[nodiscard]] glm::vec2 getPosition() const;
+		[[nodiscard]] glm::vec2 getSize() const;
 	private:
 		glm::vec2 m_pos;
 		glm::vec2 m_size;
@@ -155,7 +151,7 @@ namespace agl
 		GraphicLayer(agl::Shader& shader, agl::Camera& camera);
 
 		~GraphicLayer() = default;
-		GraphicLayer(GraphicLayer&&) = default;
+		GraphicLayer(GraphicLayer&&) noexcept = default;
 		GraphicLayer(const GraphicLayer&) = delete;
 		GraphicLayer &operator=(GraphicLayer&&) = default;
 		GraphicLayer &operator=(const GraphicLayer&) = delete;

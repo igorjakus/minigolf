@@ -35,9 +35,9 @@ void agl::Visual::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 agl::Texture::Texture(std::string filepath, int filter, glm::ivec2 textureRatio/*= {1, 1}*/, int sWrap/* = GL_CLAMP_TO_BORDER*/, int tWrap/* = GL_CLAMP_TO_BORDER*/)
 	:m_textureID(0), m_texRat(textureRatio)
 {
-	int w, h, bpp;
+	int width = 0; int height = 0; int bpp = 0;
 	stbi_set_flip_vertically_on_load(1);
-	uint8_t* data = stbi_load(filepath.c_str(), &w, &h, &bpp, 4);
+	uint8_t* data = stbi_load(filepath.c_str(), &width, &height, &bpp, 4);
 	if (data == nullptr) { DTL_ERR("Faild to load texture: \"{0}\"", filepath); return; }
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -46,7 +46,7 @@ agl::Texture::Texture(std::string filepath, int filter, glm::ivec2 textureRatio/
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sWrap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tWrap);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	stbi_image_free(data);
 }
 agl::Texture::~Texture() { if (m_textureID != 0) { glDeleteTextures(1, &m_textureID); }}
@@ -70,9 +70,9 @@ agl::Texture& agl::Texture::operator=(Texture&& oth) noexcept
 agl::Animation::Animation(std::string filepath, int filter, uint frames, float frametime, uint width, uint heigth)
 	:m_textureID(0), m_frames(frames), m_frameTime(frametime), m_timePassed(0.f), m_w(width), m_h(heigth)
 {
-	int w = 0, h = 0, bpp = 0;
+	int wid = 0; int hei = 0; int bpp = 0;
 	stbi_set_flip_vertically_on_load(1);
-	uint8_t* data = stbi_load(filepath.c_str(), &w, &h, &bpp, 4);
+	uint8_t* data = stbi_load(filepath.c_str(), &wid, &hei, &bpp, 4);
 	if (data == nullptr) { DTL_ERR("Faild to load texture: \"{0}\"", filepath); return; }
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -82,7 +82,7 @@ agl::Animation::Animation(std::string filepath, int filter, uint frames, float f
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, wid, hei, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	stbi_image_free(data);
 }
 agl::Animation::~Animation() { if (m_textureID != 0) { glDeleteTextures(1, &m_textureID); }}

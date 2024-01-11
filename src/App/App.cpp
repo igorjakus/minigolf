@@ -2,11 +2,7 @@
 #include "App.h"
 #include "Core/AppData.h"
 #include "Scenes.h"
-#include <Agl.h>
-#include <dtl.h>
-#include <ImGui.h>
-#include <Window.h>
-#include <Shader.h>
+#include "dtl.h"
 
 namespace golf 
 {

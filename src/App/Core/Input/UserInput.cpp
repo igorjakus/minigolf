@@ -1,11 +1,10 @@
+#include <pch.h>
 #include "UserInput.h"
 
+#include "dtl.h"
 
 
-namespace golf
-{
-	
-	
+namespace golf {
 	
 	Input* Input::s_instance; //NOLINT
 	

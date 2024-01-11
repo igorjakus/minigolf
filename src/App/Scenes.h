@@ -1,11 +1,8 @@
 #pragma once
 
 #include "Core/SceneManager/Scene.h"
+#include "Agl.h"
 #include "ECS/Entity.h"
-#include "Graphics.h"
-
-#include <Agl.h>
-#include <array>
 
 
 //NOLINTBEGIN

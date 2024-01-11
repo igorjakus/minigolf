@@ -5,8 +5,6 @@
 #include "ECS/Entity.h"
 #include "Graphics.h"
 
-#include <cmath>
-#include <memory>
 #include "Util.hpp"
 
 // Temp:

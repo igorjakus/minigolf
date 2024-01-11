@@ -1,12 +1,9 @@
 #pragma once
 
 #include "Component.h"
-#include "dtl.h"
 
-#include <memory>
 #include <type_traits>
 #include <typeindex>
-#include <unordered_map>
 
 namespace golf {
 
@@ -17,12 +14,12 @@ struct Transform {
 
 	void setPos(float xPos, float yPos);
 	void setPos(std::pair<float, float> pos);
-	std::pair<float&, float&> getPos();
+	[[nodiscard]] std::pair<float&, float&> getPos();
 
 	void setScale(float scale);
 	void setScale(float xScaleVal, float yScaleVal);
 	void setScale(std::pair<float, float> scale);
-	std::pair<float&, float&> getScale();
+	[[nodiscard]] std::pair<float&, float&> getScale();
 };
 
 class Entity {
@@ -34,13 +31,13 @@ public:
 	Entity operator=(Entity&&) = delete;
 	Entity operator=(const Entity&) = delete;
 
-	Transform* getTransform();
+	[[nodiscard]] Transform* getTransform();
 
 	void kill();
 
 	template <typename T>
 	void addComponent(T& component) {
-		addComponent<T, true>(std::shared_ptr<T>( & component, [](T*) {}));
+		addComponent<T, true>(std::shared_ptr<T>(&component, [](T*) {}));
 	}
 
 	template <typename T>
@@ -59,7 +56,7 @@ public:
 	}
 
 	template <typename T>
-	[[nodiscard]] std::shared_ptr<T> getComponent() {
+	[[nodiscard]] std::shared_ptr<T> getComponent() const {
 		auto item = m_components.find(typeid(T));
 		if(item != m_components.end()) {
 			return std::dynamic_pointer_cast<T>(item->second);
@@ -69,7 +66,7 @@ public:
 
 
 	template <typename T>
-	[[nodiscard]] bool hasComponent() {
+	[[nodiscard]] bool hasComponent() const {
 		return m_components.find(typeid(T)) != m_components.end(); 
 	}
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Agl.h"
 #include "ECS/Component.h"
 #include "ECS/Entity.h"
+#include "Agl.h"
 
 namespace golf {
 
