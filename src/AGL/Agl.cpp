@@ -194,9 +194,9 @@ void agl::GraphicLayer::draw()
 		else
 		{ blV = { 1.0, 1.0 }; trV = { 1.0, 1.0 }; }
 
-		const std::array<Vertice, 4> objectData({
+		const std::array<Vertice, 4> objectData = {{
 		{{-.5f, -.5f,}, {static_cast<glm::vec2>(blV)}}, {{ .5f, -.5f,}, {static_cast<float>(trV.x), static_cast<float>(blV.y)}},
-		{{-.5f,  .5f,}	, {static_cast<float>(blV.x), static_cast<float>(trV.y)}}, {{ .5f,  .5f,}, {static_cast<glm::vec2>(trV)}} });
+		{{-.5f,  .5f,}	, {static_cast<float>(blV.x), static_cast<float>(trV.y)}}, {{ .5f,  .5f,}, {static_cast<glm::vec2>(trV)}} }};
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, objectData.size() * sizeof(Vertice), objectData.data());
 		m_shader->setUniformMatrix4("u_T", glm::translate(glm::mat4(1.f), glm::vec3(*quad.m_x, *quad.m_y, 0.f)));
@@ -218,7 +218,7 @@ void agl::GraphicLayer::draw()
 uint32_t agl::GraphicLayer::newQuad()
 {
 	const std::array<uint32_t, 6> m_trisStencile = { 0, 1, 2, 2, 3, 1 };
-	const std::array<Vertice, 4> objectData({ {{-.5f, -.5f}, {.0f, .0f}}, {{.5f, -.5f}, {1.f, .0f}}, {{-.5f, .5f}, {.0f, 1.f}}, {{.5f, .5f}, {1.f, 1.f}} });
+	const std::array<Vertice, 4> objectData = {{ {{-.5f, -.5f}, {.0f, .0f}}, {{.5f, -.5f}, {1.f, .0f}}, {{-.5f, .5f}, {.0f, 1.f}}, {{.5f, .5f}, {1.f, 1.f}} }};
 	//createing a new quad
 	agl::Quad* quad = nullptr;
 	uint inx = 0;
