@@ -1,4 +1,6 @@
-#include <Window.h>
+#pragma once
+
+#include "Window.h"
 
 namespace golf
 {
@@ -13,37 +15,37 @@ namespace golf
 		Input &operator=(const Input &) = delete;
 		Input &operator=(Input &&) = delete;
 	
-		bool isKeyPressed(const std::string& key) const;
+		[[nodiscard]] bool isKeyPressed(const std::string& key) const;
 		bool isKeyClicked(const std::string& key);
 	
-		std::pair<float, float> getMousePos() const;
-		float getMouseX() const;
-		float getMouseY() const;
+		[[nodiscard]] std::pair<float, float> getMousePos() const;
+		[[nodiscard]] float getMouseX() const;
+		[[nodiscard]] float getMouseY() const;
 	
-		bool isLeftMousePressed() const;
+		[[nodiscard]] bool isLeftMousePressed() const;
 		bool isLeftMouseClicked();
-		bool isRightMousePressed() const;
+		[[nodiscard]] bool isRightMousePressed() const;
 		bool isRightMouseClicked();
-		bool isMiddleMousePressed() const;
+		[[nodiscard]] bool isMiddleMousePressed() const;
 		bool isMiddleMouseClicked();
 	
 		void toggleMouseVisibility();
 		void setMouseVisibility(bool visible);
-		bool isMouseVisible() const;
+		[[nodiscard]] bool isMouseVisible() const;
 	
 		void toggleMousePosLock();
 		void setMousePosLock(bool lock);
-		bool isMouseLocked() const;
+		[[nodiscard]] bool isMouseLocked() const;
 	
-		std::pair<float, float> getMouseOffset() const;
-		float getMouseOffsetX() const;
-		float getMouseOffsetY() const;
+		[[nodiscard]] std::pair<float, float> getMouseOffset() const;
+		[[nodiscard]] float getMouseOffsetX() const;
+		[[nodiscard]] float getMouseOffsetY() const;
 	
 		void setCustomCursor();
 	
-		float getWheelOffset() const;
+		[[nodiscard]] float getWheelOffset() const;
 	
-		bool isFocused() const;
+		[[nodiscard]] bool isFocused() const;
 	
 		void setTargetWindow(const agl::Window& window);
 		void frameEnd();

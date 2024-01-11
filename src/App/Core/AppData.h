@@ -5,14 +5,11 @@
 
 #pragma once
 
-
 #include "Sus/Sus.h"
-
 #include "SceneManager/SceneManager.h"
 #include "Input/UserInput.h"
 
-#include <Shader.h>
-#include <Window.h>
+#include "Window.h"
 
 namespace golf {
 
@@ -25,11 +22,9 @@ public:
 	static void terminate();
 
 	static agl::Window& getWindow();
-
 	static Sus& getSus();
 	static SceneManager& getSceneManager();
 	static Input& getInput();
-
 
 private:
 	AppData() = default;

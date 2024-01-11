@@ -1,11 +1,8 @@
 #pragma once
 
 #include "Core/SceneManager/Scene.h"
+#include "Agl.h"
 #include "ECS/Entity.h"
-#include "Graphics.h"
-
-#include <Agl.h>
-#include <array>
 
 
 //NOLINTBEGIN
@@ -31,6 +28,7 @@ private:
 	agl::GraphicLayer m_graphicsLayer;
 
 	Entity m_kot;
+	Entity m_kot2;
 
 	float timer = 0;
 };

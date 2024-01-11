@@ -1,11 +1,10 @@
+#include <pch.h>
 #include "AppData.h"
 
-#include <dtl.h>
-
+#include "dtl.h"
 
 
 namespace golf {
-
 
 
 AppData& AppData::getInstance() {

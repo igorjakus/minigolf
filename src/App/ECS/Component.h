@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 namespace golf {
 
 struct Transform;
@@ -18,8 +16,8 @@ public:
 
 	virtual void kill() final;
 	virtual void setOwner(Entity* entity) final;
-	virtual Entity* getOwner() final;
-	virtual Transform* getTransform() final;
+	[[nodiscard]] virtual Entity* getOwner() final;
+	[[nodiscard]] virtual Transform* getTransform() final;
 
 protected:
 	virtual void onKill();
