@@ -17,12 +17,10 @@ namespace golf {
 // ===============================
 
 BlankScene::BlankScene()
-	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	:m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
 	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 
-	const uint tempX = AppData::getWindow().getWindowSize().x;
-	const uint tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+	AppData::getInput().attachCamera(&m_camera, 1.0f, true);
 
 	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
@@ -47,11 +45,10 @@ void BlankScene::update(float deltaT) {
 		m_kot.getComponent<VisualComponent>()->setTexture("sponge");
 	}
 	if (AppData::getInput().isKeyClicked("LEFT")) {
-		m_kot2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-		m_kot2.getTransform()->setScale(.2f);
+		m_camera.setFocalLength(1.5f);
 	}
 	if (AppData::getInput().isKeyClicked("RIGHT")) {
-		m_kot2.removeComponent<VisualComponent>();
+		m_camera.setFocalLength(0.5f);
 	}
 }
 
@@ -106,7 +103,7 @@ TestScene::TestScene()
 
 	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	m_camera.setSize(tempX, tempY);
+	AppData::getInput().attachCamera(&m_camera, 1024.0f, true);
 
 	auto graphics = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 

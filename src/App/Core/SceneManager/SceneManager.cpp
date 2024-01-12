@@ -1,10 +1,12 @@
 #include <pch.h>
 #include "SceneManager.h"
+#include "../AppData.h"
 #include "dtl.h"
 
 namespace golf {	
 
 void SceneManager::pushScene(std::shared_ptr<Scene> newScene) {
+	AppData::getInput().newScene();
 	m_sceneQueueBuffer.push(newScene);
 }
 
@@ -20,6 +22,7 @@ void SceneManager::nextScene() {
 	m_currentScene = m_sceneQueueBuffer.front();
 	m_sceneQueueBuffer.pop();
 
+	AppData::getInput().resetCameras();
 }
 
 void SceneManager::update(float deltaT) {

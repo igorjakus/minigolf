@@ -28,7 +28,6 @@ private:
 	agl::GraphicLayer m_graphicsLayer;
 
 	Entity m_kot;
-	Entity m_kot2;
 
 	float timer = 0;
 };
