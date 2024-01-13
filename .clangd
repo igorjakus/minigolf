@@ -1,0 +1,2 @@
+CompileFlags:
+    CompilationDatabase: build/unixlike-clang-debug
