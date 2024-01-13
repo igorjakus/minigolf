@@ -7,7 +7,10 @@ Szczegółowe instrukcje budowania projektu.
 <details>
 <summary>Visual Studio</summary>
 
-Budowanie przy pomocy VS jest banalne. Wystarczy otworzyć projekt. VS sam znajdzie pliki CMake. Należy u góry wybrać jedynie rodzaj konfiguracji i plik wykonywalny. Następnie można zbudować projekt kombinacją klawiszy ctrl + shift + B, lub zbudować i uruchomić przyciskiem F5.
+Budowanie przy pomocy VS jest banalne. Wystarczy otworzyć projekt. VS sam znajdzie pliki CMake. 
+Należy u góry wybrać jedynie rodzaj konfiguracji i plik wykonywalny. 
+Następnie można zbudować projekt kombinacją klawiszy ctrl + shift + B, lub zbudować i uruchomić przyciskiem F5. 
+W razie problemów z kompilacją pomocne może być przejście z kompilatora MSVC na Clang lub usunięcie projektu, a następnie ponowne jego sklonowanie.
 
 </details>
 
