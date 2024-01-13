@@ -2,6 +2,11 @@
 #include "Scenes.h"
 #include "Core/AppData.h"
 
+// audio
+#include "Core/Audio/SoundBuffer.h"
+#include "Core/Audio/SoundDevice.h"
+#include "Core/Audio/SoundSource.h"
+
 #include "ECS/Entity.h"
 #include "Graphics.h"
 
@@ -9,6 +14,9 @@
 
 // Temp:
 // NOLINTBEGIN
+
+
+
 
 namespace golf {
 
@@ -31,6 +39,13 @@ BlankScene::BlankScene()
 	// m_kot.getTransform()->xScale = 0.8f;
 	// m_kot.getTransform()->yScale = 0.3f;
 
+	// TODO: dźwięk na innym wątku, pliki jednak .wav albo naprawić przekonwertowane .ogg bo z nimi jest problem
+	// TODO: logi z biblioteki Łukasza
+	// DŹWIĘK NA TESTA
+	[[maybe_unused]] SoundDevice* mysounddevice = SoundDevice::get();
+	uint32_t /*ALuint*/ sound1 = SoundBuffer::get()->addSoundEffect("assets/audio/magicfail.ogg");
+	SoundSource mySpeaker;
+	mySpeaker.Play(sound1);
 }
 
 void BlankScene::update(float deltaT) {
