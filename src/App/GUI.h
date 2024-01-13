@@ -9,38 +9,36 @@ namespace golf {
 
 class GUILayer;
 
+class ButtonComponent : public Component {
+public:
+	using Callback = std::function<void>();
 
-// class ButtonComponent : public Component {
-// public:
-// 	using Callback = std::function<void>();
-//
-// 	void onKill() override;
-// 	void onOwnerSet(Entity* entity) override;
-//
-// 	void setPressCallback(Callback callback);
-// 	void setClickCallback(Callback callback);
-// 	void setReleaseCallback(Callback callback);
-// 	void setHoverCallback(Callback callback);
-// 	void setHoverEnterCallback(Callback callback);
-// 	void setHoverExitCallback(Callback callback);
-//
-// 	[[nodiscard]] bool isPressed() const;
-// 	[[nodiscard]] bool isClicked() const;
-// 	[[nodiscard]] bool isCursorOn() const;
-//
-// 	void update();
-// private:
-//
-// 	bool m_wasPressed = false;
-//
-// 	Callback m_press;
-// 	Callback m_click;
-// 	Callback m_release;
-// 	Callback m_Hover;
-// 	Callback m_hoverEnter;
-// 	Callback m_hoverExit;
-//
-// };
+	void onKill() override;
+	void onOwnerSet(Entity* entity) override;
+
+	void setPressCallback(Callback callback);
+	void setClickCallback(Callback callback);
+	void setReleaseCallback(Callback callback);
+	void setHoverCallback(Callback callback);
+	void setHoverEnterCallback(Callback callback);
+	void setHoverExitCallback(Callback callback);
+
+	[[nodiscard]] bool isPressed() const;
+	[[nodiscard]] bool isClicked() const;
+	[[nodiscard]] bool isCursorOn() const;
+
+	void update();
+
+private:
+	bool m_wasPressed = false;
+
+	Callback m_press;
+	Callback m_click;
+	Callback m_release;
+	Callback m_Hover;
+	Callback m_hoverEnter;
+	Callback m_hoverExit;
+};
 
 class GUIComponent : public Component {
 public:
