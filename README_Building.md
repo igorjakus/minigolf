@@ -1,4 +1,4 @@
-# Instrukcje buodwania
+# Instrukcje budowania
 
 Szczegółowe instrukcje budowania projektu.
 
