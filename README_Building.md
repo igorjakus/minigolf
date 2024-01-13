@@ -18,8 +18,8 @@ W razie problemów z kompilacją pomocne może być przejście z kompilatora MSV
 <summary>Terminal</summary>
 
 Budowanie projektu odbywa się w dwóch prostych krokach:
-1) Utworzenie konfiguracji przy pomocy CMake
-2) Zbudowanie programu przy pomocy generatora Ninja
+1) Utworzenie konfiguracji przy pomocy [CMake](https://cmake.org/download/)
+2) Zbudowanie programu przy pomocy generatora [Ninja](https://ninja-build.org/)
 
 Krok 1 nie jest wymagany jeżeli od ostatniego zbudowania projektu wprowadzono wyłącznie zmiany do plików źródłowych (tzn. program zbuduje się poprawnie tak długo jak nie dodasz nowego pliku).
 
