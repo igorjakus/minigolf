@@ -97,7 +97,7 @@ void GUIComponent::update(float screenWidth, float screenHeight) { //NOLINT
 		auto[xScale, yScale] = m_transform->getScale();
 		float rot = m_transform->rot;
 
-		const float TO_DEG = 180.f / static_cast<float>(M_PI);
+		const float TO_DEG = 180.f / static_cast<float>(PI);
 		const float effWidth = (xScale * cosf(rot * TO_DEG) + yScale * sinf(rot * TO_DEG)) / 2;
 		const float effHeight = (yScale * cosf(rot * TO_DEG) + xScale * sinf(rot * TO_DEG)) / 2;
 

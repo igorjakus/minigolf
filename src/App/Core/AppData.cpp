@@ -40,6 +40,7 @@ void AppData::init(uint width, uint height, const std::string& title) {
 	getInstance().m_input = std::make_unique<Input>();
 	getInstance().m_input->setTargetWindow(*getInstance().m_window);
 	getInstance().m_input->setCustomCursor();
+	getInstance().m_input->newScene();
 	DTL_INF("User Input created");
 
 	DTL_INF("Application systems initialized successfully");
