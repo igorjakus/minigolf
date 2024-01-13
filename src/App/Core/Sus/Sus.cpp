@@ -113,7 +113,7 @@ namespace golf
 		}
 	}
 	//=====[Data File]=====
-	void Sus::ReadLevelFile() {
+	void Sus::LoadLevelFile(int log) {
 		std::ifstream file(LEVELS);
 		std::filesystem::path p = std::filesystem::current_path();
 		std::cout << p.relative_path() <<"\n";
@@ -126,7 +126,7 @@ namespace golf
 
 			m_Levels.emplace(std::piecewise_construct, std::forward_as_tuple(nr), std::forward_as_tuple(std::make_pair(highScore,isUnlocked)));
 
-			if (true) {
+			if (log) {
 				DTL_INF("SUS: Level {0} loaded; whole line: {0}", nr, line);
 			}
 		}

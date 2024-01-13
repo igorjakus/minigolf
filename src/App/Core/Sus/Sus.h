@@ -31,7 +31,7 @@ namespace golf {
 
 		//=====[Data File]=====
 
-		void ReadLevelFile();
+		void LoadLevelFile(int log=false);
 		bool IsUnlocked(int nr);
 		int HighScore(int nr);
 
