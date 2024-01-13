@@ -34,7 +34,8 @@ namespace golf {
 		void LoadLevelFile(int log=false);
 		bool IsUnlocked(int nr);
 		int HighScore(int nr);
-
+		void ChangeHighScore(int nr, int score);
+		void Unlock(int nr);
 
 		//=====[Audio (Igor :3)]
 		void LoadAllAudio();

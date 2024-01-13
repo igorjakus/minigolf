@@ -5,7 +5,7 @@
 #define TEXTURE_PATH "assets/textures/"
 #define SHADER_PATH "assets/shaders/"
 #define ANIMATION_PATH "assets/animation/"
-#define LEVELS "assets/data/Levels.txt"
+#define LEVELS "assets/data/"
 
 //NOLINTBEGIN
 
@@ -14,6 +14,9 @@ namespace golf
 	void Sus::LoadAll() {
 		LoadAllTextures();
 		LoadAllShaders();
+		LoadLevelFile(true);
+
+
 	}
 
 	//=====[Textures]=====
@@ -40,8 +43,8 @@ namespace golf
 		}
 		else {
 			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, glm::ivec2(1, 1), sWrap, tWrap));
+			DTL_INF("SUS: Texture loaded \"{0}\"", fileName);
 		}
-		DTL_INF("SUS: Texture loaded \"{0}\"", fileName);
 	}
 
 	void Sus::LoadAllTextures() {
@@ -114,9 +117,8 @@ namespace golf
 	}
 	//=====[Data File]=====
 	void Sus::LoadLevelFile(int log) {
-		std::ifstream file(LEVELS);
-		std::filesystem::path p = std::filesystem::current_path();
-		std::cout << p.relative_path() <<"\n";
+		std::string str = "Levels.txt";
+		std::ifstream file(LEVELS + str);
 
 		std::string line;
 		while (std::getline(file,line)) {
@@ -154,6 +156,55 @@ namespace golf
 		}
 	}
 
+	void Sus::ChangeHighScore(int nr, int score) {
+		auto item = m_Levels.find(nr);
+		if (item != m_Levels.end()) {
+			item->second.first = score;
+		}
+		else {
+			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
+		}
+	}
+	void Sus::Unlock(int nr) {
+		auto item = m_Levels.find(nr);
+		if (item != m_Levels.end()) {
+			item->second.second = 1;
+		}
+		else {
+			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
+		}
+
+
+		//nadpisywac powinien na koniec programu (aktualizacja orgina³u tj) NIE USUWAC NOTATKI
+		/*
+		auto item = m_Levels.find(nr);
+		if (item != m_Levels.end()) {
+			std::string str1 = "Levels.txt";
+			std::ifstream file(LEVELS + str1);
+			std::string str2 = "Temp.txt";
+			std::ofstream temp_file(LEVELS + str1);
+
+			std::string line;
+			std::string new_line = ":3";
+
+			while (std::getline(file, line)) {
+				int level_nr = std::stoi(line.substr(line.find("Level ") + 6));
+				if (level_nr == nr) {
+					line = new_line;
+				}
+				temp_file << line << std::endl;
+			}
+			file.close();
+			temp_file.close();
+
+
+		}
+		else {
+			DTL_WAR("SUS: Level {0} doesn't exist :c", nr);
+			return;
+		}
+		*/
+	}
 
 	//=====================
 	void Sus::LoadAllAudio() {
