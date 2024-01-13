@@ -4,9 +4,10 @@
 #include "ECS/Component.h"
 #include "Agl.h"
 #include <functional>
-#include <list>
 
 namespace golf {
+
+class GUILayer;
 
 
 // class ButtonComponent : public Component {
@@ -43,7 +44,8 @@ namespace golf {
 
 class GUIComponent : public Component {
 public:
-	enum class position {
+	explicit GUIComponent(GUILayer* layer);
+	enum class positionType {
 		TOP,
 		BOTTOM,
 		LEFT,
@@ -55,21 +57,31 @@ public:
 		BOTTOMRIGHT,
 		DEFAULT
 	};
-	enum class mode {
+	enum class modeType {
 		PIXEL,
 		RELATIVE,
 		DEFAULT
 	};
-	void setPosition(position, float offsetX, float offsetY, mode);
+	void setPosition(positionType, float offsetX, float offsetY, modeType);
+
+	void onKill() override;
+ 	void onOwnerSet(Entity* entity) override;
+
+	[[nodiscard]] float getXOffset() const;
+	[[nodiscard]] float getYOffset() const;
 
 private:
-	explicit GUIComponent();
-	void update();
+	void update(float screenWidth, float screenHeight);
 
-	position m_position;
+	positionType m_position;
 	float m_offsetX;
 	float m_offsetY;
-	mode m_mode;
+	modeType m_mode;
+
+	GUILayer* m_layer;
+
+	Transform* m_transform;
+	bool m_owned;
 
 	friend class GUILayer;
 };
@@ -80,18 +92,16 @@ public:
 	GUILayer();
 
 	std::shared_ptr<GUIComponent> createGUIComponent();
+	void deleteGUIComponent(GUIComponent* component);
 
-	void update(float deltaT);
-	void render();
+	void update();
+	void unconditionalUpdate();
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
-	std::list<GUIComponent> m_guis;
+	std::vector<std::shared_ptr<GUIComponent>> m_guis;
 };
-
-
-
 
 
 }

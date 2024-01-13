@@ -16,6 +16,9 @@ namespace golf {
 // BlankScene
 // ===============================
 
+using PositionType = GUIComponent::positionType;
+using ModeType = GUIComponent::modeType;
+
 BlankScene::BlankScene()
 	:m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
 	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
@@ -27,6 +30,23 @@ BlankScene::BlankScene()
 	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
 	m_kot.getTransform()->setScale(0.5f);
 
+	m_button.getTransform()->setScale(0.2f, 0.1f);
+	m_button.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+	m_button.getComponent<VisualComponent>()->setColor(255.f, 0.f, 0.f, 255.f);
+	m_button.addComponent<GUIComponent>(m_gui.createGUIComponent());
+	m_button.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMRIGHT, -0.05f, 0.05f, ModeType::RELATIVE);
+
+	m_button2.getTransform()->setScale(0.2f, 0.1f);
+	m_button2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+	m_button2.getComponent<VisualComponent>()->setColor(0.f, 50.f, 255.f, 255.f);
+	m_button2.addComponent<GUIComponent>(m_gui.createGUIComponent());
+	m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.05f, ModeType::RELATIVE);
+
+	m_button3.getTransform()->setScale(0.2f, 0.1f);
+	m_button3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+	m_button3.getComponent<VisualComponent>()->setColor(0.f, 100.f, 255.f, 255.f);
+	m_button3.addComponent<GUIComponent>(m_gui.createGUIComponent());
+	m_button3.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, -0.1f, ModeType::RELATIVE);
 }
 
 void BlankScene::update(float deltaT) {
@@ -51,6 +71,7 @@ void BlankScene::update(float deltaT) {
 }
 
 void BlankScene::render() {
+	m_gui.update();
 	m_graphicsLayer.draw();
 }
 

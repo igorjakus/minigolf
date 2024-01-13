@@ -2,6 +2,7 @@
 
 #include "Core/SceneManager/Scene.h"
 #include "Agl.h"
+#include "GUI.h"
 #include "ECS/Entity.h"
 
 
@@ -26,8 +27,12 @@ public:
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
+	GUILayer m_gui;
 
 	Entity m_kot;
+	Entity m_button;
+	Entity m_button2;
+	Entity m_button3;
 
 	float timer = 0;
 };
