@@ -125,6 +125,12 @@ TestScene::TestScene()
 	// i ustawiam skalę obietku (pozycja, obrót i skala są przechowywane w trasformie)
 	// Uwaga! Transform technicznie rzecz biorąc nie jest komponentem tzn. np. testObj.hasComponent<Transform>()
 	// zwróci false
+	AppData::getSus().ReadLevelFile();
+	DTL_WAR("{0}",AppData::getSus().IsUnlocked(1));
+	DTL_WAR("{0}", AppData::getSus().IsUnlocked(3));
+	DTL_WAR("{0}", AppData::getSus().IsUnlocked(-1));
+	DTL_WAR("=======================");
+	DTL_WAR("{0}", AppData::getSus().HighScore(3));
 
 	srand(2137);
 	const float spoingSize = 75;

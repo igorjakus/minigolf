@@ -32,7 +32,8 @@ namespace golf {
 		//=====[Data File]=====
 
 		void ReadLevelFile();
-
+		bool IsUnlocked(int nr);
+		int HighScore(int nr);
 
 
 		//=====[Audio (Igor :3)]
@@ -43,7 +44,8 @@ namespace golf {
 
 		std::map<std::string, agl::Shader> m_Shaders;
 
-		std::map<int, std::pair<bool, int>> m_Levels;
+
+		std::map<int, std::pair<int,bool>> m_Levels;
 
 	};
 

@@ -33,10 +33,10 @@ namespace golf
 		}
 		
 		if (m_Textures.find(fileName) != m_Textures.end()) {
-			DTL_WAR("Trying to load already loaded texture:({0}). Operation ignored.", file);
+			DTL_WAR("SUS: Trying to load already loaded texture:({0}). Operation ignored.", file);
 		}
 		else if (!std::filesystem::exists(TEXTURE_PATH + file) && !std::filesystem::exists(TEXTURE_PATH + fileName+ ".png")) {
-			DTL_WAR("Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
+			DTL_WAR("SUS: Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
 		}
 		else {
 			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, glm::ivec2(1, 1), sWrap, tWrap));
@@ -58,7 +58,7 @@ namespace golf
 		if (item != m_Textures.end()) {
 			return &item->second;
 		}
-		DTL_WAR("Trying to get not loaded texture:(" + file + "). Operation ignored.");
+		DTL_WAR("SUS: Trying to get not loaded texture:(" + file + "). Operation ignored.");
 		return nullptr;
 	}
 
@@ -72,7 +72,7 @@ namespace golf
 			m_Textures.erase(file);
 		}
 		else {
-			DTL_WAR("Trying to remove not loaded texture:({0}). Operation ignored.", file);
+			DTL_WAR("SUS: Trying to remove not loaded texture:({0}). Operation ignored.", file);
 		}
 	}
 
@@ -80,10 +80,10 @@ namespace golf
 
 	void Sus::LoadShader(const std::string& file) {
 		if (m_Shaders.find(file) != m_Shaders.end()) {
-			DTL_WAR("Trying to load already loaded shader:({0}). Operation ignored.",file);
+			DTL_WAR("SUS: Trying to load already loaded shader:({0}). Operation ignored.",file);
 		}
 		else if (!std::filesystem::exists(SHADER_PATH + file)) {
-			DTL_WAR("Trying to open non - existing file : ({0}{0}). Operation ignored.", SHADER_PATH,file);
+			DTL_WAR("SUS: Trying to open non - existing file : ({0}{0}). Operation ignored.", SHADER_PATH,file);
 		}
 		else {
 			m_Shaders.emplace(std::piecewise_construct, std::forward_as_tuple(file), std::forward_as_tuple(SHADER_PATH + file));
@@ -95,7 +95,7 @@ namespace golf
 		if (item != m_Shaders.end()) {
 			return &item->second;
 		}
-		DTL_WAR("Trying to get not loaded shader:({0}). Operation ignored.", file);
+		DTL_WAR("SUS: Trying to get not loaded shader:({0}). Operation ignored.", file);
 		return nullptr;
 	}
 	
@@ -113,27 +113,46 @@ namespace golf
 		}
 	}
 	//=====[Data File]=====
-
 	void Sus::ReadLevelFile() {
-
 		std::ifstream file(LEVELS);
 		std::filesystem::path p = std::filesystem::current_path();
 		std::cout << p.relative_path() <<"\n";
 
-		std::string linia;
-		while (std::getline(file,linia)) {
-			int nr = std::stoi(linia.substr(linia.find("Level ")+6, linia.find_first_of(":")-linia.find("Level ")-6));
-			int isUnlocked = std::stoi(linia.substr(linia.find("isUnlocked: ")+11, linia.find_last_of(":") - linia.find("isUnlocked: ") - 11));
+		std::string line;
+		while (std::getline(file,line)) {
+			int nr = std::stoi(line.substr(line.find("Level ") + 6));
+			int highScore = std::stoi(line.substr(line.find("HighScore: ") + 11));
+			bool isUnlocked = std::stoi(line.substr(line.find("isUnlocked: ") + 12));
 
+			m_Levels.emplace(std::piecewise_construct, std::forward_as_tuple(nr), std::forward_as_tuple(std::make_pair(highScore,isUnlocked)));
 
-			DTL_ERR(linia);
-			DTL_ERR("{0} {0} {0}",nr,isUnlocked,nr);
+			if (true) {
+				DTL_INF("SUS: Level {0} loaded; whole line: {0}", nr, line);
+			}
 		}
 		file.close();
-
-
 	}
 
+	bool Sus::IsUnlocked(int nr) {
+		auto item = m_Levels.find(nr);
+		if (item != m_Levels.end()) {
+			return item->second.second;
+		}
+		else {
+			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c",nr);
+			return 0;
+		}
+	}
+	int Sus::HighScore(int nr) {
+		auto item = m_Levels.find(nr);
+		if (item != m_Levels.end()) {
+			return item->second.first;
+		}
+		else {
+			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
+			return 0;
+		}
+	}
 
 
 	//=====================
