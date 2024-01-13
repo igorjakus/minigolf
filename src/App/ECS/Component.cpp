@@ -34,11 +34,12 @@ Entity* Component::getOwner() {
 
 Transform* Component::getTransform() {
 	if (m_owner == nullptr) [[unlikely]] {
-		return nullptr;
 #ifndef __DIST__
 		DTL_ERR("Komponent sprawdza wartosc transform, gdy nie ma wlasciciela!");
-#endif
+#endif // !__DIST__
+		return nullptr;
 	}
+
 	return m_owner->getTransform();
 }
 

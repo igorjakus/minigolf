@@ -7,5 +7,5 @@ Project for undergraduate studies
 
 ## See:
 
- * [Building Details](README_building.md)
+ * [Building Details](README_Building.md)
  * [AGL Documentation](src/AGL/README_AGL-Docs.md)
