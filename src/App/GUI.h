@@ -11,10 +11,10 @@ class GUILayer;
 
 class ButtonComponent : public Component {
 public:
-	using Callback = std::function<void>();
+	explicit ButtonComponent(agl::Camera& camera);
+	explicit ButtonComponent(GUILayer& gui);
 
-	void onKill() override;
-	void onOwnerSet(Entity* entity) override;
+	using Callback = std::function<void()>;
 
 	void setPressCallback(Callback callback);
 	void setClickCallback(Callback callback);
@@ -30,14 +30,23 @@ public:
 	void update();
 
 private:
-	bool m_wasPressed = false;
+	int lol = 69;
+	agl::Camera* m_camera;
 
-	Callback m_press;
-	Callback m_click;
-	Callback m_release;
-	Callback m_Hover;
-	Callback m_hoverEnter;
-	Callback m_hoverExit;
+	bool m_pressed = false;
+
+	float m_xPos = 0;
+	float m_yPos = 0;
+	float m_rot = 0;
+	float m_xScale = 1;
+	float m_yScale = 1;
+
+	Callback m_press = nullptr;
+	Callback m_click = nullptr;
+	Callback m_release = nullptr;
+	Callback m_hover = nullptr;
+	Callback m_hoverEnter = nullptr;
+	Callback m_hoverExit = nullptr;
 };
 
 class GUIComponent : public Component {
@@ -94,6 +103,8 @@ public:
 
 	void update();
 	void unconditionalUpdate();
+
+	agl::Camera* getCamera();
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;

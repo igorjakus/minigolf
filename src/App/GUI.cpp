@@ -4,6 +4,67 @@
 
 namespace golf {
 
+/////////////////////////////////
+/// Button component
+/////////////////////////////////
+
+ButtonComponent::ButtonComponent(agl::Camera& camera)
+	:m_camera(&camera) {
+	DTL_WAR("{0}", m_camera->getSize().x);
+}
+
+ButtonComponent::ButtonComponent(GUILayer& gui)
+	:m_camera(gui.getCamera()) {
+	DTL_WAR("{0}", m_camera->getSize().x);
+}
+
+void ButtonComponent::setPressCallback(Callback callback) {
+	m_press = callback;
+}
+void ButtonComponent::setClickCallback(Callback callback) {
+	m_click = callback;
+}
+void ButtonComponent::setReleaseCallback(Callback callback) {
+	m_release = callback;
+}
+void ButtonComponent::setHoverCallback(Callback callback) {
+	m_hover = callback;
+}
+void ButtonComponent::setHoverEnterCallback(Callback callback) {
+	m_hoverEnter = callback;
+}
+void ButtonComponent::setHoverExitCallback(Callback callback) {
+	m_hoverEnter = callback;
+}
+
+[[nodiscard]] bool ButtonComponent::isPressed() const {
+	return false;
+}
+[[nodiscard]] bool ButtonComponent::isClicked() const {
+	return false;
+}
+[[nodiscard]] bool ButtonComponent::isCursorOn() const {
+	auto[x, y] = AppData::getInput().getMousePos();
+	DTL_WAR("{0}", m_camera->getSize().x);
+	const glm::vec2 pos = m_camera->getPosition();
+	const glm::vec2 size = m_camera->getSize();
+	const float focl = m_camera->getFocalLength();
+	const glm::mat4 proj = glm::ortho(pos.x - (size.x / 2) * focl, pos.x + (size.x / 2) * focl, pos.y - (size.y / 2) * focl, pos.y + (size.y / 2) * focl, -1.f, 1.f);
+	const glm::mat4 inv = glm::inverse(proj);
+	const glm::vec4 rawPos = {x, y, 0, 1};
+	const glm::vec4 mousePos = inv * rawPos;
+	const bool inside = mousePos.x > m_xPos - m_xScale / 2 && mousePos.x < m_xPos + m_xScale / 2 && mousePos.y > m_yPos - m_yScale / 2 && mousePos.y < m_yPos + m_yScale / 2;
+	return inside;
+}
+
+void ButtonComponent::update() {
+	DTL_ERR("{x}", lol);
+	DTL_ERR("hdskjahdkjas");
+}
+
+/////////////////////////////////
+/// GUI component
+/////////////////////////////////
 
 GUIComponent::GUIComponent(GUILayer* layer)
 	: m_position(positionType::CENTER), m_offsetX(0), m_offsetY(0), m_mode(modeType::RELATIVE), m_layer(layer), m_transform(nullptr), m_owned(false) {}
@@ -129,6 +190,10 @@ void GUILayer::update() {
 	for(auto& comp : m_guis) {
 		comp->update(width, height);
 	}
+}
+
+agl::Camera* GUILayer::getCamera() {
+	return &m_camera;
 }
 
 

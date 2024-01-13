@@ -41,16 +41,27 @@ BlankScene::BlankScene()
 	m_button2.getComponent<VisualComponent>()->setColor(0.f, 50.f, 255.f, 255.f);
 	m_button2.addComponent<GUIComponent>(m_gui.createGUIComponent());
 	m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.05f, ModeType::RELATIVE);
+	m_button2.addComponent<ButtonComponent>(std::make_shared<ButtonComponent>(m_gui));
 
 	m_button3.getTransform()->setScale(0.2f, 0.1f);
 	m_button3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 	m_button3.getComponent<VisualComponent>()->setColor(0.f, 100.f, 255.f, 255.f);
 	m_button3.addComponent<GUIComponent>(m_gui.createGUIComponent());
 	m_button3.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, -0.1f, ModeType::RELATIVE);
+
+	DTL_WAR("{0}", m_gui.getCamera()->getSize().x);
 }
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
+
+	m_button.getComponent<ButtonComponent>()->update();
+
+	if(m_button.getComponent<ButtonComponent>()->isCursorOn()) {
+		m_button.getComponent<VisualComponent>()->setColor(155.f, 0.f, 0.f, 255.f);
+	} else {
+		m_button.getComponent<VisualComponent>()->setColor(255.f, 0.f, 0.f, 255.f);
+	}
 	
 	if (AppData::getInput().isKeyClicked("ENTER")) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
