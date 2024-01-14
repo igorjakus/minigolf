@@ -127,6 +127,7 @@ TestScene::TestScene()
 	// zwróci false
 
 
+
 	srand(2137);
 	const float spoingSize = 75;
 	// Ciekawszy przykład: iterujemy po elementach listy Entity

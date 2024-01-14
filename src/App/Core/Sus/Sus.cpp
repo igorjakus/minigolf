@@ -33,7 +33,7 @@ namespace golf
 		}
 		else {
 			fileName = file;
-		}
+		}//
 		
 		if (m_Textures.find(fileName) != m_Textures.end()) {
 			DTL_WAR("SUS: Trying to load already loaded texture:({0}). Operation ignored.", file);
@@ -115,7 +115,36 @@ namespace golf
 			}
 		}
 	}
-	//=====[Data File]=====
+	//=====[Animations]=====
+
+	void Sus::LoadAnimation(const std::string& file, int filter, uint frames, float frametime, uint width, uint heigth) {
+		//sprawdzanie formatu danej i zmienienie nazwy adekwatnie:
+		std::string fileName;
+		if (file.std::string::find(".png") != std::string::npos) {
+			fileName = file.std::string::substr(0, file.std::string::size() - 4);
+		}
+		else {
+			fileName = file;
+		}//
+
+		if (m_Animations.find(fileName) != m_Animations.end()) {
+			DTL_WAR("SUS: Trying to load already loaded animation:({0}). Operation ignored.", file);
+		}
+		else if (!std::filesystem::exists(ANIMATION_PATH + file) && !std::filesystem::exists(ANIMATION_PATH + fileName + ".png")) {
+			DTL_WAR("SUS: Trying to open non-existing file:({0}{0}). Operation ignored.", ANIMATION_PATH, file);
+		}
+		else {
+			m_Animations.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(ANIMATION_PATH + fileName + ".png",
+				filter, frames, frametime, width, heigth));
+			DTL_INF("SUS: Animation loaded \"{0}\"", fileName);
+		}
+
+	}
+
+
+
+	//=====[Level Data File]=====
+
 	void Sus::LoadLevelFile(int log) {
 		std::string str = "Levels.txt";
 		std::ifstream file(LEVELS + str);
@@ -204,6 +233,30 @@ namespace golf
 			return;
 		}
 		*/
+	}
+
+	void Sus::UpdateSaveFile() {
+		std::string path = "../../../assets/data/Levels.txt"; //b³agam Macieju i £ukaszu, nie zabijajcie za to proszê :cc
+		std::string path_temp = "../../../assets/data/Temp.txt";
+
+		std::ifstream file(path);
+		std::ofstream file_temp(path_temp);
+		std::string line;
+
+		int counter = 1;
+		auto mapa = m_Levels.find(counter);
+
+		while (std::getline(file, line)) {
+			mapa = m_Levels.find(counter);
+			file_temp << "Level " << counter <<": HighScore: " << mapa->second.first << ", isUnlocked: " << mapa->second.second << "\n";
+			counter++;
+		}
+		file.close();
+		file_temp.close();
+
+		//std::remove("../../../assets/data/Levels.txt");
+		//std::rename("../../../assets/data/Temp.txt", "Levels.txt");//za to te¿, na razie dzia³a a bêdê móg³ zrobiæ ³adniej
+
 	}
 
 	//=====================
