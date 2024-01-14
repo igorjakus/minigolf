@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Agl.h"
 #include "GUI.h"
 #include "App/Core/AppData.h"
 
@@ -7,6 +8,19 @@ namespace golf {
 /////////////////////////////////
 /// Button component
 /////////////////////////////////
+
+std::shared_ptr<ButtonComponent> ButtonComponent::create(agl::Camera& camera) {
+	return std::make_shared<ButtonComponent>(camera);
+}
+std::shared_ptr<ButtonComponent> ButtonComponent::create(agl::Camera* camera) {
+	return std::make_shared<ButtonComponent>(*camera);
+}
+std::shared_ptr<ButtonComponent> ButtonComponent::create(GUILayer& gui) {
+	return std::make_shared<ButtonComponent>(gui);
+}
+std::shared_ptr<ButtonComponent> ButtonComponent::create(GUILayer* gui) {
+	return std::make_shared<ButtonComponent>(*gui);
+}
 
 ButtonComponent::ButtonComponent(agl::Camera& camera)
 	:m_camera(&camera) {}
@@ -65,6 +79,13 @@ void ButtonComponent::update() {
 /////////////////////////////////
 /// GUI component
 /////////////////////////////////
+
+std::shared_ptr<GUIComponent> GUIComponent::create(GUILayer* gui) {
+	return gui->createGUIComponent();
+}
+std::shared_ptr<GUIComponent> GUIComponent::create(GUILayer& gui) {
+	return gui.createGUIComponent();
+}
 
 GUIComponent::GUIComponent(GUILayer* layer)
 	: m_position(positionType::CENTER), m_offsetX(0), m_offsetY(0), m_mode(modeType::RELATIVE), m_layer(layer), m_transform(nullptr), m_owned(false) {}
@@ -142,11 +163,12 @@ void GUIComponent::update(float screenWidth, float screenHeight) { //NOLINT
 				break;
 		}
 
-		const float xOffset = (m_mode == modeType::RELATIVE) ? m_offsetX : (m_offsetX / static_cast<float>(AppData::getWindow().getWindowSize().y));
-		const float yOffset = (m_mode == modeType::RELATIVE) ? m_offsetY : (m_offsetY / static_cast<float>(AppData::getWindow().getWindowSize().y));
+		const uint windowX = AppData::getWindow().getWindowSize().x;
+		const uint windowY = AppData::getWindow().getWindowSize().y;
+		const auto max = static_cast<float>(windowX > windowY ? windowX : windowY);
 
-		x += xOffset;
-		y += yOffset;
+		x += (m_mode == modeType::RELATIVE) ? m_offsetX : (m_offsetX / max);
+		y += (m_mode == modeType::RELATIVE) ? m_offsetY : (m_offsetY / max);
 	}
 }
 
@@ -184,16 +206,21 @@ void GUILayer::deleteGUIComponent(GUIComponent* component) {
 	}
 }
 
-void GUILayer::update() {
+void GUILayer::render() {
 	const float width = m_camera.getSize().x;
 	const float height = m_camera.getSize().y;
 	for(auto& comp : m_guis) {
 		comp->update(width, height);
 	}
+	m_graphicsLayer.draw();
 }
 
 agl::Camera* GUILayer::getCamera() {
 	return &m_camera;
+}
+
+agl::GraphicLayer* GUILayer::getLayer() {
+	return &m_graphicsLayer;
 }
 
 

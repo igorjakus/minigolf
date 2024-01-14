@@ -10,6 +10,11 @@ class GUILayer;
 
 class ButtonComponent : public Component {
 public:
+	static std::shared_ptr<ButtonComponent> create(agl::Camera&);
+	static std::shared_ptr<ButtonComponent> create(agl::Camera*);
+	static std::shared_ptr<ButtonComponent> create(GUILayer&);
+	static std::shared_ptr<ButtonComponent> create(GUILayer*);
+
 	explicit ButtonComponent(agl::Camera& camera);
 	explicit ButtonComponent(GUILayer& gui);
 
@@ -33,6 +38,9 @@ private:
 
 class GUIComponent : public Component {
 public:
+	static std::shared_ptr<GUIComponent> create(GUILayer*);
+	static std::shared_ptr<GUIComponent> create(GUILayer&);
+
 	explicit GUIComponent(GUILayer* layer);
 	enum class positionType {
 		TOP,
@@ -83,10 +91,11 @@ public:
 	std::shared_ptr<GUIComponent> createGUIComponent();
 	void deleteGUIComponent(GUIComponent* component);
 
-	void update();
+	void render();
 	void unconditionalUpdate();
 
 	agl::Camera* getCamera();
+	agl::GraphicLayer* getLayer();
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;

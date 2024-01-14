@@ -52,7 +52,7 @@ Input();
 	[[nodiscard]] float getMouseWorldOffsetX(agl::Camera&) const;
 	[[nodiscard]] float getMouseWorldOffsetY(agl::Camera&) const;
 
-	void attachCamera(agl::Camera* camera, float constvalue, bool isHeight);
+	void attachCamera(agl::Camera* camera, float constvalue, bool dynamic = false);
 	void resetCameras();
 	void newScene();
 
@@ -96,7 +96,9 @@ private:
 	struct Camera {
 		agl::Camera* camera;
 		float constvalue;
-		bool height;
+		bool dynamic;
+
+		void updateSize(float width, float height);
 	};
 	std::list<Camera> m_cameras;
 	std::list<size_t> m_camerasCounts;

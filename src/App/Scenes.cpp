@@ -23,7 +23,7 @@ BlankScene::BlankScene()
 	:m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
 	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 
-	AppData::getInput().attachCamera(&m_camera, 1.0f, true);
+	AppData::getInput().attachCamera(&m_camera, 1.0f);
 
 	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
@@ -31,19 +31,24 @@ BlankScene::BlankScene()
 	m_kot.getTransform()->setScale(0.5f);
 
 	m_button.getTransform()->setScale(0.2f, 0.1f);
-	m_button.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-	m_button.addComponent<GUIComponent>(m_gui.createGUIComponent());
+	// Komponenty wizualne można teraz tworzyć prościej:
+	m_button.addComponent<VisualComponent>(VisualComponent::create(m_gui));
+	// Gui komponent tworzy się następująco:
+	m_button.addComponent<GUIComponent>(GUIComponent::create(m_gui));
+	// odpowiada on za pozycje na ekranie (z tego powodu ustawienie pozycji poprzez transform nie zadziała)
 	m_button.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMRIGHT, -0.05f, 0.05f, ModeType::RELATIVE);
-	m_button.addComponent<ButtonComponent>(std::make_shared<ButtonComponent>(m_gui));
+	// A tak tworzy się komponent przycisku
+	m_button.addComponent<ButtonComponent>(ButtonComponent::create(m_gui));
 
 	m_button2.getTransform()->setScale(0.2f, 0.1f);
-	m_button2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+	m_button2.addComponent<VisualComponent>(VisualComponent::create(m_gui));
+	// GUI komponent można też tworzyć tak:
 	m_button2.addComponent<GUIComponent>(m_gui.createGUIComponent());
 	m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.05f, ModeType::RELATIVE);
 	m_button2.addComponent<ButtonComponent>(std::make_shared<ButtonComponent>(m_gui));
 
 	m_button3.getTransform()->setScale(0.2f, 0.1f);
-	m_button3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+	m_button3.addComponent<VisualComponent>(VisualComponent::create(m_gui));
 	m_button3.getComponent<VisualComponent>()->setColor(0, 100, 255, 255);
 	m_button3.addComponent<GUIComponent>(m_gui.createGUIComponent());
 	m_button3.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, -0.1f, ModeType::RELATIVE);
@@ -51,13 +56,15 @@ BlankScene::BlankScene()
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
-
+	
 	auto button = m_button.getComponent<ButtonComponent>();
 	if(button) {
 		button->update();
 		if(button->isHovered()) {
+			m_button.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMRIGHT, -0.05f, 0.06f, ModeType::RELATIVE);
 			m_button.getComponent<VisualComponent>()->setColor(155, 0, 0, 255);
 		} else {
+			m_button.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMRIGHT, -0.05f, 0.05f, ModeType::RELATIVE);
 			m_button.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		}
 		if(button->isClicked()) {
@@ -69,8 +76,10 @@ void BlankScene::update(float deltaT) {
 	if(button) {
 		button->update();
 		if(button->isHovered()) {
+			m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.06f, ModeType::RELATIVE);
 			m_button2.getComponent<VisualComponent>()->setColor(0, 20, 155, 255);
 		} else {
+			m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.05f, ModeType::RELATIVE);
 			m_button2.getComponent<VisualComponent>()->setColor(0, 50, 255, 255);
 		}
 		if(button->isClicked()) {
@@ -86,16 +95,16 @@ void BlankScene::update(float deltaT) {
 		m_kot.getComponent<VisualComponent>()->setTexture("sponge");
 	}
 	if (AppData::getInput().isKeyClicked("LEFT")) {
-		m_camera.setFocalLength(1.5f);
+		m_camera.setFocalLength(m_camera.getFocalLength() * 0.8f);
 	}
 	if (AppData::getInput().isKeyClicked("RIGHT")) {
-		m_camera.setFocalLength(0.5f);
+		m_camera.setFocalLength(m_camera.getFocalLength() * 1.25f);
 	}
 }
 
 void BlankScene::render() {
-	m_gui.update();
 	m_graphicsLayer.draw();
+	m_gui.render();
 }
 
 // ===============================
@@ -145,7 +154,7 @@ TestScene::TestScene()
 
 	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	AppData::getInput().attachCamera(&m_camera, 1024.0f, true);
+	AppData::getInput().attachCamera(&m_camera, 1024.0f);
 
 	auto graphics = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 

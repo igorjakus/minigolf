@@ -226,16 +226,12 @@ bool Input::isFocused() const {
 ///				Camera resize control
 //////////////////////////////////////////////
 
-void Input::attachCamera(agl::Camera* camera, float constvalue, bool isHeight) {
-	m_cameras.push_front({camera, constvalue, isHeight});
+void Input::attachCamera(agl::Camera* camera, float constvalue, bool dynamic) {
+	m_cameras.push_front({camera, constvalue, dynamic});
 	m_camerasCounts.front() += 1;
-	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
-	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	if(isHeight) {
-		camera->setSize(tempX / tempY * constvalue, constvalue);
-	} else {
-		camera->setSize(constvalue, tempY / tempX * constvalue);
-	}
+	const float screenX = static_cast<float>(AppData::getWindow().getWindowSize().x);
+	const float screenY = static_cast<float>(AppData::getWindow().getWindowSize().y);
+	m_cameras.front().updateSize(screenX, screenY);
 }
 
 void Input::resetCameras() {
@@ -302,11 +298,15 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 // }
 void Input::s_resizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height) { //NOLINT
 	for(auto& cam : s_instance->m_cameras) {
-		if(cam.height) {
-			cam.camera->setSize(static_cast<float>(width) / static_cast<float>(height) * cam.constvalue, cam.constvalue);
-		} else {
-			cam.camera->setSize(cam.constvalue, static_cast<float>(height) / static_cast<float>(width) * cam.constvalue);
-		}
+		cam.updateSize(static_cast<float>(width), static_cast<float>(height));
+	}
+}
+
+void Input::Camera::updateSize(float width, float height) { //NOLINT
+	if(dynamic && width < height) {
+		camera->setSize(constvalue, height / width * constvalue);
+	} else {
+		camera->setSize(width / height * constvalue, constvalue);
 	}
 }
 
