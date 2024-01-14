@@ -126,8 +126,6 @@ TestScene::TestScene()
 	// Uwaga! Transform technicznie rzecz biorąc nie jest komponentem tzn. np. testObj.hasComponent<Transform>()
 	// zwróci false
 
-
-
 	srand(2137);
 	const float spoingSize = 75;
 	// Ciekawszy przykład: iterujemy po elementach listy Entity

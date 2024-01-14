@@ -254,9 +254,9 @@ namespace golf
 		file.close();
 		file_temp.close();
 
-		//std::remove("../../../assets/data/Levels.txt");
-		//std::rename("../../../assets/data/Temp.txt", "Levels.txt");//za to te¿, na razie dzia³a a bêdê móg³ zrobiæ ³adniej
-
+		std::remove("../../../assets/data/Levels.txt");
+		(void)std::rename("../../../assets/data/Temp.txt", "../../../assets/data/Levels.txt");//za to te¿, na razie dzia³a co jest najwazniejsze, a bêdê móg³ zrobiæ ³adniej
+		DTL_INF("SUS: Updated Level file");
 	}
 
 	//=====================

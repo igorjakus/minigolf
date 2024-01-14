@@ -71,6 +71,8 @@ namespace golf
 	
 	void App::terminate() {
 	
+		AppData::getSus().UpdateSaveFile();
+
 		AppData::terminate();
 	
 		DTL_INF("Application terminated: {0}", m_title);
