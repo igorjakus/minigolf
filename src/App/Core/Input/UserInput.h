@@ -20,9 +20,14 @@ Input();
 	[[nodiscard]] bool isKeyPressed(const std::string& key) const;
 	bool isKeyClicked(const std::string& key);
 
+
 	[[nodiscard]] std::pair<float, float> getMousePos() const;
 	[[nodiscard]] float getMouseX() const;
 	[[nodiscard]] float getMouseY() const;
+
+	[[nodiscard]] std::pair<float, float> getMouseWorldPos(agl::Camera&) const;
+	[[nodiscard]] float getMouseWorldX(agl::Camera&) const;
+	[[nodiscard]] float getMouseWorldY(agl::Camera&) const;
 
 	[[nodiscard]] bool isLeftMousePressed() const;
 	bool isLeftMouseClicked();
@@ -43,6 +48,10 @@ Input();
 	[[nodiscard]] float getMouseOffsetX() const;
 	[[nodiscard]] float getMouseOffsetY() const;
 
+	[[nodiscard]] std::pair<float, float> getMouseWorldOffset(agl::Camera&) const;
+	[[nodiscard]] float getMouseWorldOffsetX(agl::Camera&) const;
+	[[nodiscard]] float getMouseWorldOffsetY(agl::Camera&) const;
+
 	void attachCamera(agl::Camera* camera, float constvalue, bool isHeight);
 	void resetCameras();
 	void newScene();
@@ -52,6 +61,8 @@ Input();
 	[[nodiscard]] float getWheelOffset() const;
 
 	[[nodiscard]] bool isFocused() const;
+
+	[[nodiscard]] std::pair<float, float> screenToWorld(std::pair<float, float>, agl::Camera&) const;
 
 	void setTargetWindow(const agl::Window& window);
 	void frameEnd();

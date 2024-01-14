@@ -9,57 +9,57 @@ namespace golf {
 /////////////////////////////////
 
 ButtonComponent::ButtonComponent(agl::Camera& camera)
-	:m_camera(&camera) {
-	DTL_WAR("{0}", m_camera->getSize().x);
-}
+	:m_camera(&camera) {}
 
 ButtonComponent::ButtonComponent(GUILayer& gui)
-	:m_camera(gui.getCamera()) {
-	DTL_WAR("{0}", m_camera->getSize().x);
+	:m_camera(gui.getCamera()) {}
+
+bool ButtonComponent::isPressed() const {
+	return m_pressed;
 }
 
-void ButtonComponent::setPressCallback(Callback callback) {
-	m_press = callback;
-}
-void ButtonComponent::setClickCallback(Callback callback) {
-	m_click = callback;
-}
-void ButtonComponent::setReleaseCallback(Callback callback) {
-	m_release = callback;
-}
-void ButtonComponent::setHoverCallback(Callback callback) {
-	m_hover = callback;
-}
-void ButtonComponent::setHoverEnterCallback(Callback callback) {
-	m_hoverEnter = callback;
-}
-void ButtonComponent::setHoverExitCallback(Callback callback) {
-	m_hoverEnter = callback;
+bool ButtonComponent::isClicked() const {
+	return m_pressed && !m_wasPressed;
 }
 
-[[nodiscard]] bool ButtonComponent::isPressed() const {
-	return false;
+bool ButtonComponent::isReleased() const {
+	return !m_pressed && m_wasPressed;
 }
-[[nodiscard]] bool ButtonComponent::isClicked() const {
-	return false;
+
+bool ButtonComponent::isHovered() const {
+	return m_hovered;
 }
-[[nodiscard]] bool ButtonComponent::isCursorOn() const {
-	auto[x, y] = AppData::getInput().getMousePos();
-	DTL_WAR("{0}", m_camera->getSize().x);
-	const glm::vec2 pos = m_camera->getPosition();
-	const glm::vec2 size = m_camera->getSize();
-	const float focl = m_camera->getFocalLength();
-	const glm::mat4 proj = glm::ortho(pos.x - (size.x / 2) * focl, pos.x + (size.x / 2) * focl, pos.y - (size.y / 2) * focl, pos.y + (size.y / 2) * focl, -1.f, 1.f);
-	const glm::mat4 inv = glm::inverse(proj);
-	const glm::vec4 rawPos = {x, y, 0, 1};
-	const glm::vec4 mousePos = inv * rawPos;
-	const bool inside = mousePos.x > m_xPos - m_xScale / 2 && mousePos.x < m_xPos + m_xScale / 2 && mousePos.y > m_yPos - m_yScale / 2 && mousePos.y < m_yPos + m_yScale / 2;
-	return inside;
+
+bool ButtonComponent::isEnteringHover() const {
+	return m_hovered && !m_wasHovered;
+}
+
+bool ButtonComponent::isExitingHover() const {
+	return !m_hovered && m_wasHovered;
 }
 
 void ButtonComponent::update() {
-	DTL_ERR("{x}", lol);
-	DTL_ERR("hdskjahdkjas");
+	m_wasHovered = m_hovered;
+	m_wasPressed = m_pressed;
+	auto[x, y] = AppData::getInput().getMouseWorldPos(*m_camera);
+	float xPos = getTransform()->x;
+	float yPos = getTransform()->y;
+	float rot = getTransform()->rot;
+	float xScale = getTransform()->xScale;
+	float yScale = getTransform()->yScale;
+	if(rot == 0) [[likely]] {
+		m_hovered =  x > xPos - xScale / 2 && x < xPos + xScale / 2 && y > yPos - yScale / 2 && y < yPos + yScale / 2;
+	} else [[unlikely]] {
+		DTL_WAR("Obrócone przyciski obecnie nie działają");
+		m_hovered = false;
+	}
+
+	if(!AppData::getInput().isLeftMousePressed()) {
+		m_pressed = false;
+	}
+	if(m_hovered && AppData::getInput().isLeftMouseClicked()) {
+		m_pressed = true;
+	}
 }
 
 /////////////////////////////////

@@ -3,7 +3,6 @@
 #include "ECS/Entity.h"
 #include "ECS/Component.h"
 #include "Agl.h"
-#include <functional>
 
 namespace golf {
 
@@ -14,39 +13,22 @@ public:
 	explicit ButtonComponent(agl::Camera& camera);
 	explicit ButtonComponent(GUILayer& gui);
 
-	using Callback = std::function<void()>;
-
-	void setPressCallback(Callback callback);
-	void setClickCallback(Callback callback);
-	void setReleaseCallback(Callback callback);
-	void setHoverCallback(Callback callback);
-	void setHoverEnterCallback(Callback callback);
-	void setHoverExitCallback(Callback callback);
-
 	[[nodiscard]] bool isPressed() const;
 	[[nodiscard]] bool isClicked() const;
-	[[nodiscard]] bool isCursorOn() const;
+	[[nodiscard]] bool isReleased() const;
+	[[nodiscard]] bool isHovered() const;
+	[[nodiscard]] bool isEnteringHover() const;
+	[[nodiscard]] bool isExitingHover() const;
 
 	void update();
 
 private:
-	int lol = 69;
 	agl::Camera* m_camera;
 
 	bool m_pressed = false;
-
-	float m_xPos = 0;
-	float m_yPos = 0;
-	float m_rot = 0;
-	float m_xScale = 1;
-	float m_yScale = 1;
-
-	Callback m_press = nullptr;
-	Callback m_click = nullptr;
-	Callback m_release = nullptr;
-	Callback m_hover = nullptr;
-	Callback m_hoverEnter = nullptr;
-	Callback m_hoverExit = nullptr;
+	bool m_wasPressed = false;
+	bool m_hovered = false;
+	bool m_wasHovered = false;
 };
 
 class GUIComponent : public Component {

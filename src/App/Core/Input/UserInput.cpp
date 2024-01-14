@@ -4,6 +4,7 @@
 
 #include "GLFW/glfw3.h"
 #include "dtl.h"
+#include "glm/fwd.hpp"
 
 
 namespace golf {
@@ -60,6 +61,18 @@ float Input::getMouseY() const {
 	double yPos = 0;
 	glfwGetCursorPos(m_window, &xPos, &yPos);
 	return static_cast<float>(yPos);
+}
+
+std::pair<float, float> Input::getMouseWorldPos(agl::Camera& camera) const {
+	return screenToWorld(getMousePos(), camera);
+}
+
+float Input::getMouseWorldX(agl::Camera& camera) const {
+	return getMouseWorldPos(camera).first;
+}
+
+float Input::getMouseWorldY(agl::Camera& camera) const {
+	return getMouseWorldPos(camera).second;
 }
 
 //////////////////////////////////////////////
@@ -169,6 +182,18 @@ float Input::getMouseOffsetY() const {
 	return yPos;
 }
 
+std::pair<float, float> Input::getMouseWorldOffset(agl::Camera& camera) const {
+	return screenToWorld(getMouseOffset(), camera);
+}
+
+float Input::getMouseWorldOffsetX(agl::Camera& camera) const {
+	return screenToWorld(getMouseOffset(), camera).first;
+}
+
+float Input::getMouseWorldOffsetY(agl::Camera& camera) const {
+	return screenToWorld(getMouseOffset(), camera).second;
+}
+
 //////////////////////////////////////////////
 ///					Other	
 //////////////////////////////////////////////
@@ -226,6 +251,21 @@ void Input::newScene() {
 //////////////////////////////////////////////
 ///				Technical Methods	
 //////////////////////////////////////////////
+
+std::pair<float, float> Input::screenToWorld(std::pair<float, float> original, agl::Camera& camera) const {
+	auto[x, y] = original;
+	x = 2 * x / static_cast<float>(AppData::getWindow().getWindowSize().x) - 1;
+	y = -2 * y / static_cast<float>(AppData::getWindow().getWindowSize().y) + 1;
+	glm::vec4 mousePos = {x, y, 0, 1};
+	const glm::mat4 proj = glm::ortho(camera.getPosition().x - (camera.getSize().x / 2) * camera.getFocalLength(), 
+									  camera.getPosition().x + (camera.getSize().x / 2) * camera.getFocalLength(), 
+								      camera.getPosition().y - (camera.getSize().y / 2) * camera.getFocalLength(),
+								      camera.getPosition().y + (camera.getSize().y / 2) * camera.getFocalLength(),
+									  -1.f, 1.f);
+	const glm::mat4 inv = glm::inverse(proj);
+	mousePos = inv * mousePos;
+	return {mousePos.x, mousePos.y};
+}
 
 void Input::setTargetWindow(const agl::Window& window) {
 	m_window = window.passPointer();
