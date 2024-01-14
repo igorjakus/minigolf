@@ -16,6 +16,8 @@ set(SOURCES
 	# Components
 	Graphics.h
 	Graphics.cpp
+	GUI.h 
+	GUI.cpp
 
 	# Core
 	Core/AppData.h

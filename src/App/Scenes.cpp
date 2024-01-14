@@ -16,30 +16,78 @@ namespace golf {
 // BlankScene
 // ===============================
 
+using PositionType = GUIComponent::positionType;
+using ModeType = GUIComponent::modeType;
+
 BlankScene::BlankScene()
-	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
+	:m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
 	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 
-	const uint tempX = AppData::getWindow().getWindowSize().x;
-	const uint tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+	AppData::getInput().attachCamera(&m_camera, 1.0f);
 
 	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
 	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
 	m_kot.getTransform()->setScale(0.5f);
-	// m_kot.getTransform()->xScale = 0.8f;
-	// m_kot.getTransform()->yScale = 0.3f;
 
+	m_button.getTransform()->setScale(0.2f, 0.1f);
+	// Komponenty wizualne można teraz tworzyć prościej:
+	m_button.addComponent<VisualComponent>(VisualComponent::create(m_gui));
+	// Gui komponent tworzy się następująco:
+	m_button.addComponent<GUIComponent>(GUIComponent::create(m_gui));
+	// odpowiada on za pozycje na ekranie (z tego powodu ustawienie pozycji poprzez transform nie zadziała)
+	m_button.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMRIGHT, -0.05f, 0.05f, ModeType::RELATIVE);
+	// A tak tworzy się komponent przycisku
+	m_button.addComponent<ButtonComponent>(ButtonComponent::create(m_gui));
+
+	m_button2.getTransform()->setScale(0.2f, 0.1f);
+	m_button2.addComponent<VisualComponent>(VisualComponent::create(m_gui));
+	// GUI komponent można też tworzyć tak:
+	m_button2.addComponent<GUIComponent>(m_gui.createGUIComponent());
+	m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.05f, ModeType::RELATIVE);
+	m_button2.addComponent<ButtonComponent>(std::make_shared<ButtonComponent>(m_gui));
+
+	m_button3.getTransform()->setScale(0.2f, 0.1f);
+	m_button3.addComponent<VisualComponent>(VisualComponent::create(m_gui));
+	m_button3.getComponent<VisualComponent>()->setColor(0, 100, 255, 255);
+	m_button3.addComponent<GUIComponent>(m_gui.createGUIComponent());
+	m_button3.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, -0.1f, ModeType::RELATIVE);
 }
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
 	
-	if (AppData::getInput().isKeyClicked("ENTER")) {
-		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
-		AppData::getSceneManager().nextScene();
+	auto button = m_button.getComponent<ButtonComponent>();
+	if(button) {
+		button->update();
+		if(button->isHovered()) {
+			m_button.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMRIGHT, -0.05f, 0.06f, ModeType::RELATIVE);
+			m_button.getComponent<VisualComponent>()->setColor(155, 0, 0, 255);
+		} else {
+			m_button.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMRIGHT, -0.05f, 0.05f, ModeType::RELATIVE);
+			m_button.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
+		}
+		if(button->isClicked()) {
+			AppData::getWindow().close();
+		}
 	}
+
+	button = m_button2.getComponent<ButtonComponent>();
+	if(button) {
+		button->update();
+		if(button->isHovered()) {
+			m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.06f, ModeType::RELATIVE);
+			m_button2.getComponent<VisualComponent>()->setColor(0, 20, 155, 255);
+		} else {
+			m_button2.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0.05f, ModeType::RELATIVE);
+			m_button2.getComponent<VisualComponent>()->setColor(0, 50, 255, 255);
+		}
+		if(button->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
+			AppData::getSceneManager().nextScene();
+		}
+	}
+	
 	if (AppData::getInput().isKeyClicked("UP")) {
 		m_kot.getComponent<VisualComponent>()->setTexture("popcat");
 	}
@@ -47,16 +95,16 @@ void BlankScene::update(float deltaT) {
 		m_kot.getComponent<VisualComponent>()->setTexture("sponge");
 	}
 	if (AppData::getInput().isKeyClicked("LEFT")) {
-		m_kot2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-		m_kot2.getTransform()->setScale(.2f);
+		m_camera.setFocalLength(m_camera.getFocalLength() * 0.8f);
 	}
 	if (AppData::getInput().isKeyClicked("RIGHT")) {
-		m_kot2.removeComponent<VisualComponent>();
+		m_camera.setFocalLength(m_camera.getFocalLength() * 1.25f);
 	}
 }
 
 void BlankScene::render() {
 	m_graphicsLayer.draw();
+	m_gui.render();
 }
 
 // ===============================
@@ -106,7 +154,7 @@ TestScene::TestScene()
 
 	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	m_camera.setSize(tempX, tempY);
+	AppData::getInput().attachCamera(&m_camera, 1024.0f);
 
 	auto graphics = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	// Niby można też graphics = std::make_shared<TextureComponent>(); tylko że wtedy ten komponent 
