@@ -228,7 +228,7 @@ bool Input::isFocused() const {
 
 void Input::attachCamera(agl::Camera* camera, float constvalue, bool isHeight) {
 	m_cameras.push_front({camera, constvalue, isHeight});
-	m_camerasCounts.front() ++;
+	m_camerasCounts.front() += 1;
 	const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 	if(isHeight) {
@@ -239,9 +239,11 @@ void Input::attachCamera(agl::Camera* camera, float constvalue, bool isHeight) {
 }
 
 void Input::resetCameras() {
-	for (size_t index = m_camerasCounts.back(); index > 0; index--) {
+	size_t toErase = m_camerasCounts.back();
+	for (size_t index = toErase; index > 0; index--) {
 		m_cameras.pop_back();
 	}
+	m_camerasCounts.pop_back();
 }
 
 void Input::newScene() {
@@ -312,6 +314,8 @@ Input::Input()
 :m_window(nullptr), m_customCursor(nullptr) {
 	s_instance = this;
 	setKeys();
+	m_camerasCounts.push_front(0);
+	m_camerasCounts.push_front(0);
 }
 
 Input::~Input() {
