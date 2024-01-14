@@ -61,8 +61,11 @@ namespace golf {
     void DynamicPhysicsComponent::set_rotation(float rot){
         m_rotation.z = rot;
     }
-    DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia)
-		:m_mass(mass), m_inertia(inertia) {}
+    DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia){
+        m_mass = mass;
+        m_inertia = inertia;
+    }
+		
 
 
     //kinematic

@@ -17,8 +17,8 @@ namespace golf {
         };
         void set_position(float x,float y);
         void set_rotation(float rot);
-        ~PhysicsComponent() override = default;
-        virtual PC_ID getType() = 0;
+        PhysicsComponent() = default;
+        ~PhysicsComponent() = default;
     protected:
         GML::Vec2f m_position; //nadpisuje
         GML::Vec3f m_rotation; //nadpisuje
@@ -33,9 +33,9 @@ namespace golf {
         void set_position(float x,float y);
         void set_rotation(float rot);
 
-        PC_ID getType() override;
+        PC_ID getType();
         DynamicPhysicsComponent(float mass,float inertia);
-        ~DynamicPhysicsComponent() override;
+        ~DynamicPhysicsComponent() = default;
 
     private:
         GML::Vec2f m_velocity;
@@ -59,8 +59,8 @@ namespace golf {
         void set_rotation(float rot);
         
 
-        PC_ID getType() override;
-        ~KinematicPhysicsComponent() override;
+        PC_ID getType();
+        ~KinematicPhysicsComponent() = default;
 
     private:
         GML::Vec2f m_velocity;
@@ -76,8 +76,8 @@ namespace golf {
         void set_position(float x,float y);
         void set_rotation(float rot);
 
-        PC_ID getType() override;
-        ~StaticPhysicsComponent() override;
+        PC_ID getType();
+        ~StaticPhysicsComponent() = default;
     };
 
     class Physics_Engine{
