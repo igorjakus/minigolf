@@ -35,12 +35,12 @@ set(SOURCES
 	Core/Input/UserInput.cpp
 	
 	# Audio
-	Core/Audio/SoundBuffer.cpp
-	Core/Audio/SoundBuffer.h
-	Core/Audio/SoundDevice.cpp
-	Core/Audio/SoundDevice.h
-	Core/Audio/SoundSource.cpp
-	Core/Audio/SoundSource.h
+	
+	
+	
+	
+	
+	
 
 )
 
