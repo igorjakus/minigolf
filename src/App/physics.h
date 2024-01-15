@@ -1,42 +1,27 @@
 #include <vector>
+#include <queue>
 
 #include "ECS/Entity.h"
 #include "ECS/Component.h"
 #include "GML/LinearAlgebra/Vec2f.h"
 #include "GML/LinearAlgebra/Vec3f.h"
 
-//!Zosta³ tydzieñ
-//!nieca³y
-//!nie dzia³a tu nic
+//!Zostaï¿½ tydzieï¿½
+//!niecaï¿½y
+//!nie dziaï¿½a tu nic
 
 namespace golf {
 
-	class PhysicsComponent : public Component{ //!ta warstwa abstrakcji jest kompletnie 
-	public:
-		enum struct PC_ID {
-			Dynamic,
-			Static,
-			Kinematic
-		};
-		void set_position(float x,float y);
-		void set_rotation(float rot);
-		PhysicsComponent() = default;
-		~PhysicsComponent() = default;
-	protected:
-		GML::Vec2f m_position; //nadpisuje
-		GML::Vec3f m_rotation; //nadpisuje       
-	};
+	
 
-	class DynamicPhysicsComponent : public PhysicsComponent{
+	class DynamicPhysicsComponent : public Component{
 	public:
+		bool m_in_physics_scope;
 		void apply_force(GML::Vec3f force, GML::Vec3f apply_point);   //zmienia acceleration
 		void apply_impulse(GML::Vec3f impulse, GML::Vec3f apply_point); //zmienia velocity
-		void update_positions(float deltaT);                          //apply net_force and net_torque i zeruj
-		void set_position(float x,float y);
-		void set_rotation(float rot);
+		void update_positions(float deltaT);  
 
-		PC_ID getType(); //!This is stoopid (you can determine a class by it's type ID)
-		DynamicPhysicsComponent(float mass,float inertia);
+		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
 		~DynamicPhysicsComponent() override = default;
 
 	private:
@@ -52,16 +37,16 @@ namespace golf {
 		float m_mass;
 		float m_inertia;
 
+		GML::Vec2f m_position;
+		GML::Vec3f m_rotation;  
+
 	};
 
-	class KinematicPhysicsComponent : public PhysicsComponent{
+	class KinematicPhysicsComponent : public Component{
 	public:
-		void update_positions(float deltaT);                          //apply net_force and net_torque i zeruj
-		void set_position(float x,float y);
-		void set_rotation(float rot);
+		bool m_in_physics_scope;
+		void update_positions(float deltaT);   
 		
-
-		PC_ID getType(); //!This is stoopid (you can determine a class by it's type ID)
 		~KinematicPhysicsComponent() override = default;
 
 	private:
@@ -71,26 +56,39 @@ namespace golf {
 		GML::Vec3f m_angular_velocity;
 		GML::Vec3f m_angular_acceleration;
 
+		GML::Vec2f m_position;
+		GML::Vec3f m_rotation;  
+
 	};
 
-	class StaticPhysicsComponent : public PhysicsComponent{
+	class StaticPhysicsComponent : public Component{
 	public:
-		void set_position(float x,float y);
-		void set_rotation(float rot);
-
-		PC_ID getType(); //!This is stoopid (you can determine a class by it's type ID)
+		bool m_in_physics_scope;
 		~StaticPhysicsComponent() override = default;
+	private:
+		GML::Vec2f m_position;
+		GML::Vec3f m_rotation;  
 	};
 
 	class Physics_Engine{
 	public:
-		void update_elements(float deltaT);
+		Physics_Engine() = default;
+		~Physics_Engine() = default;
+
+		void updateElements(float deltaT);
+
+		//return ID of element
+		std::shared_ptr<DynamicPhysicsComponent> addDynamicElement();
+		std::shared_ptr<KinematicPhysicsComponent> addKinematicElement();
+		std::shared_ptr<StaticPhysicsComponent> addStaticElement();
+
 
 	private:
 		//trzymam je
-		std::vector<DynamicPhysicsComponent> Dynamic_Objects;
-		std::vector<KinematicPhysicsComponent> Kinematic_Objects;
-		std::vector<StaticPhysicsComponent> Static_Objects;
+
+		std::vector<std::shared_ptr<DynamicPhysicsComponent>> m_Dynamic_Objects;
+		std::vector<std::shared_ptr<KinematicPhysicsComponent>> m_Kinematic_Objects;
+		std::vector<std::shared_ptr<StaticPhysicsComponent>> m_Static_Objects;
 
 	};
 

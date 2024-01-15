@@ -1,3 +1,4 @@
+#include <memory>
 #include <pch.h>
 #include <dtl.h>
 #include "physics.h"
@@ -7,10 +8,12 @@
 
 namespace golf {
 
+
 	//dynamic
+
 	void DynamicPhysicsComponent::apply_force(GML::Vec3f force, GML::Vec3f apply_point){   //zmienia acceleration
-		m_net_force = m_net_force + static_cast<GML::Vec2f>(force)  ;
-		m_net_torque = m_net_torque + GML::Vec3f::crossProduct(apply_point,force);
+		m_net_force += static_cast<GML::Vec2f>(force)  ;
+		m_net_torque += GML::Vec3f::crossProduct(apply_point,force);
 	}
 
 	void DynamicPhysicsComponent::apply_impulse(GML::Vec3f impulse, GML::Vec3f apply_point){ //zmienia velocity
@@ -31,12 +34,12 @@ namespace golf {
 		//aktualnie rotacja skosna nie jest przechowywana w transformie, trzeba to zmienic //rotacja skośna nie będzie przechowywana w transformie xD
 		m_rotation.z = rotation; //to be changed
 
-		m_acceleration += m_net_force / m_mass; //!Czm tu jest += a nie = ?
-		m_velocity += m_acceleration; //!Wzór na przyspieszenie chwilowe
+		m_acceleration = m_net_force / m_mass; //!Czm tu jest += a nie = ?
+		m_velocity += m_acceleration * deltaT; //!Wzór na przyspieszenie chwilowe
 		m_position += m_velocity * deltaT;
 
-		m_angular_acceleration += m_net_torque *(1/ m_inertia);
-		m_angular_velocity += m_angular_acceleration;
+		m_angular_acceleration = m_net_torque *(1/ m_inertia);
+		m_angular_velocity += m_angular_acceleration * deltaT;
 		m_rotation += m_angular_velocity * deltaT;
 		
 		m_rotation.x = (m_rotation.x > GML::F_2_PI) ? m_rotation.x - GML::F_2_PI : m_rotation.x;
@@ -58,13 +61,6 @@ namespace golf {
 		DTL_ENT("{0}", m_velocity);
 
 	}
-	void DynamicPhysicsComponent::set_position(float x,float y){
-		m_position.set(x, y);
-	}
-	void DynamicPhysicsComponent::set_rotation(float rot){
-		m_rotation.z = rot;
-	}
-	PhysicsComponent::PC_ID DynamicPhysicsComponent::getType() { return PC_ID::Dynamic; }
 
 	DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia){
 		m_mass = mass;
@@ -110,28 +106,56 @@ namespace golf {
 		m_acceleration.set(0,0); //suma wszystkich sil
 		m_angular_acceleration.set(0,0,0); //suma wszystkich sil obrotowych
 	}
-	
-	void KinematicPhysicsComponent::set_position(float x,float y){
-		m_position.x = x;
-		m_position.y = y;
-	}
-	void KinematicPhysicsComponent::set_rotation(float rot){
-		m_rotation.z = rot;
+
+
+	//physics engine
+
+	void Physics_Engine::updateElements(float deltaT){
+		//main Collision program
+
+		for(long unsigned int dyn_id=0;dyn_id < m_Dynamic_Objects.size();dyn_id++){
+			auto MyDynamicObject = m_Dynamic_Objects[dyn_id];
+
+			for(long unsigned int kinem_id=0;kinem_id < m_Kinematic_Objects.size();kinem_id++){
+				auto MyKinematicObject = m_Kinematic_Objects[kinem_id];
+				//collise the
+			}
+			for(long unsigned int static_id=0;static_id < m_Static_Objects.size();static_id++){
+				auto MyStaticObject = m_Static_Objects[static_id];
+				//collise the
+			}
+			//prevent double collision
+			for(long unsigned int dyn_second_id = dyn_id + 1;dyn_second_id < m_Dynamic_Objects.size();dyn_second_id++){
+				auto MySecondDynamicObject = m_Dynamic_Objects[dyn_second_id];
+				//collise the
+			}
+		}
+
+		for(long unsigned int id=0;id < m_Dynamic_Objects.size();id++){
+			m_Dynamic_Objects[id]->update_positions(deltaT);
+		}
+
+		for(long unsigned int id=0;id < m_Kinematic_Objects.size();id++){
+			m_Kinematic_Objects[id]->update_positions(deltaT);
+		}
 	}
 
-	PhysicsComponent::PC_ID KinematicPhysicsComponent::getType() { return PC_ID::Kinematic; }
-
-	//static
-	
-	void StaticPhysicsComponent::set_position(float x,float y){
-		m_position.x = x;
-		m_position.y = y;
+	std::shared_ptr<DynamicPhysicsComponent> Physics_Engine::addDynamicElement(){
+		std::shared_ptr<DynamicPhysicsComponent> Obj = std::make_shared<DynamicPhysicsComponent>();
+		m_Dynamic_Objects.push_back(Obj);
+		return Obj;
 	}
-	void StaticPhysicsComponent::set_rotation(float rot){
-		m_rotation.z = rot;
+	std::shared_ptr<KinematicPhysicsComponent> Physics_Engine::addKinematicElement(){
+		std::shared_ptr<KinematicPhysicsComponent> Obj = std::make_shared<KinematicPhysicsComponent>();
+		m_Kinematic_Objects.push_back(Obj);
+		return Obj;
+	}
+	std::shared_ptr<StaticPhysicsComponent> Physics_Engine::addStaticElement(){
+		std::shared_ptr<StaticPhysicsComponent> Obj = std::make_shared<StaticPhysicsComponent>();
+		m_Static_Objects.push_back(Obj);
+		return Obj;
 	}
 
-	PhysicsComponent::PC_ID StaticPhysicsComponent::getType() { return PC_ID::Static; }
 	
 
 	}
