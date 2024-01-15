@@ -138,7 +138,6 @@ namespace golf
 				filter, frames, frametime, width, heigth));
 			DTL_INF("SUS: Animation loaded \"{0}\"", fileName);
 		}
-
 	}
 
 
