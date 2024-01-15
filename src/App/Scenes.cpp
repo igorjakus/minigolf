@@ -47,11 +47,11 @@ void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
 		
 	}
 	if (AppData::getInput().isKeyClicked("LEFT")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({-1,0,0},{0,0,0});
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_force({-1,0,0},{0,0,0});
 		
 	}
 	if (AppData::getInput().isKeyClicked("RIGHT")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({1,0,0},{0,0,0});
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_force({1,0,0},{0,0,0});
 		
 	}
 	m_kot.getComponent<DynamicPhysicsComponent>()->update_positions(deltaT);
