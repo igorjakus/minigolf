@@ -9,8 +9,53 @@
 namespace golf {
 
 
-	//dynamic
+	Hitbox::Hitbox(Hitbox::Typ tego_typu ,float radius = 0){
+		m_Typ_obiektu = tego_typu;
+		m_radius = radius;
+	}
 
+	Physics_Engine::Collision::Collision(std::shared_ptr<Hitbox> O1,std::shared_ptr<Hitbox> O2,
+										GML::Vec2f collidePoint,GML::Vec2f normal,float penetracja){
+		m_Obj1 = O1;
+		m_Obj2 = O2;
+		m_collidePoint = collidePoint;
+		m_normalCollidePoint = normal;
+		m_penetrationDepth = penetracja;
+	}
+
+	void Physics_Engine::Collision::reisolveCollison(){
+		auto Owner1 = m_Obj1.getOwner();
+		auto Owner2 = m_Obj2.getOwner();
+
+		if(Owner2->hasComponent<DynamicPhysicsComponent>()){
+			auto temp = Owner1;
+			Owner1 = Owner2;
+			Owner2 = temp;
+		}
+		
+		if(m_Obj1.m_Typ_obiektu == Hitbox::Box || m_Obj2.m_Typ_obiektu == Hitbox::Kula) return;
+
+		//ball to box colliison
+		
+		if(Owner1->hasComponent<DynamicPhysicsComponent>()){
+
+			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
+				
+			}
+
+			if(Owner2->hasComponent<StaticPhysicsComponent>()){
+
+				
+
+			}
+
+		}
+
+		
+	}
+
+
+	//dynamic
 	void DynamicPhysicsComponent::apply_force(GML::Vec3f force, GML::Vec3f apply_point){   //zmienia acceleration
 		m_net_force += static_cast<GML::Vec2f>(force)  ;
 		m_net_torque += GML::Vec3f::crossProduct(apply_point,force);
@@ -110,7 +155,7 @@ namespace golf {
 
 	//physics engine
 
-	void Physics_Engine::updateElements(float deltaT){
+	void Physics_Engine::update(float deltaT){
 		//main Collision program
 
 		for(long unsigned int dyn_id=0;dyn_id < m_Dynamic_Objects.size();dyn_id++){

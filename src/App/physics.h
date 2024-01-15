@@ -12,7 +12,13 @@
 
 namespace golf {
 
-	
+	class Hitbox : public Component{
+	public:
+		enum Typ {Kula, Box};
+		Typ m_Typ_obiektu;
+		float m_radius;
+		Hitbox(Typ,float);
+	};
 
 	class DynamicPhysicsComponent : public Component{
 	public:
@@ -22,7 +28,6 @@ namespace golf {
 		void update_positions(float deltaT);  
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
-		~DynamicPhysicsComponent() override = default;
 
 	private:
 		GML::Vec2f m_velocity;
@@ -46,8 +51,6 @@ namespace golf {
 	public:
 		bool m_in_physics_scope;
 		void update_positions(float deltaT);   
-		
-		~KinematicPhysicsComponent() override = default;
 
 	private:
 		GML::Vec2f m_velocity;
@@ -64,7 +67,6 @@ namespace golf {
 	class StaticPhysicsComponent : public Component{
 	public:
 		bool m_in_physics_scope;
-		~StaticPhysicsComponent() override = default;
 	private:
 		GML::Vec2f m_position;
 		GML::Vec3f m_rotation;  
@@ -73,9 +75,8 @@ namespace golf {
 	class Physics_Engine{
 	public:
 		Physics_Engine() = default;
-		~Physics_Engine() = default;
 
-		void updateElements(float deltaT);
+		void update(float deltaT);
 
 		//return ID of element
 		std::shared_ptr<DynamicPhysicsComponent> addDynamicElement();
@@ -85,10 +86,23 @@ namespace golf {
 
 	private:
 		//trzymam je
-
 		std::vector<std::shared_ptr<DynamicPhysicsComponent>> m_Dynamic_Objects;
 		std::vector<std::shared_ptr<KinematicPhysicsComponent>> m_Kinematic_Objects;
 		std::vector<std::shared_ptr<StaticPhysicsComponent>> m_Static_Objects;
+
+		class Collision{
+		public:
+			Collision(std::shared_ptr<Hitbox>,std::shared_ptr<Hitbox>,GML::Vec2f,GML::Vec2f,float);
+
+			std::shared_ptr<Hitbox> m_Obj1,m_Obj2;
+
+			GML::Vec2f m_collidePoint;
+			GML::Vec2f m_normalCollidePoint;
+
+			float m_penetrationDepth;
+
+			void reisolveCollison();//ide do wlasciciela Entity, ide do jego komponentu fizycznego i chuj
+		};
 
 	};
 
