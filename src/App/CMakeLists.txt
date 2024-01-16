@@ -36,6 +36,11 @@ set(SOURCES
 	Core/Input/UserInput.h
 	Core/Input/UserInput.cpp
 	
+	# Scenes
+	scenes/levels.cpp 
+	scenes/levels.h
+	scenes/misc.cpp 
+	scenes/misc.h 
 
 )
 
