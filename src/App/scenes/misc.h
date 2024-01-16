@@ -9,11 +9,6 @@ namespace golf {
 	class LevelSelectionScene : public Scene {
 	public:
 		LevelSelectionScene();
-		~LevelSelectionScene() override = default;
-		LevelSelectionScene(LevelSelectionScene&&) = delete;
-		LevelSelectionScene(const LevelSelectionScene&) = delete;
-		LevelSelectionScene& operator=(LevelSelectionScene&&) = delete;
-		LevelSelectionScene& operator=(const LevelSelectionScene&) = delete;
 
 		void update(float deltaT) override;
 		void render() override;
@@ -22,8 +17,9 @@ namespace golf {
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
 
-		std::unique_ptr<agl::Object> cokolwiek;
-		bool isFirstUpdate = true;
+		GUILayer guiLayer;
+		Entity lvlOneButton;
+		Entity lvlTwoButton;
 
 	};
 
@@ -32,11 +28,6 @@ namespace golf {
 	class ResultsScene : public Scene {
 	public:
 		ResultsScene(int score, int lvlNumber);
-		~ResultsScene() override = default;
-		ResultsScene(ResultsScene&&) = delete;
-		ResultsScene(const ResultsScene&) = delete;
-		ResultsScene& operator=(ResultsScene&&) = delete;
-		ResultsScene& operator=(const ResultsScene&) = delete;
 
 		void update(float deltaT) override;
 		void render() override;

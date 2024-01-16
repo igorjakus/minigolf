@@ -11,11 +11,6 @@ namespace golf {
 	class LevelOneScene : public Scene {
 	public:
 		LevelOneScene();
-		~LevelOneScene() override = default;
-		LevelOneScene(LevelOneScene&&) = delete;
-		LevelOneScene(const LevelOneScene&) = delete;
-		LevelOneScene& operator=(LevelOneScene&&) = delete;
-		LevelOneScene& operator=(const LevelOneScene&) = delete;
 
 		void update(float deltaT) override;
 		void render() override;
@@ -35,11 +30,6 @@ namespace golf {
 	class LevelTwoScene : public Scene {
 	public:
 		LevelTwoScene();
-		~LevelTwoScene() override = default;
-		LevelTwoScene(LevelTwoScene&&) = delete;
-		LevelTwoScene(const LevelTwoScene&) = delete;
-		LevelTwoScene& operator=(LevelTwoScene&&) = delete;
-		LevelTwoScene& operator=(const LevelTwoScene&) = delete;
 
 		void update(float deltaT) override;
 		void render() override;

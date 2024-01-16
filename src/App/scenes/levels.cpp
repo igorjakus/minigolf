@@ -7,6 +7,8 @@
 namespace golf {
 
 
+	using PositionType = GUIComponent::positionType;
+	using ModeType = GUIComponent::modeType;
 
 	// ===============================
 	// LevelOneScene

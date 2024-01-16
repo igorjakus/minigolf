@@ -7,6 +7,8 @@
 
 namespace golf {
 
+	using PositionType = GUIComponent::positionType;
+	using ModeType = GUIComponent::modeType;
 
 	//funkcja ktora uruchamia odpowiedni poziom
 	void startLevel(int levelNumber)
@@ -30,26 +32,22 @@ namespace golf {
 		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
 		m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 	{
-		const uint tempX = AppData::getWindow().getWindowSize().x;
-		const uint tempY = AppData::getWindow().getWindowSize().y;
-		m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
+		AppData::getInput().attachCamera(&m_camera, 1.0f);
+		lvlOneButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlOneButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0, ModeType::RELATIVE);
+		lvlOneButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		lvlOneButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlOneButton.getTransform()->setScale(0.2f, 0.2f);
+		lvlOneButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
 	}
 
 	void LevelSelectionScene::update([[maybe_unused]] float deltaT)
 	{
-		if (isFirstUpdate) {
-			DTL_INF("level selection scene -- click 1 to play lvl 1, 2 to play lvl 2");
-			isFirstUpdate = false;
-		}
-
-
-		if (AppData::getInput().isKeyClicked("1")) {
+		auto ptr = lvlOneButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
-			AppData::getSceneManager().nextScene();
-		}
-
-		if (AppData::getInput().isKeyClicked("2")) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
 			AppData::getSceneManager().nextScene();
 		}
 	}
@@ -57,6 +55,7 @@ namespace golf {
 	void LevelSelectionScene::render()
 	{
 		m_graphicsLayer.draw();
+		guiLayer.render();
 	}
 
 
