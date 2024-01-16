@@ -70,8 +70,6 @@ namespace golf
 	}
 	
 	void App::terminate() {
-	
-		AppData::getSus().UpdateSaveFile();
 
 		AppData::terminate();
 	

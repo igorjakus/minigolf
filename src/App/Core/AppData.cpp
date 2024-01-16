@@ -52,6 +52,7 @@ void AppData::terminate() {
 	glfwSetWindowUserPointer(getInstance().m_window->passPointer(), nullptr);
 	getInstance().m_window.reset();
 	getInstance().m_sceneManager.reset();
+	AppData::getSus().UpdateSaveFile();
 	getInstance().m_sus.reset();
 	getInstance().m_input.reset();
 	DTL_INF("Application systems terminated successfully");

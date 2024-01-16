@@ -157,7 +157,7 @@ namespace golf
 			m_Levels.emplace(std::piecewise_construct, std::forward_as_tuple(nr), std::forward_as_tuple(std::make_pair(highScore,isUnlocked)));
 
 			if (log) {
-				DTL_INF("SUS: Level {0} loaded; whole line: {0}", nr, line);
+				DTL_INF("SUS: Data for Level {0} loaded", nr);
 			}
 		}
 		file.close();
