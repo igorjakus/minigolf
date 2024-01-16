@@ -39,6 +39,12 @@ namespace golf {
 			DTL_INF("level one scene -- click q to quit, r to play again, w to win");
 			isFirstUpdate = false;
 		}
+		if (AppData::getInput().isKeyPressed("UP")) {
+			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y + deltaT);
+		}
+		if (AppData::getInput().isKeyPressed("DOWN")) {
+			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y - deltaT);
+		}
 		//quit
 		if (AppData::getInput().isKeyClicked("Q")) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
