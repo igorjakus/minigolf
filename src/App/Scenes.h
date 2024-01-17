@@ -27,8 +27,12 @@ private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
 
+	agl::Camera m_camera2;
+	agl::GraphicLayer m_graphicsLayer2;
+
 	Entity m_kot;
 	Entity m_kot2;
+	Entity m_kot3;
 
 	float timer = 0;
 };
@@ -61,6 +65,8 @@ public:
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
+
+
 
 	float speed = 0.0f;
 	float size;

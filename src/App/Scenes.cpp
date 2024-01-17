@@ -18,11 +18,10 @@ namespace golf {
 
 BlankScene::BlankScene()
 	:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
+	m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
+	m_camera2(0.F, 0.F, 1.F, 1.F, 1.F),
+	m_graphicsLayer2(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera){
 
-	const uint tempX = AppData::getWindow().getWindowSize().x;
-	const uint tempY = AppData::getWindow().getWindowSize().y;
-	m_camera.setSize(static_cast<float>(tempX) / static_cast<float>(tempY), 1.0F);
 
 	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
@@ -31,7 +30,20 @@ BlankScene::BlankScene()
 	// m_kot.getTransform()->xScale = 0.8f;
 	// m_kot.getTransform()->yScale = 0.3f;
 
+	auto comp2 = std::make_shared<VisualComponent>(&m_graphicsLayer2);
+	m_kot2.addComponent<VisualComponent>(comp2);
+	m_kot2.getComponent<VisualComponent>()->setTexture("popcat");
+	m_kot2.getTransform()->setScale(0.25f);
+
+	auto comp3 = std::make_shared<VisualComponent>(&m_graphicsLayer2);
+	m_kot3.addComponent<VisualComponent>(comp3);
+	m_kot3.getComponent<VisualComponent>()->setTexture("sponge");
+	m_kot3.getTransform()->setScale(0.25f);
+	m_kot3.getTransform()->setPos(0.2f, 0.2f);
+
 }
+
+
 
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
@@ -56,6 +68,7 @@ void BlankScene::update(float deltaT) {
 }
 
 void BlankScene::render() {
+	m_graphicsLayer2.draw();
 	m_graphicsLayer.draw();
 }
 
