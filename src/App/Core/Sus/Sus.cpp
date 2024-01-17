@@ -39,7 +39,7 @@ namespace golf
 			DTL_WAR("Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, glm::ivec2(3, 3), sWrap, tWrap));
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, glm::ivec2(1, 1), sWrap, tWrap));
 		}
 		DTL_INF("SUS: Texture loaded \"{0}\"", fileName);
 	}

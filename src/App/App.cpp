@@ -58,7 +58,7 @@ namespace golf
 	
 	void App::render() {
 		IMGUI_NEW_FRAME;
-		IMGUI_CALL(ImGui::ShowDemoWindow());
+		
 		AppData::getSceneManager().render();
 	
 		AppData::getInput().frameEnd();

@@ -30,6 +30,8 @@ private:
 	Entity m_kot;
 	Entity m_kot2;
 
+	float xS = .5f, yS = .5f;
+
 	float timer = 0;
 };
 

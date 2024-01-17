@@ -27,7 +27,8 @@ BlankScene::BlankScene()
 	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
 	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
-	m_kot.getTransform()->setScale(0.5f);
+	m_kot.getTransform()->setScale(.5f);
+	m_kot.getComponent<VisualComponent>()->setTexRepeat(.5f);
 	// m_kot.getTransform()->xScale = 0.8f;
 	// m_kot.getTransform()->yScale = 0.3f;
 
@@ -36,6 +37,9 @@ BlankScene::BlankScene()
 void BlankScene::update(float deltaT) {
 	timer += deltaT;
 	
+	m_kot.getTransform()->setScale({ xS, yS });
+
+
 	if (AppData::getInput().isKeyClicked("ENTER")) {
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new TestScene()));
 		AppData::getSceneManager().nextScene();
@@ -57,6 +61,10 @@ void BlankScene::update(float deltaT) {
 
 void BlankScene::render() {
 	m_graphicsLayer.draw();
+	IMGUI_CALL(ImGui::Begin("Debug"));
+	IMGUI_CALL(ImGui::SliderFloat("xScale", &xS, .5f, 10.0f););
+	IMGUI_CALL(ImGui::SliderFloat("yScale", &yS, .5f, 10.0f););
+	IMGUI_CALL(ImGui::End());
 }
 
 // ===============================
