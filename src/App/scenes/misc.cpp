@@ -39,6 +39,7 @@ namespace golf {
 		lvlOneButton.getComponent<VisualComponent>()->setTexture("popcat");
 		lvlOneButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlOneButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
 		lvlTwoButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlTwoButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.4f, -0.1f, ModeType::RELATIVE);
 		lvlTwoButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));

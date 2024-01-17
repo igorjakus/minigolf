@@ -18,7 +18,7 @@ void SceneManager::nextScene() {
 	}
 #endif
 
-	m_currentScene.reset();
+	m_bufferScene = m_currentScene;
 	m_currentScene = m_sceneQueueBuffer.front();
 	m_sceneQueueBuffer.pop();
 
@@ -27,6 +27,10 @@ void SceneManager::nextScene() {
 
 void SceneManager::update(float deltaT) {
 	m_currentScene->update(deltaT);
+	if (m_changeScene) {
+		m_bufferScene.reset();
+		m_changeScene = false;
+	}
 }
 
 void SceneManager::render() {

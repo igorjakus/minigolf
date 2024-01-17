@@ -13,6 +13,9 @@ namespace golf  {
 		void nextScene();
 	
 	private:
+		bool m_changeScene = false;
+
+		std::shared_ptr<Scene> m_bufferScene;
 		std::shared_ptr<Scene> m_currentScene;
 		std::queue<std::shared_ptr<Scene>> m_sceneQueueBuffer;	
 	};
