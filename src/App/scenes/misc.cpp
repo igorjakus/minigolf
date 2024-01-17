@@ -72,6 +72,7 @@ namespace golf {
 		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
 			AppData::getSceneManager().nextScene();
+			return;
 		}
 	}
 

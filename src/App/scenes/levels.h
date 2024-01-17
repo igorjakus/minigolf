@@ -21,7 +21,10 @@ namespace golf {
 
 		Entity wallA;
 		Entity wallB;
-		bool isFirstUpdate = true;
+		Entity frame1;
+		Entity frame2;
+		Entity frame3;
+		Entity frame4;
 	};
 
 	
