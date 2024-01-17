@@ -25,7 +25,7 @@ namespace golf
 			Sus::LoadTexture(file);
 		}
 	}
-	void Sus::LoadTexture(const std::string& file, int filter, int sWrap, int tWrap) {
+	void Sus::LoadTexture(const std::string& file, glm::ivec2 textureRatio, int filter, int sWrap, int tWrap) {
 		//sprawdzanie formatu danej i zmienienie nazwy adekwatnie:
 		std::string fileName;
 		if (file.std::string::find(".png") != std::string::npos){
@@ -42,7 +42,9 @@ namespace golf
 			DTL_WAR("SUS: Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, glm::ivec2(1, 1), sWrap, tWrap));
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", 
+				filter, textureRatio, sWrap, tWrap));
+
 			DTL_INF("SUS: Texture loaded \"{0}\"", fileName);
 		}
 	}
@@ -51,7 +53,7 @@ namespace golf
 		std::string temp = TEXTURE_PATH;
 		for (const auto& entry : std::filesystem::directory_iterator(TEXTURE_PATH)) {
 			if (std::filesystem::is_regular_file(entry)) {
-				LoadTexture(entry.path().string().erase(0, temp.length()));
+				LoadTexture(entry.path().string().erase(0, temp.length()), {2,2});
 			}
 		}
 	}
