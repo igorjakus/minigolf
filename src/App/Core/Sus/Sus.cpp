@@ -139,8 +139,17 @@ namespace golf
 				filter, frames, frametime, width, heigth));
 			DTL_INF("SUS: Animation loaded \"{0}\"", fileName);
 		}
-	}
+	}	
 
+	agl::Animation* Sus::GetAnimation(const std::string& file){
+		auto item = m_Animations.find(file);
+		if (item != m_Animations.end()) {
+			return &item->second;
+		}
+		DTL_WAR("SUS: Trying to get not loaded animation:({0}). Operation ignored.", file);
+		return nullptr;
+
+	}
 
 
 	//=====[Level Data File]=====

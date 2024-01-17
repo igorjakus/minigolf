@@ -31,11 +31,9 @@ namespace golf {
 		
 		//=====[Animation]=====
 
-		void LoadAnimation(const std::string& file, int filter, uint frames, float frametime, uint width, uint heigth);
+		void LoadAnimation(const std::string& file, int filter= GL_LINEAR, uint frames = 1, float frametime = 1, uint width = 1, uint heigth = 1);
 
-		agl::Animation GetAnimation(const std::string& file);
-
-
+		agl::Animation* GetAnimation(const std::string& file);
 
 		//=====[Level Data File]=====
 		void LoadLevelFile(int log=false);
