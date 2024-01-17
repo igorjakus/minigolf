@@ -20,9 +20,9 @@ namespace golf
 	}
 
 	//=====[Textures]=====
-	void Sus::LoadListOfTextures(std::initializer_list<std::string> files) {
+	void Sus::LoadListOfTextures(std::initializer_list<std::string> files,int scaleX,int scaleY) {
 		for (auto file : files) {
-			Sus::LoadTexture(file);
+			Sus::LoadTexture(file,glm::ivec2(scaleX,scaleY));
 		}
 	}
 	void Sus::LoadTexture(const std::string& file, glm::ivec2 textureRatio, int filter, int sWrap, int tWrap) {
@@ -34,26 +34,25 @@ namespace golf
 		else {
 			fileName = file;
 		}//
-		
+
 		if (m_Textures.find(fileName) != m_Textures.end()) {
 			DTL_WAR("SUS: Trying to load already loaded texture:({0}). Operation ignored.", file);
 		}
-		else if (!std::filesystem::exists(TEXTURE_PATH + file) && !std::filesystem::exists(TEXTURE_PATH + fileName+ ".png")) {
+		else if (!std::filesystem::exists(TEXTURE_PATH + file) && !std::filesystem::exists(TEXTURE_PATH + fileName + ".png")) {
 			DTL_WAR("SUS: Trying to open non-existing file:({0}{0}). Operation ignored.", TEXTURE_PATH, file);
 		}
 		else {
-			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", 
-				filter, textureRatio, sWrap, tWrap));
-
+			m_Textures.emplace(std::piecewise_construct, std::forward_as_tuple(fileName), std::forward_as_tuple(TEXTURE_PATH + fileName + ".png", filter, textureRatio, sWrap, tWrap));
 			DTL_INF("SUS: Texture loaded \"{0}\"", fileName);
 		}
+	
 	}
 
 	void Sus::LoadAllTextures() {
 		std::string temp = TEXTURE_PATH;
 		for (const auto& entry : std::filesystem::directory_iterator(TEXTURE_PATH)) {
 			if (std::filesystem::is_regular_file(entry)) {
-				LoadTexture(entry.path().string().erase(0, temp.length()), {2,2});
+				LoadTexture(entry.path().string().erase(0, temp.length()));
 			}
 		}
 	}

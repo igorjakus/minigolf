@@ -9,7 +9,7 @@ namespace golf {
 		void LoadAll();
 
 		//=====[Textures]=====
-		void LoadListOfTextures(std::initializer_list<std::string> files);
+		void LoadListOfTextures(std::initializer_list<std::string> files, int scaleX = 1, int scaleY = 1);
 
 		void LoadTexture(const std::string& file, glm::ivec2 textureRatio = { 1, 1 }, int filter = GL_LINEAR, int sWrap = GL_REPEAT, int tWrap = GL_REPEAT);
 

@@ -19,6 +19,8 @@ void AppData::init(uint width, uint height, const std::string& title) {
 	getInstance().m_window = std::make_unique<agl::Window>(width, height, title);
 	getInstance().m_window->create();
 
+	agl::Shader::enableBlending();
+
 	glm::uvec2 screenRes = getInstance().m_window->getScreenResolution();
 	const uint windowPosX = screenRes.x / 2 - width / 2;
 	const uint windowPosY = screenRes.y / 2 - height / 2;
@@ -29,6 +31,9 @@ void AppData::init(uint width, uint height, const std::string& title) {
 	//Sus initialization
 	getInstance().m_sus = std::make_unique<Sus>();
 	DTL_ENT("Loading assets...");
+
+	getInstance().m_sus->LoadListOfTextures({ "catcat.png", "sponge.png" }, 3, 3);
+
 	getInstance().m_sus->LoadAll();
 	DTL_INF("Assets loaded");
 
