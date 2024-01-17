@@ -34,11 +34,18 @@ namespace golf {
 	{
 		AppData::getInput().attachCamera(&m_camera, 1.0f);
 		lvlOneButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		lvlOneButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, 0, ModeType::RELATIVE);
+		lvlOneButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.1f, -0.1f, ModeType::RELATIVE);
 		lvlOneButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		lvlOneButton.getComponent<VisualComponent>()->setTexture("popcat");
 		lvlOneButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlOneButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+		lvlTwoButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlTwoButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.4f, -0.1f, ModeType::RELATIVE);
+		lvlTwoButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		lvlTwoButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlTwoButton.getTransform()->setScale(0.2f, 0.2f);
+		lvlTwoButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
 
 	}
 
@@ -48,6 +55,21 @@ namespace golf {
 		ptr->update();
 		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			lvlOneButton.getComponent<VisualComponent>()->setTexture("sponge");
+		}
+		else { lvlOneButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+
+		ptr = lvlTwoButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isHovered()) {
+			lvlTwoButton.getComponent<VisualComponent>()->setTexture("sponge");
+		}
+		else { lvlTwoButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
 			AppData::getSceneManager().nextScene();
 		}
 	}
