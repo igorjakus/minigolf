@@ -1,6 +1,7 @@
 ---
 Checks: '-*,
   bugprone-*,
+  -bugprone-easily-swappable-parameters,
   cert-dcl50-cpp,
   cert-env33-c,
   cert-err34-c,
@@ -15,6 +16,7 @@ Checks: '-*,
   -cppcoreguidelines-pro-type-union-access,
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
   -cppcoreguidelines-pro-type-vararg,
+  -cppcoreguidelines-avoid-magic-numbers,
   google-build-using-namespace,
   google-explicit-constructor,
   google-global-names-in-headers,
@@ -30,7 +32,8 @@ Checks: '-*,
   readability-*,
   -readability-named-parameter,
   -readability-uppercase-literal-suffix,
-  -readability-convert-member-functions-to-static'
+  -readability-convert-member-functions-to-static,
+  -readability-magic-numbers'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 FormatStyle:     none
