@@ -355,17 +355,20 @@ namespace golf {
 		wall1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall1.getComponent<VisualComponent>()->setTexture("popcat");
 		wall1.getTransform()->setPos(2.5f, -2.0f);
-		wall1.getTransform()->setScale(2.0f, 0.2f);
+		wall1.getTransform()->setScale(2.5f, 0.2f);
 
 		wall2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall2.getComponent<VisualComponent>()->setTexture("popcat");
 		wall2.getTransform()->setPos(5.5f, -3.5f);
-		wall2.getTransform()->setScale(2.0f, 0.2f);
+		wall2.getTransform()->setScale(2.5f, 0.2f);
+		wall2.getTransform()->rot = 20.0f;
+
 
 		wall3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall3.getComponent<VisualComponent>()->setTexture("popcat");
-		wall3.getTransform()->setPos(3.5f, -5.5f);
-		wall3.getTransform()->setScale(2.0f, 0.2f);
+		wall3.getTransform()->setPos(2.5f, -5.5f);
+		wall3.getTransform()->setScale(2.5f, 0.2f);
+		wall3.getTransform()->rot = 100.0f;
 
 		
 
@@ -401,7 +404,11 @@ namespace golf {
 		}
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("popcat"); }
 
-
+		float rotateSpeed1 = 80.0f; 
+		
+		wall1.getTransform()->rot -= deltaT * rotateSpeed1;
+		wall2.getTransform()->rot += deltaT * rotateSpeed1;
+		wall3.getTransform()->rot -= deltaT * rotateSpeed1;
 	}
 
 	void LevelFourScene::render() {
