@@ -36,15 +36,39 @@ namespace golf {
 		agl::Animation* GetAnimation(const std::string& file);
 
 		//=====[Level Data File]=====
+		class LevelData {
+		public:
+			LevelData(int HighScore, int Stars, bool isUnlocked);
+
+			int HighScore();
+			int StarCount();
+			bool IsUnlocked();
+
+			void ChangeHighScore(int nr);
+			void ChangeStars(int nr);
+			void Unlock(int nr);
+
+
+		private:
+			int highScore;
+			int stars;
+			bool isUnlocked;
+		};
+
+
 		void LoadLevelFile(int log=false);
 
+		
 		bool IsUnlocked(int nr);
+		int StarCount(int nr);
 		int HighScore(int nr);
 
 		void ChangeHighScore(int nr, int score);
+		void ChangeStars(int nr, int stars);
 		void Unlock(int nr);
-
+		
 		void UpdateSaveFile();
+
 		//TO DO: zapis zmieniony przy koñcu programu
 
 		//=====[Audio (Igor :3)]
@@ -59,7 +83,7 @@ namespace golf {
 
 		std::map<std::string, agl::Animation> m_Animations;
 
-		std::map<int, std::pair<int,bool>> m_Levels;
+		std::map<int, Sus::LevelData> m_Levels;
 
 	};
 

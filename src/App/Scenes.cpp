@@ -28,6 +28,7 @@ BlankScene::BlankScene()
 	m_kot.addComponent<VisualComponent>(comp);
 	m_kot.getComponent<VisualComponent>()->setTexture("catcat");
 	m_kot.getTransform()->setScale(0.5f);
+
 	// m_kot.getTransform()->xScale = 0.8f;
 	// m_kot.getTransform()->yScale = 0.3f;
 

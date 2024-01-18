@@ -1,9 +1,9 @@
-Level 1: HighScore: 4, isUnlocked: 1
-Level 2: HighScore: 3, isUnlocked: 0
-Level 3: HighScore: 3, isUnlocked: 0
-Level 4: HighScore: 100, isUnlocked: 0
-Level 5: HighScore: 3, isUnlocked: 0
-Level 6: HighScore: 3, isUnlocked: 0
-Level 7: HighScore: 3, isUnlocked: 0
-Level 8: HighScore: 3, isUnlocked: 0
-Level 9: HighScore: 3, isUnlocked: 0
+Level 1: HighScore: 100, Stars: 1, isUnlocked: 1
+Level 2: HighScore: 0, Stars: 1, isUnlocked: 1
+Level 3: HighScore: 0, Stars: 0, isUnlocked: 0
+Level 4: HighScore: 0, Stars: 0, isUnlocked: 0
+Level 5: HighScore: 0, Stars: 0, isUnlocked: 0
+Level 6: HighScore: 0, Stars: 0, isUnlocked: 0
+Level 7: HighScore: 0, Stars: 0, isUnlocked: 0
+Level 8: HighScore: 0, Stars: 0, isUnlocked: 0
+Level 9: HighScore: 0, Stars: 0, isUnlocked: 0
