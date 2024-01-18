@@ -25,5 +25,10 @@ namespace golf
 	
 	void VisualComponent::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_GL->getQuadPtr(m_ID)->setColor(red, green, blue, alpha); }
 	
-	void VisualComponent::setColor(Color color) { m_GL->getQuadPtr(m_ID)->setColor(color); };
+	void VisualComponent::setColor(Color color) { m_GL->getQuadPtr(m_ID)->setColor(color); }
+	
+	void VisualComponent::setTexRepeat(float defxScale, float defyScale) { m_GL->getQuadPtr(m_ID)->setTexRepeat(defxScale, defyScale); }
+
+	void VisualComponent::setTexRepeat(float defScale) { m_GL->getQuadPtr(m_ID)->setTexRepeat(defScale, defScale); }
+	
 }

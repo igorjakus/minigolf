@@ -122,6 +122,7 @@ void agl::Quad::setScalePtr(float* xScale, float* yScale) { m_xScale = xScale; m
 void agl::Quad::setRotationPtr(float* rotation) { m_rotation = rotation; }
 void agl::Quad::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_color = { red, green, blue, alpha }; }
 void agl::Quad::setColor(Color color) { m_color = color; }
+void agl::Quad::setTexRepeat(float defxScale, float defyScale) { m_defxScale = defxScale; m_defyScale = defyScale; }
 Color agl::Quad::getColor() const { return m_color; }
 
 agl::Quad::~Quad() 
@@ -194,6 +195,11 @@ void agl::GraphicLayer::draw()
 		{ botomLeftVert = quad.m_vis->getUV().first; topRightVert = quad.m_vis->getUV().second; }
 		else
 		{ botomLeftVert = { 0.0, 0.0 }; topRightVert = { 1.0, 1.0 }; }
+		if (quad.m_defxScale != 0.f || quad.m_defyScale != 0.f) 
+		{
+			topRightVert.x *= *quad.m_xScale / quad.m_defxScale;
+			topRightVert.y *= *quad.m_yScale / quad.m_defyScale;
+		}
 
 		const std::array<Vertice, 4> objectData = {{
 		{{-.5f, -.5f,}, {static_cast<glm::vec2>(botomLeftVert)}}, {{ .5f, -.5f,}, {static_cast<float>(topRightVert.x), static_cast<float>(botomLeftVert.y)}},
