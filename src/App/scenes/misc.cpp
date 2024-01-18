@@ -48,6 +48,14 @@ namespace golf {
 		lvlTwoButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 
+		lvlThreeButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlThreeButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.7f, -0.1f, ModeType::RELATIVE);
+		lvlThreeButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		lvlThreeButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlThreeButton.getTransform()->setScale(0.2f, 0.2f);
+		lvlThreeButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+
 	}
 
 	void LevelSelectionScene::update([[maybe_unused]] float deltaT)
@@ -71,6 +79,18 @@ namespace golf {
 		else { lvlTwoButton.getComponent<VisualComponent>()->setTexture("popcat"); }
 		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+			AppData::getSceneManager().nextScene();
+			return;
+		}
+
+		ptr = lvlThreeButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isHovered()) {
+			lvlThreeButton.getComponent<VisualComponent>()->setTexture("sponge");
+		}
+		else { lvlThreeButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelThreeScene()));
 			AppData::getSceneManager().nextScene();
 			return;
 		}
