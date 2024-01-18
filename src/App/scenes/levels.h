@@ -99,6 +99,12 @@ namespace golf {
 		Entity frame2;
 		Entity frame3;
 		Entity frame4;
+		Entity frame5;
+		Entity frame6;
+		Entity wall1;
+		Entity wall2;
+		Entity wall3;
+		Entity wall4;
 		Entity pauseButton;
 	};
 }
