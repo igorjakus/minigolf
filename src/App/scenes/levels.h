@@ -18,6 +18,7 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		GUILayer guiLayer;
 
 		Entity wallA;
 		Entity wallB;
@@ -25,6 +26,7 @@ namespace golf {
 		Entity frame2;
 		Entity frame3;
 		Entity frame4;
+		Entity pauseButton;
 	};
 
 	

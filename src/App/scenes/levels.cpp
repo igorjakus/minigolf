@@ -18,7 +18,14 @@ namespace golf {
 		: m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
 		m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
-		
+
+
+		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.01f, -0.01f, ModeType::RELATIVE);
+		pauseButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		pauseButton.getComponent<VisualComponent>()->setTexture("popcat");
+		pauseButton.getTransform()->setScale(0.1f, 0.1f);
+		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
@@ -69,25 +76,24 @@ namespace golf {
 		if (AppData::getInput().isKeyPressed("DOWN")) {
 			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y - deltaT*5);
 		}
-		//quit
-		if (AppData::getInput().isKeyClicked("Q")) {
+		auto ptr = pauseButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
 			AppData::getSceneManager().nextScene();
 		}
-		//retry
-		if (AppData::getInput().isKeyClicked("R")) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
-			AppData::getSceneManager().nextScene();
+		if (ptr->isHovered()) {
+			pauseButton.getComponent<VisualComponent>()->setTexture("sponge");
 		}
-		//won
-		if (AppData::getInput().isKeyClicked("W")) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(10, 1)));
-			AppData::getSceneManager().nextScene();
-		}
+		else { pauseButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+
 
 	}
 
-	void LevelOneScene::render() { m_graphicsLayer.draw(); }
+	void LevelOneScene::render() { 
+		m_graphicsLayer.draw(); 
+		guiLayer.render();
+	}
 
 
 
