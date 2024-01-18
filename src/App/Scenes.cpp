@@ -1,3 +1,4 @@
+#include <memory>
 #include <pch.h>
 #include "Scenes.h"
 #include "Core/AppData.h"
@@ -32,8 +33,20 @@ PhysicsTestingScene::PhysicsTestingScene()
 	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
 	m_kot.getTransform()->setScale(0.1f);
 	
-	auto physics = std::make_shared<DynamicPhysicsComponent>(1,1);
+	m_kot.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula,0.05f));
+
+	auto physics = Engine.addDynamicElement();
 	m_kot.addComponent<DynamicPhysicsComponent>(physics);
+
+	visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
+	m_kot2.addComponent<VisualComponent>(visual);
+	m_kot2.getComponent<VisualComponent>()->setTexture("popcat");
+	m_kot2.getTransform()->setScale(0.1f);
+	
+	m_kot2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box,0.f));
+
+	auto physics2 = Engine.addStaticElement();
+	m_kot2.addComponent<StaticPhysicsComponent>(physics2);
 
 }
 
@@ -46,15 +59,15 @@ void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
 		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,-0.1f,0},{0,0,0});
 		
 	}
-	if (AppData::getInput().isKeyPressed("LEFT")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_force({-0.1f,0,0},{0,0,0});
+	if (AppData::getInput().isKeyClicked("LEFT")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({-0.1f,0,0},{0,0,0});
 		
 	}
-	if (AppData::getInput().isKeyPressed("RIGHT")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_force({0.1f,0,0},{0,0,0});
+	if (AppData::getInput().isKeyClicked("RIGHT")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0.1f,0,0},{0,0,0});
 		
 	}
-	m_kot.getComponent<DynamicPhysicsComponent>()->update_positions(deltaT);
+	Engine.update(deltaT);
 }
 
 void PhysicsTestingScene::render() {

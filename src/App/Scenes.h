@@ -3,6 +3,7 @@
 #include "Core/SceneManager/Scene.h"
 #include "Agl.h"
 #include "ECS/Entity.h"
+#include "physics.h"
 
 
 //NOLINTBEGIN
@@ -179,6 +180,7 @@ public:
 private:
 	agl::Camera m_camera;
 	agl::GraphicLayer m_graphicsLayer;
+	Physics_Engine Engine;
 
 	Entity m_kot;
 	Entity m_kot2;

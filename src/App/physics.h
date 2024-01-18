@@ -1,9 +1,14 @@
+#pragma once
+
+#include <memory>
+#include <scoped_allocator>
 #include <vector>
 #include <queue>
 
 #include "ECS/Entity.h"
 #include "ECS/Component.h"
 #include "GML/LinearAlgebra/Vec2f.h"
+#include "GML/LinearAlgebra/Mat2f.h"
 #include "GML/LinearAlgebra/Vec3f.h"
 
 //!Zosta� tydzie�
@@ -12,12 +17,12 @@
 
 namespace golf {
 
-	class Hitbox : public Component{
+	class HitboxComponent : public Component{
 	public:
 		enum Typ {Kula, Box};
 		Typ m_Typ_obiektu;
 		float m_radius;
-		Hitbox(Typ,float);
+		HitboxComponent(Typ,float);
 	};
 
 	class DynamicPhysicsComponent : public Component{
@@ -77,6 +82,7 @@ namespace golf {
 		Physics_Engine() = default;
 
 		void update(float deltaT);
+		void check_collision(std::shared_ptr<HitboxComponent>, std::shared_ptr<HitboxComponent>);
 
 		//return ID of element
 		std::shared_ptr<DynamicPhysicsComponent> addDynamicElement();
@@ -92,9 +98,9 @@ namespace golf {
 
 		class Collision{
 		public:
-			Collision(std::shared_ptr<Hitbox>,std::shared_ptr<Hitbox>,GML::Vec2f,GML::Vec2f,float);
+			Collision(std::shared_ptr<HitboxComponent>,std::shared_ptr<HitboxComponent>,GML::Vec2f,GML::Vec2f,float);
 
-			std::shared_ptr<Hitbox> m_Obj1,m_Obj2;
+			std::shared_ptr<HitboxComponent> m_Obj1,m_Obj2;
 
 			GML::Vec2f m_collidePoint;
 			GML::Vec2f m_normalCollidePoint;
@@ -103,6 +109,8 @@ namespace golf {
 
 			void reisolveCollison();//ide do wlasciciela Entity, ide do jego komponentu fizycznego i chuj
 		};
+
+		std::queue<Collision> ColideQue;
 
 	};
 
