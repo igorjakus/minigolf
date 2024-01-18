@@ -113,7 +113,7 @@ agl::Animation& agl::Animation::operator=(Animation&& oth) noexcept
 //!QUAD===================================================================================================================================================================================================================
 agl::Quad::Quad() 
 	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), 
-	m_color({ 255, 255, 255, 255 }), m_VBO(0), m_EBO(0), m_VAO(0), m_exists(true) {}
+	m_defxScale(0.f), m_defyScale(0.f), m_color({ 255, 255, 255, 255 }), m_VBO(0), m_EBO(0), m_VAO(0), m_exists(true) {}
 
 //transform funcions 
 void agl::Quad::setVisual(agl::Visual* visual) { m_vis = visual; }
@@ -133,8 +133,8 @@ agl::Quad::~Quad()
 }
 
 agl::Quad::Quad(Quad && oth) noexcept
-	:	m_x(oth.m_x), m_y(oth.m_y), m_xScale(oth.m_xScale), m_yScale(oth.m_yScale), m_rotation(oth.m_rotation), 
-	m_vis(oth.m_vis), m_color(oth.m_color), m_VBO(oth.m_VBO), m_EBO(oth.m_EBO), m_VAO(oth.m_VAO), m_exists(oth.m_exists)
+	:m_x(oth.m_x), m_y(oth.m_y), m_xScale(oth.m_xScale), m_yScale(oth.m_yScale), m_rotation(oth.m_rotation), m_defxScale(oth.m_defxScale),
+	m_defyScale(oth.m_defyScale), m_vis(oth.m_vis), m_color(oth.m_color), m_VBO(oth.m_VBO), m_EBO(oth.m_EBO), m_VAO(oth.m_VAO), m_exists(oth.m_exists)
 {
 	oth.m_VBO = 0;
 	oth.m_EBO = 0;
@@ -143,8 +143,8 @@ agl::Quad::Quad(Quad && oth) noexcept
 
 agl::Quad& agl::Quad::operator=(Quad && oth) noexcept
 {
-	m_x = oth.m_x; m_y = oth.m_y; m_xScale = oth.m_xScale; m_yScale = oth.m_yScale; m_rotation = oth.m_rotation;
-	m_vis = oth.m_vis; m_color = oth.m_color; m_VBO = oth.m_VBO; m_EBO = oth.m_EBO; m_VAO = oth.m_VAO; m_exists = oth.m_exists;
+	m_x = oth.m_x; m_y = oth.m_y; m_xScale = oth.m_xScale; m_yScale = oth.m_yScale; m_rotation = oth.m_rotation; m_defxScale = oth.m_defxScale; 
+	m_defyScale = oth.m_defyScale; m_vis = oth.m_vis; m_color = oth.m_color; m_VBO = oth.m_VBO; m_EBO = oth.m_EBO; m_VAO = oth.m_VAO; m_exists = oth.m_exists;
 	oth.m_VBO = 0;
 	oth.m_EBO = 0;
 	oth.m_VAO = 0;
