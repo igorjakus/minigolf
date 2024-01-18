@@ -51,7 +51,7 @@ agl::Texture::Texture(std::string filepath, int filter, glm::ivec2 textureRatio/
 }
 agl::Texture::~Texture() { if (m_textureID != 0) { glDeleteTextures(1, &m_textureID); }}
 
-std::pair<glm::vec2, glm::vec2> agl::Texture::getUV() const { return { {0.f, 0.f}, m_texRat}; }
+std::pair<glm::vec2, glm::vec2> agl::Texture::getUV() const { return { {0.f, 0.f}, m_texRat }; }
 void agl::Texture::bind(int slot/*= 0*/) const { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
 void agl::Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
@@ -122,6 +122,7 @@ void agl::Quad::setScalePtr(float* xScale, float* yScale) { m_xScale = xScale; m
 void agl::Quad::setRotationPtr(float* rotation) { m_rotation = rotation; }
 void agl::Quad::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_color = { red, green, blue, alpha }; }
 void agl::Quad::setColor(Color color) { m_color = color; }
+void agl::Quad::setTexRepeat(float defxScale, float defyScale) { m_defxScale = defxScale; m_defyScale = defyScale; }
 Color agl::Quad::getColor() const { return m_color; }
 
 agl::Quad::~Quad() 
@@ -187,16 +188,22 @@ void agl::GraphicLayer::draw()
 	{
 		if (!quad.m_exists) { continue; }
 		glBindVertexArray(quad.m_VAO);
-		glm::dvec2 blV;
-		glm::dvec2 trV;
+		glBindBuffer(GL_ARRAY_BUFFER, quad.m_VBO);
+		glm::dvec2 botomLeftVert;
+		glm::dvec2 topRightVert;
 		if(quad.m_vis != nullptr)
-		{ blV = quad.m_vis->getUV().first; trV = quad.m_vis->getUV().second; }
+		{ botomLeftVert = quad.m_vis->getUV().first; topRightVert = quad.m_vis->getUV().second; }
 		else
-		{ blV = { 1.0, 1.0 }; trV = { 1.0, 1.0 }; }
+		{ botomLeftVert = { 0.0, 0.0 }; topRightVert = { 1.0, 1.0 }; }
+		if (quad.m_defxScale != 0.f || quad.m_defyScale != 0.f) 
+		{
+			topRightVert.x *= *quad.m_xScale / quad.m_defxScale;
+			topRightVert.y *= *quad.m_yScale / quad.m_defyScale;
+		}
 
 		const std::array<Vertice, 4> objectData = {{
-		{{-.5f, -.5f,}, {static_cast<glm::vec2>(blV)}}, {{ .5f, -.5f,}, {static_cast<float>(trV.x), static_cast<float>(blV.y)}},
-		{{-.5f,  .5f,}	, {static_cast<float>(blV.x), static_cast<float>(trV.y)}}, {{ .5f,  .5f,}, {static_cast<glm::vec2>(trV)}} }};
+		{{-.5f, -.5f,}, {static_cast<glm::vec2>(botomLeftVert)}}, {{ .5f, -.5f,}, {static_cast<float>(topRightVert.x), static_cast<float>(botomLeftVert.y)}},
+		{{-.5f,  .5f,}, {static_cast<float>(botomLeftVert.x), static_cast<float>(topRightVert.y)}}, {{ .5f,  .5f,}, {static_cast<glm::vec2>(topRightVert)}} }};
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, objectData.size() * sizeof(Vertice), objectData.data());
 		m_shader->setUniformMatrix4("u_T", glm::translate(glm::mat4(1.f), glm::vec3(*quad.m_x, *quad.m_y, 0.f)));

@@ -38,14 +38,18 @@ void VisualComponent::onOwnerSet([[maybe_unused]]Entity *entity) {
 	quad->setRotationPtr(&trans->rot);
 }
 
-void VisualComponent::setTexture(const std::string& name) {
-	m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetTexture(name));
-}
+	void VisualComponent::setTexture(const std::string& name) {
+		m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetTexture(name));
+	}
+	
+	void VisualComponent::setAnimation([[maybe_unused]] const std::string& name) {}
+	
+	void VisualComponent::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_GL->getQuadPtr(m_ID)->setColor(red, green, blue, alpha); }
+	
+	void VisualComponent::setColor(Color color) { m_GL->getQuadPtr(m_ID)->setColor(color); }
+	
+	void VisualComponent::setTexRepeat(float defxScale, float defyScale) { m_GL->getQuadPtr(m_ID)->setTexRepeat(defxScale, defyScale); }
 
-void VisualComponent::setAnimation([[maybe_unused]] const std::string& name) {}
-
-void VisualComponent::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_GL->getQuadPtr(m_ID)->setColor(red, green, blue, alpha); }
-
-void VisualComponent::setColor(Color color) { m_GL->getQuadPtr(m_ID)->setColor(color); };
-
+	void VisualComponent::setTexRepeat(float defScale) { m_GL->getQuadPtr(m_ID)->setTexRepeat(defScale, defScale); }
+	
 }
