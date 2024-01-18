@@ -22,6 +22,8 @@ namespace golf {
 		Entity lvlTwoButton;
 		Entity lvlThreeButton;
 		Entity lvlFourButton;
+		Entity lvlFiveButton;
+
 
 	};
 

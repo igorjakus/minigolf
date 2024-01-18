@@ -28,6 +28,7 @@ namespace golf {
 		Entity frame3;
 		Entity frame4;
 		Entity pauseButton;
+		bool won;
 	};
 
 	
@@ -106,5 +107,43 @@ namespace golf {
 		Entity wall3;
 		Entity wall4;
 		Entity pauseButton;
+	};
+
+	class LevelFiveScene : public Scene {
+	public:
+		LevelFiveScene();
+
+		void update(float deltaT) override;
+		void render() override;
+
+	private:
+		agl::Camera m_camera;
+		agl::GraphicLayer m_graphicsLayer;
+		GUILayer guiLayer;
+
+		Entity wallA;
+		Entity wallB;
+
+		Entity frame1;
+		Entity frame2;
+		Entity frame3;
+		Entity frame4;
+		Entity pauseButton;
+
+		Entity w1;
+		Entity w2;
+		Entity w3;
+		Entity w4;
+		Entity w5;
+		Entity w6;
+
+		Entity q1;
+		Entity q2;
+		Entity q3;
+		Entity q4;
+		Entity q5;
+		Entity q6;
+
+		bool won;
 	};
 }
