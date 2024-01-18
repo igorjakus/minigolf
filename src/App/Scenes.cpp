@@ -27,7 +27,7 @@ BlankScene::BlankScene()
 
 	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(comp);
-	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
+	m_kot.getComponent<VisualComponent>()->setTexture("catcat");
 	m_kot.getTransform()->setScale(0.5f);
 
 	m_button.getTransform()->setScale(0.2f, 0.1f);
