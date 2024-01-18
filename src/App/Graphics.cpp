@@ -42,7 +42,9 @@ void VisualComponent::onOwnerSet([[maybe_unused]]Entity *entity) {
 		m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetTexture(name));
 	}
 	
-	void VisualComponent::setAnimation([[maybe_unused]] const std::string& name) {}
+	void VisualComponent::setAnimation([[maybe_unused]] const std::string& name) {
+		m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetAnimation(name));
+	}
 	
 	void VisualComponent::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_GL->getQuadPtr(m_ID)->setColor(red, green, blue, alpha); }
 	

@@ -15,8 +15,8 @@ namespace golf {
 	// ===============================
 
 	LevelOneScene::LevelOneScene()
-		: m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
-		m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
+	{
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
 
@@ -90,7 +90,8 @@ namespace golf {
 
 	}
 
-	void LevelOneScene::render() { 
+	void LevelOneScene::render()
+	{ 
 		m_graphicsLayer.draw(); 
 		guiLayer.render();
 	}
@@ -103,8 +104,7 @@ namespace golf {
 
 
 	LevelTwoScene::LevelTwoScene()
-		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-		m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 	{
 		const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 		const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);

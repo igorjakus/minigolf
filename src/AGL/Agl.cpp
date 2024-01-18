@@ -152,6 +152,7 @@ agl::Quad& agl::Quad::operator=(Quad && oth) noexcept
 }
 
 //!CAMERA===================================================================================================================================================================================================================
+agl::Camera::Camera() :m_pos(0, 0), m_size(1, 1), m_focalLengh(1) {}
 agl::Camera::Camera(float x, float y, glm::vec2 size, float focalLength)
 	:m_pos(x, y), m_size(size), m_focalLengh(focalLength) {}
 agl::Camera::Camera(glm::vec2 position, float w, float h, float focalLength)

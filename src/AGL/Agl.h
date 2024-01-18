@@ -122,6 +122,7 @@ namespace agl
 	class Camera
 	{
 	public:
+		Camera();
 		Camera(float x, float y, glm::vec2 size, float focalLength);
 		Camera(glm::vec2 position, float w, float h, float focalLength);
 		Camera(float x, float y, float w, float h, float focalLength);
