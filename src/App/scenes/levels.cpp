@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "../Graphics.h"
 #include "levels.h"
+#include "../Graphics.h"
 #include "../Core/AppData.h"
 #include "misc.h"
 
@@ -15,10 +15,10 @@ namespace golf {
 	// ===============================
 
 	LevelOneScene::LevelOneScene()
+		//Tu ci trawke dodalem :)
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 	{
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
-
 
 		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.01f, -0.01f, ModeType::RELATIVE);
@@ -27,32 +27,38 @@ namespace golf {
 		pauseButton.getTransform()->setScale(0.1f, 0.1f);
 		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
-		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		grass.getComponent<VisualComponent>()->setTexture("Grass");
+		grass.getComponent<VisualComponent>()->setTexRepeat(0.5f);
+		grass.getTransform()->setScale(10.f, 10.f);
+		grass.getTransform()->setPos(0, 0);
+
+		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame1.getTransform()->setPos(0.0f, 3.0f);
 		frame1.getTransform()->setScale(0.2f, 6.19f);
 
-		frame2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame2.getTransform()->setPos(5.0f, 6.0f);
 		frame2.getTransform()->setScale(10.15f, 0.2f);
 
-		frame3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame3.getTransform()->setPos(10.1f, 3.0f);
 		frame3.getTransform()->setScale(0.2f, 6.19f);
 
-		frame4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		frame4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame4.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame4.getTransform()->setPos(5.0f,0.0f);
 		frame4.getTransform()->setScale(10.15f, 0.2f);
 
-		wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("popcat");
 		wallA.getTransform()->setPos(4.0f, 2.0f);
 		wallA.getTransform()->setScale(8.0f, 0.2f);
 
-		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wallB.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 		wallB.getTransform()->setPos(6.0f, 4.0f);
 		wallB.getTransform()->setScale(8.0f, 0.2f);
@@ -62,19 +68,20 @@ namespace golf {
 	void LevelOneScene::update([[maybe_unused]] float deltaT)
 	{
 		
+		const float cameraSpeed = 5;
 		if (AppData::getInput().isKeyPressed("UP")) {
-			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y + deltaT*5);
+			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y + deltaT * cameraSpeed);
 		}
 
 		if (AppData::getInput().isKeyPressed("LEFT")) {
-			m_camera.setPosition(m_camera.getPosition().x - deltaT*5, m_camera.getPosition().y );
+			m_camera.setPosition(m_camera.getPosition().x - deltaT * cameraSpeed, m_camera.getPosition().y );
 		}
 
 		if (AppData::getInput().isKeyPressed("RIGHT")) {
-			m_camera.setPosition(m_camera.getPosition().x + deltaT*5, m_camera.getPosition().y );
+			m_camera.setPosition(m_camera.getPosition().x + deltaT * cameraSpeed, m_camera.getPosition().y );
 		}
 		if (AppData::getInput().isKeyPressed("DOWN")) {
-			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y - deltaT*5);
+			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y - deltaT * cameraSpeed);
 		}
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		ptr->update();

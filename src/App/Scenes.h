@@ -30,6 +30,7 @@ private:
 	GUILayer m_gui;
 
 	Entity m_kot;
+	Entity m_kot2;
 	Entity m_button;
 	Entity m_button2;
 	Entity m_button3;

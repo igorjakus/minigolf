@@ -20,6 +20,8 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
 
+		Entity grass;
+
 		Entity wallA;
 		Entity wallB;
 		Entity frame1;

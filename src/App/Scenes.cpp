@@ -25,11 +25,16 @@ BlankScene::BlankScene()
 
 	AppData::getInput().attachCamera(&m_camera, 1.f);
 
-	auto comp = std::make_shared<VisualComponent>(&m_graphicsLayer);
+	auto comp = VisualComponent::create(m_graphicsLayer);
 	comp->setTexture("popcat");
 	comp->setTexRepeat(0.3f);
 	m_kot.addComponent<VisualComponent>(comp);
 	m_kot.getTransform()->setScale(0.5f);
+
+	comp = VisualComponent::create(m_graphicsLayer);
+	m_kot2.addComponent<VisualComponent>(comp);
+	m_kot2.getTransform()->setScale(0.5f);
+	m_kot2.getTransform()->x = 0.5f;
 
 	m_button.getTransform()->setScale(0.2f, 0.1f);
 	// Komponenty wizualne można teraz tworzyć prościej:
@@ -103,7 +108,7 @@ void BlankScene::update(float deltaT) {
 		m_camera.setFocalLength(m_camera.getFocalLength() * 1.25f);
 	}
 
-	m_kot.getTransform()->setScale({ xS, yS });
+	m_kot.getTransform()->setScale(xS, yS);
 
 }
 

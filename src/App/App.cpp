@@ -3,6 +3,7 @@
 #include "Core/AppData.h"
 #include "scenes/misc.h"
 #include "dtl.h"
+#include "Scenes.h"
 
 namespace golf 
 {
@@ -13,7 +14,7 @@ namespace golf
 	
 		AppData::init(width, height, title);
 
-		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlankScene()));
 		AppData::getSceneManager().nextScene();
 	
 		DTL_INF("Application created: {0}", title);
