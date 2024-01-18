@@ -86,6 +86,20 @@ namespace agl
 		uint m_w, m_h;
 	};
 
+	class TextureMask
+	{
+	public:
+		TextureMask(std::string filepath);
+		~TextureMask();
+		TextureMask(TextureMask&& oth) noexcept;
+		TextureMask& operator=(TextureMask&& oth) noexcept;
+		TextureMask(const TextureMask&) = delete;
+		TextureMask& operator=(const TextureMask&) = delete;
+		void bind(int slot = 1) const;
+		static void unbind();
+	private:
+		uint32_t m_textureID;
+	};
 	//!rendering==================================================================================================================================
 	class Quad
 	{
@@ -105,6 +119,7 @@ namespace agl
 		void setColor(uchar red, uchar green, uchar blue, uchar alpha);
 		void setColor(Color color);
 		void setTexRepeat(float defxScale, float defyScale);
+		void setMask(agl::TextureMask* mask);
 		[[nodiscard]] Color getColor() const;
 
 		friend class GraphicLayer;
@@ -112,8 +127,9 @@ namespace agl
 		float* m_x, *m_y;
 		float* m_xScale, *m_yScale;
 		float* m_rotation;
-		float m_defxScale = 0.f, m_defyScale = 0.f;
+		float m_defxScale, m_defyScale;
 		agl::Visual* m_vis;
+		agl::TextureMask* m_texMask;
 		Color m_color;
 		GLuint m_VBO, m_EBO, m_VAO;
 		bool m_exists;

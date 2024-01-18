@@ -86,6 +86,7 @@ agl::Animation::Animation(std::string filepath, int filter, uint frames, float f
 	stbi_image_free(data);
 }
 agl::Animation::~Animation() { if (m_textureID != 0) { glDeleteTextures(1, &m_textureID); }}
+
 std::pair<glm::vec2, glm::vec2> agl::Animation::getUV() const {
 	const int currframe = static_cast<int>(m_timePassed / m_frameTime);
 	return {
@@ -93,7 +94,6 @@ std::pair<glm::vec2, glm::vec2> agl::Animation::getUV() const {
 		{1.f / static_cast<float>(m_w * ((currframe % m_w) + 1))	, 1.f / static_cast<float>(m_h * (m_h - (static_cast<uint32_t>(currframe) / m_w)))}
 	};
 }
-
 void agl::Animation::update(float deltaT)
 { m_timePassed += deltaT; if (m_timePassed >= static_cast<float>(m_frames) * m_frameTime) { m_timePassed -= static_cast<float>(m_frames) * m_frameTime; } }
 void agl::Animation::bind(int slot/* = 0*/) const { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
@@ -110,9 +110,39 @@ agl::Animation& agl::Animation::operator=(Animation&& oth) noexcept
 	return *this;
 }
 
+//!TEXTURE MASK===================================================================================================================================================================================================================
+agl::TextureMask::TextureMask(std::string filepath)
+	:m_textureID(0)
+{
+	int width = 0; int height = 0; int bpp = 0;
+	stbi_set_flip_vertically_on_load(1);
+	uint8_t* data = stbi_load(filepath.c_str(), &width, &height, &bpp, 4);
+	if (data == nullptr) { DTL_ERR("Faild to load texture: \"{0}\"", filepath); return; }
+	glGenTextures(1, &m_textureID);
+	glBindTexture(GL_TEXTURE_2D, m_textureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	stbi_image_free(data);
+}
+agl::TextureMask::~TextureMask() { if (m_textureID != 0) { glDeleteTextures(1, &m_textureID); }}
+
+agl::TextureMask::TextureMask(TextureMask&& oth) noexcept :m_textureID(oth.m_textureID) { oth.m_textureID = 0; }
+agl::TextureMask& agl::TextureMask::operator=(TextureMask&& oth) noexcept
+{
+	m_textureID = oth.m_textureID;
+	oth.m_textureID = 0;
+	return *this;
+}
+void agl::TextureMask::bind(int slot) const { glActiveTexture(GL_TEXTURE0 + slot); glBindTexture(GL_TEXTURE_2D, m_textureID); }
+void agl::TextureMask::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
+
 //!QUAD===================================================================================================================================================================================================================
 agl::Quad::Quad() 
-	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), 
+	:m_x(nullptr), m_y(nullptr), m_xScale(nullptr), m_yScale(nullptr), m_rotation(nullptr), m_vis(nullptr), m_texMask(nullptr),
 	m_defxScale(0.f), m_defyScale(0.f), m_color({ 255, 255, 255, 255 }), m_VBO(0), m_EBO(0), m_VAO(0), m_exists(true) {}
 
 //transform funcions 
@@ -123,6 +153,7 @@ void agl::Quad::setRotationPtr(float* rotation) { m_rotation = rotation; }
 void agl::Quad::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_color = { red, green, blue, alpha }; }
 void agl::Quad::setColor(Color color) { m_color = color; }
 void agl::Quad::setTexRepeat(float defxScale, float defyScale) { m_defxScale = defxScale; m_defyScale = defyScale; }
+void agl::Quad::setMask(agl::TextureMask* mask) { m_texMask = mask; }
 Color agl::Quad::getColor() const { return m_color; }
 
 agl::Quad::~Quad() 
@@ -133,8 +164,8 @@ agl::Quad::~Quad()
 }
 
 agl::Quad::Quad(Quad && oth) noexcept
-	:m_x(oth.m_x), m_y(oth.m_y), m_xScale(oth.m_xScale), m_yScale(oth.m_yScale), m_rotation(oth.m_rotation), m_defxScale(oth.m_defxScale),
-	m_defyScale(oth.m_defyScale), m_vis(oth.m_vis), m_color(oth.m_color), m_VBO(oth.m_VBO), m_EBO(oth.m_EBO), m_VAO(oth.m_VAO), m_exists(oth.m_exists)
+	:m_x(oth.m_x), m_y(oth.m_y), m_xScale(oth.m_xScale), m_yScale(oth.m_yScale), m_rotation(oth.m_rotation), m_defxScale(oth.m_defxScale), m_defyScale(oth.m_defyScale),
+	m_vis(oth.m_vis), m_texMask(oth.m_texMask), m_color(oth.m_color), m_VBO(oth.m_VBO), m_EBO(oth.m_EBO), m_VAO(oth.m_VAO), m_exists(oth.m_exists)
 {
 	oth.m_VBO = 0;
 	oth.m_EBO = 0;
@@ -143,8 +174,8 @@ agl::Quad::Quad(Quad && oth) noexcept
 
 agl::Quad& agl::Quad::operator=(Quad && oth) noexcept
 {
-	m_x = oth.m_x; m_y = oth.m_y; m_xScale = oth.m_xScale; m_yScale = oth.m_yScale; m_rotation = oth.m_rotation; m_defxScale = oth.m_defxScale; 
-	m_defyScale = oth.m_defyScale; m_vis = oth.m_vis; m_color = oth.m_color; m_VBO = oth.m_VBO; m_EBO = oth.m_EBO; m_VAO = oth.m_VAO; m_exists = oth.m_exists;
+	m_x = oth.m_x; m_y = oth.m_y; m_xScale = oth.m_xScale; m_yScale = oth.m_yScale; m_rotation = oth.m_rotation; m_defxScale = oth.m_defxScale; m_defyScale = oth.m_defyScale; 
+	m_vis = oth.m_vis; m_texMask = oth.m_texMask; m_color = oth.m_color; m_VBO = oth.m_VBO; m_EBO = oth.m_EBO; m_VAO = oth.m_VAO; m_exists = oth.m_exists;
 	oth.m_VBO = 0;
 	oth.m_EBO = 0;
 	oth.m_VAO = 0;
@@ -217,6 +248,13 @@ void agl::GraphicLayer::draw()
 			quad.m_vis->bind(0); 
 		}
 		else { m_shader->setUniform1i("u_Texuse", 0); }
+		if (quad.m_texMask != nullptr) {
+			m_shader->setUniform1i("u_Mask", 1);
+			m_shader->setUniform1i("u_Maskuse", 1);
+			m_shader->setUniform2f("u_TexScale", topRightVert);
+			quad.m_texMask->bind(1);
+		}
+		else { m_shader->setUniform1i("u_Maskuse", 0); }
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
 	}
 

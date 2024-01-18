@@ -21,11 +21,15 @@ void main()
 #version 330 core
 layout(location = 0) out vec4 color;
 in vec2 vTex;
-uniform sampler2D u_Tex;
 uniform vec4 u_Col;
+uniform sampler2D u_Tex;
+uniform sampler2D u_Mask;
 uniform int u_Texuse;
+uniform int u_Maskuse;
+uniform vec2 u_TexScale;
 
 void main()
 {
     color = (u_Texuse == 1) ? texture(u_Tex, vTex) * u_Col : u_Col;
+    if(u_Maskuse == 1) { color.a *= texture(u_Mask, vTex / u_TexScale).r; }
 }

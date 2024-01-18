@@ -31,6 +31,9 @@ BlankScene::BlankScene()
 	m_kot.addComponent<VisualComponent>(comp);
 	m_kot.getTransform()->setScale(0.5f);
 
+	agl::TextureMask* mask = new agl::TextureMask("assets/textures/maskTest.png");
+	m_kot.getComponent<VisualComponent>()->setMask(mask);
+
 	comp = VisualComponent::create(m_graphicsLayer);
 	m_kot2.addComponent<VisualComponent>(comp);
 	m_kot2.getTransform()->setScale(0.5f);

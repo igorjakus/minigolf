@@ -24,6 +24,7 @@ public:
 	void onOwnerSet(Entity* entity) override;
 	void setTexture(const std::string& name);
 	void setAnimation(const std::string& name);
+	void setMask(agl::TextureMask* mask);
 	void setColor(uchar red, uchar green, uchar blue, uchar alpha);
 	void setColor(Color color);
 	void setTexRepeat(float defxScale, float defyScale);

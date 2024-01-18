@@ -38,13 +38,11 @@ void VisualComponent::onOwnerSet([[maybe_unused]]Entity *entity) {
 	quad->setRotationPtr(&trans->rot);
 }
 
-	void VisualComponent::setTexture(const std::string& name) {
-		m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetTexture(name));
-	}
+	void VisualComponent::setTexture(const std::string& name) { m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetTexture(name)); }
 	
-	void VisualComponent::setAnimation([[maybe_unused]] const std::string& name) {
-		m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetAnimation(name));
-	}
+	void VisualComponent::setAnimation(const std::string& name) { m_GL->getQuadPtr(m_ID)->setVisual(AppData::getSus().GetAnimation(name)); }
+
+	void VisualComponent::setMask(agl::TextureMask* mask) { m_GL->getQuadPtr(m_ID)->setMask(mask); }
 	
 	void VisualComponent::setColor(uchar red, uchar green, uchar blue, uchar alpha) { m_GL->getQuadPtr(m_ID)->setColor(red, green, blue, alpha); }
 	
