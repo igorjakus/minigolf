@@ -29,8 +29,7 @@ namespace golf {
 	// ===============================
 
 	LevelSelectionScene::LevelSelectionScene()
-		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-		m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 	{
 		AppData::getInput().attachCamera(&m_camera, 1.0f);
 		lvlOneButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
@@ -123,8 +122,7 @@ namespace golf {
 
 
 	ResultsScene::ResultsScene(int score, int lvlNumber)
-		:m_camera(0.F, 0.F, 1.F, 1.F, 1.F),
-		m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
 	{
 		const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 		const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);

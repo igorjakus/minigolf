@@ -26,6 +26,8 @@ public:
 	void setAnimation(const std::string& name);
 	void setColor(uchar red, uchar green, uchar blue, uchar alpha);
 	void setColor(Color color);
+	void setTexRepeat(float defxScale, float defyScale);
+	void setTexRepeat(float defScale);
 
 private:
 	uint32_t m_ID;

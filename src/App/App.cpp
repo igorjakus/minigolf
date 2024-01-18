@@ -58,7 +58,7 @@ namespace golf
 	
 	void App::render() {
 		IMGUI_NEW_FRAME;
-		IMGUI_CALL(ImGui::ShowDemoWindow());
+		
 		AppData::getSceneManager().render();
 	
 		AppData::getInput().frameEnd();
@@ -70,7 +70,7 @@ namespace golf
 	}
 	
 	void App::terminate() {
-	
+
 		AppData::terminate();
 	
 		DTL_INF("Application terminated: {0}", m_title);
