@@ -22,6 +22,7 @@ namespace golf {
 
 		Entity wallA;
 		Entity wallB;
+
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;
@@ -42,10 +43,18 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		GUILayer guiLayer;
 
 		std::unique_ptr<agl::Object> WallA;
 		std::unique_ptr<agl::Object> WallB;
 		std::unique_ptr<agl::Texture> WallTex;
-		bool isFirstUpdate = true;
+		Entity wallA;
+		Entity wallB;
+
+		Entity frame1;
+		Entity frame2;
+		Entity frame3;
+		Entity frame4;
+		Entity pauseButton;
 	};
 }
