@@ -20,6 +20,10 @@ namespace golf {
 		GUILayer guiLayer;
 		Entity lvlOneButton;
 		Entity lvlTwoButton;
+		Entity lvlThreeButton;
+		Entity lvlFourButton;
+		Entity lvlFiveButton;
+
 
 	};
 

@@ -153,6 +153,32 @@ namespace golf
 
 
 	//=====[Level Data File]=====
+		Sus::LevelData::LevelData(int HighScore, int Stars, bool IsUnlocked) {
+			highScore = HighScore;
+			stars = Stars;
+			isUnlocked = IsUnlocked;
+		}
+
+		bool Sus::LevelData::IsUnlocked() {
+			return isUnlocked;
+		}
+		int Sus::LevelData::StarCount() {
+			return stars;
+		}
+		int Sus::LevelData::HighScore() {
+			return highScore;
+		}
+
+		void Sus::LevelData::ChangeHighScore(int nr) {
+			highScore = nr;
+		}
+		void Sus::LevelData::ChangeStars(int nr) {
+			stars = nr;
+		}
+		void Sus::LevelData::Unlock(int nr) {
+			isUnlocked = nr;
+		}
+
 
 	void Sus::LoadLevelFile(int log) {
 		std::string str = "Levels.txt";
@@ -162,31 +188,42 @@ namespace golf
 		while (std::getline(file,line)) {
 			int nr = std::stoi(line.substr(line.find("Level ") + 6));
 			int highScore = std::stoi(line.substr(line.find("HighScore: ") + 11));
+			int stars = std::stoi(line.substr(line.find("Stars: ") + 7));
 			bool isUnlocked = std::stoi(line.substr(line.find("isUnlocked: ") + 12));
 
-			m_Levels.emplace(std::piecewise_construct, std::forward_as_tuple(nr), std::forward_as_tuple(std::make_pair(highScore,isUnlocked)));
+			m_Levels.emplace(std::piecewise_construct, std::forward_as_tuple(nr), std::forward_as_tuple(LevelData(highScore,stars,isUnlocked)));
 
 			if (log) {
-				DTL_INF("SUS: Data for Level {0} loaded", nr);
+				DTL_INF("SUS: Data for Level {0} loaded: {0},{0},{0}", nr,m_Levels.find(nr)->second.HighScore(), m_Levels.find(nr)->second.StarCount(),m_Levels.find(nr)->second.IsUnlocked());
 			}
 		}
 		file.close();
 	}
-
+	
 	bool Sus::IsUnlocked(int nr) {
 		auto item = m_Levels.find(nr);
 		if (item != m_Levels.end()) {
-			return item->second.second;
+			return item->second.IsUnlocked();
 		}
 		else {
 			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c",nr);
 			return 0;
 		}
 	}
+	int Sus::StarCount(int nr) {
+		auto item = m_Levels.find(nr);
+		if (item != m_Levels.end()) {
+			return item->second.StarCount();
+		}
+		else {
+			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
+			return 0;
+		}
+	}
 	int Sus::HighScore(int nr) {
 		auto item = m_Levels.find(nr);
 		if (item != m_Levels.end()) {
-			return item->second.first;
+			return item->second.HighScore();
 		}
 		else {
 			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
@@ -194,10 +231,20 @@ namespace golf
 		}
 	}
 
+
 	void Sus::ChangeHighScore(int nr, int score) {
 		auto item = m_Levels.find(nr);
 		if (item != m_Levels.end()) {
-			item->second.first = score;
+			item->second.ChangeHighScore(score);
+		}
+		else {
+			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
+		}
+	}
+	void Sus::ChangeStars(int nr, int stars) {
+		auto item = m_Levels.find(nr);
+		if (item != m_Levels.end()) {
+			item->second.ChangeStars(stars);
 		}
 		else {
 			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
@@ -206,44 +253,13 @@ namespace golf
 	void Sus::Unlock(int nr) {
 		auto item = m_Levels.find(nr);
 		if (item != m_Levels.end()) {
-			item->second.second = 1;
+			item->second.Unlock(1);
 		}
 		else {
 			DTL_WAR("SUS: Level {0} doesn't exist, return 0 :c", nr);
 		}
-
-
-		//nadpisywac powinien na koniec programu (aktualizacja orgina³u tj) NIE USUWAC NOTATKI
-		/*
-		auto item = m_Levels.find(nr);
-		if (item != m_Levels.end()) {
-			std::string str1 = "Levels.txt";
-			std::ifstream file(LEVELS + str1);
-			std::string str2 = "Temp.txt";
-			std::ofstream temp_file(LEVELS + str1);
-
-			std::string line;
-			std::string new_line = ":3";
-
-			while (std::getline(file, line)) {
-				int level_nr = std::stoi(line.substr(line.find("Level ") + 6));
-				if (level_nr == nr) {
-					line = new_line;
-				}
-				temp_file << line << std::endl;
-			}
-			file.close();
-			temp_file.close();
-
-
-		}
-		else {
-			DTL_WAR("SUS: Level {0} doesn't exist :c", nr);
-			return;
-		}
-		*/
 	}
-
+	
 	void Sus::UpdateSaveFile() {
 		std::string path = "../../../assets/data/Levels.txt"; //b³agam Macieju i £ukaszu, nie zabijajcie za to proszê :cc
 		std::string path_temp = "../../../assets/data/Temp.txt";
@@ -257,7 +273,7 @@ namespace golf
 
 		while (std::getline(file, line)) {
 			mapa = m_Levels.find(counter);
-			file_temp << "Level " << counter <<": HighScore: " << mapa->second.first << ", isUnlocked: " << mapa->second.second << "\n";
+			file_temp << "Level " << counter <<": HighScore: " << mapa->second.HighScore() << ", Stars: " << mapa->second.IsUnlocked() << ", isUnlocked: " << mapa->second.IsUnlocked() << "\n";
 			counter++;
 		}
 		file.close();
