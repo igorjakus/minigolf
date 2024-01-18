@@ -34,28 +34,28 @@ namespace golf {
 
 		frame2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
-		frame2.getTransform()->setPos(5.0f, 6.0f);
-		frame2.getTransform()->setScale(10.15f, 0.2f);
+		frame2.getTransform()->setPos(4.0f, 6.0f);
+		frame2.getTransform()->setScale(8.15f, 0.2f);
 
 		frame3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
-		frame3.getTransform()->setPos(10.1f, 3.0f);
+		frame3.getTransform()->setPos(8.1f, 3.0f);
 		frame3.getTransform()->setScale(0.2f, 6.19f);
 
 		frame4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame4.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
-		frame4.getTransform()->setPos(5.0f,0.0f);
-		frame4.getTransform()->setScale(10.15f, 0.2f);
+		frame4.getTransform()->setPos(4.0f,0.0f);
+		frame4.getTransform()->setScale(8.15f, 0.2f);
 
 		wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("popcat");
-		wallA.getTransform()->setPos(4.0f, 2.0f);
-		wallA.getTransform()->setScale(8.0f, 0.2f);
+		wallA.getTransform()->setPos(3.0f, 2.0f);
+		wallA.getTransform()->setScale(6.0f, 0.2f);
 
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
-		wallB.getTransform()->setPos(6.0f, 4.0f);
-		wallB.getTransform()->setScale(8.0f, 0.2f);
+		wallB.getTransform()->setPos(5.0f, 4.0f);
+		wallB.getTransform()->setScale(6.0f, 0.2f);
 
 	}
 
