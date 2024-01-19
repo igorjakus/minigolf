@@ -1,8 +1,7 @@
-#include <algorithm>
-#include <cmath>
-#include <memory>
 #include <pch.h>
 #include <dtl.h>
+
+#include <utility>
 #include "physics.h"
 
 #include "Util.hpp"
@@ -11,33 +10,28 @@
 namespace golf {
 
 
-	HitboxComponent::HitboxComponent(HitboxComponent::Typ tego_typu ,float radius = 0){
-		m_Typ_obiektu = tego_typu;
-		m_radius = radius;
-	}
+	HitboxComponent::HitboxComponent(HitboxComponent::Typ tego_typu ,float radius = 0) 
+		: m_Typ_obiektu(tego_typu), m_radius(radius) {}
 
 	//physics engine
 
 	void Physics_Engine::update(float deltaT){
 		//main Collision program
 
-		for(long unsigned int dyn_id=0;dyn_id < m_Dynamic_Objects.size();dyn_id++){
-			auto MyDynamicObject = m_Dynamic_Objects[dyn_id];
+		for(auto MyDynamicObject : m_Dynamic_Objects){
 			auto HitboxDyna = MyDynamicObject->getOwner()->getComponent<HitboxComponent>();
-			if(!HitboxDyna) continue;
+			if(!HitboxDyna) { continue; }
 
-			for(long unsigned int kinem_id=0;kinem_id < m_Kinematic_Objects.size();kinem_id++){
-				auto MyKinematicObject = m_Kinematic_Objects[kinem_id];
+			for(auto MyKinematicObject : m_Kinematic_Objects){
 				auto HitboxKina = MyKinematicObject->getOwner()->getComponent<HitboxComponent>();
-				if(!HitboxKina) continue;
+				if(!HitboxKina) { continue; }
 				//check collision
 				//make hitboxes
 				check_collision(HitboxDyna,HitboxKina);
 			}
-			for(long unsigned int static_id=0;static_id < m_Static_Objects.size();static_id++){
-				auto MyStaticObject = m_Static_Objects[static_id];
+			for(auto MyStaticObject : m_Static_Objects){
 				auto HitboxStalina = MyStaticObject->getOwner()->getComponent<HitboxComponent>();
-				if(!HitboxStalina) continue;
+				if(!HitboxStalina) { continue; }
 				//collise the
 				check_collision(HitboxDyna,HitboxStalina);
 			}
@@ -48,17 +42,17 @@ namespace golf {
 			// }
 		}
 
-		while(ColideQue.size()){
+		while(!ColideQue.empty()){
 			ColideQue.front().reisolveCollison();
 			ColideQue.pop();
 		}
 
-		for(long unsigned int id=0;id < m_Dynamic_Objects.size();id++){
-			m_Dynamic_Objects[id]->update_positions(deltaT);
+		for(auto & m_Dynamic_Object : m_Dynamic_Objects){
+			m_Dynamic_Object->update_positions(deltaT);
 		}
 
-		for(long unsigned int id=0;id < m_Kinematic_Objects.size();id++){
-			m_Kinematic_Objects[id]->update_positions(deltaT);
+		for(auto & m_Kinematic_Object : m_Kinematic_Objects){
+			m_Kinematic_Object->update_positions(deltaT);
 		}
 	}
 
@@ -108,40 +102,33 @@ namespace golf {
 
 		float ruchanie = (closest - newBallPos).getLength() - Ballradius;
 
-		if( ruchanie > 0 ) return;
+		if( ruchanie > 0 ) { return; }
 
 		GML::Vec2f normalny = (closest - newBallPos).normalized();
 
 		closest = RotBox*closest;
 		normalny = RotBox*normalny;
 
-		ColideQue.push(Collision(A,B,closest,normalny,ruchanie));
+		ColideQue.emplace(A,B,closest,normalny,ruchanie);
 		
 		DTL_ENT("Koliduje mi siurtek");
-		
-		return;
 	}
 
 	Physics_Engine::Collision::Collision(std::shared_ptr<HitboxComponent> O1,std::shared_ptr<HitboxComponent> O2,
-										GML::Vec2f collidePoint,GML::Vec2f normal,float penetracja){
-		m_Obj1 = O1;
-		m_Obj2 = O2;
-		m_collidePoint = collidePoint;
-		m_normalCollidePoint = normal;
-		m_penetrationDepth = penetracja;
-	}
+										GML::Vec2f collidePoint,GML::Vec2f normal,float penetracja)
+		: m_Obj1(std::move(O1)), m_Obj2(std::move(O2)), m_collidePoint(collidePoint), m_normalCollidePoint(normal), m_penetrationDepth(penetracja) {}
 
 	void Physics_Engine::Collision::reisolveCollison(){
-		auto Owner1 = m_Obj1->getOwner();
-		auto Owner2 = m_Obj2->getOwner();
+		auto* Owner1 = m_Obj1->getOwner();
+		auto* Owner2 = m_Obj2->getOwner();
 
 		if(Owner2->hasComponent<DynamicPhysicsComponent>()){
-			auto temp = Owner1;
+			auto* temp = Owner1;
 			Owner1 = Owner2;
 			Owner2 = temp;
 		}
 		
-		if(m_Obj1->m_Typ_obiektu == HitboxComponent::Box || m_Obj2->m_Typ_obiektu == HitboxComponent::Kula) return;
+		if(m_Obj1->m_Typ_obiektu == HitboxComponent::Box || m_Obj2->m_Typ_obiektu == HitboxComponent::Kula) { return; }
 
 		//ball with box colliison
 		
@@ -214,10 +201,8 @@ namespace golf {
 
 	}
 
-	DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia){
-		m_mass = mass;
-		m_inertia = inertia;
-	}
+	DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia)
+		: m_in_physics_scope(true), m_mass(mass), m_inertia(inertia) {}
 		
 
 
