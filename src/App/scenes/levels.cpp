@@ -100,9 +100,9 @@ namespace golf {
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
-			pauseButton.getComponent<VisualComponent>()->setTexture("sponge");
+			pauseButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
 		}
-		else { pauseButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
 	
 	}
@@ -189,9 +189,9 @@ namespace golf {
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
-			pauseButton.getComponent<VisualComponent>()->setTexture("sponge");
+			pauseButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
 		}
-		else { pauseButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
 
 		static bool moveUp = true; 
@@ -303,9 +303,9 @@ namespace golf {
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
-			pauseButton.getComponent<VisualComponent>()->setTexture("sponge");
+			pauseButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
 		}
-		else { pauseButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
 		float rotateSpeed = 45.0f;  // Dostosuj prêdkoœæ obrotu wallA
 		wallA.getTransform()->rot += deltaT * rotateSpeed;
@@ -415,9 +415,9 @@ namespace golf {
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
-			pauseButton.getComponent<VisualComponent>()->setTexture("sponge");
+			pauseButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
 		}
-		else { pauseButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
 		float rotateSpeed1 = 80.0f; 
 		
@@ -536,9 +536,9 @@ namespace golf {
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
-			pauseButton.getComponent<VisualComponent>()->setTexture("sponge");
+			pauseButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
 		}
-		else { pauseButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
 		float rotateSpeed1 = 80.0f;
 

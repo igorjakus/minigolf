@@ -35,14 +35,14 @@ namespace golf {
 		lvlOneButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlOneButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.3f, 0.3f, ModeType::RELATIVE);
 		lvlOneButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		lvlOneButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlOneButton.getComponent<VisualComponent>()->setTexture("1_not_pressed");
 		lvlOneButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlOneButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		lvlTwoButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlTwoButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.3f, ModeType::RELATIVE);
 		lvlTwoButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		lvlTwoButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlTwoButton.getComponent<VisualComponent>()->setTexture("2_not_pressed");
 		lvlTwoButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlTwoButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
@@ -50,85 +50,107 @@ namespace golf {
 		lvlThreeButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlThreeButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.3f, 0.3f, ModeType::RELATIVE);
 		lvlThreeButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		lvlThreeButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlThreeButton.getComponent<VisualComponent>()->setTexture("3_not_pressed");
 		lvlThreeButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlThreeButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		lvlFourButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlFourButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.3f, 0.0f, ModeType::RELATIVE);
 		lvlFourButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		lvlFourButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlFourButton.getComponent<VisualComponent>()->setTexture("4_not_pressed");
 		lvlFourButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlFourButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		lvlFiveButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlFiveButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.0f, 0.0f, ModeType::RELATIVE);
 		lvlFiveButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		lvlFiveButton.getComponent<VisualComponent>()->setTexture("popcat");
+		lvlFiveButton.getComponent<VisualComponent>()->setTexture("5_not_pressed");
 		lvlFiveButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlFiveButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
 
 	}
 
 	void LevelSelectionScene::update([[maybe_unused]] float deltaT)
 	{
+
+
+
+
 		auto ptr = lvlOneButton.getComponent<ButtonComponent>();
 		ptr->update();
-		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
-			AppData::getSceneManager().nextScene();
+		
+		if (AppData::getSus().IsUnlocked(1)) {
+			if (ptr->isClicked()) {
+				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+				AppData::getSceneManager().nextScene();
+			}
+			if (ptr->isHovered()) {
+				lvlOneButton.getComponent<VisualComponent>()->setTexture("1_pressed");
+			}
+			else { lvlOneButton.getComponent<VisualComponent>()->setTexture("1_not_pressed"); }
 		}
-		if (ptr->isHovered()) {
-			lvlOneButton.getComponent<VisualComponent>()->setTexture("sponge");
-		}
-		else { lvlOneButton.getComponent<VisualComponent>()->setTexture("popcat"); }
+		else { lvlOneButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
 
 		ptr = lvlTwoButton.getComponent<ButtonComponent>();
 		ptr->update();
-		if (ptr->isHovered()) {
-			lvlTwoButton.getComponent<VisualComponent>()->setTexture("sponge");
+		if (AppData::getSus().IsUnlocked(2)) {
+			if (ptr->isHovered()) {
+				lvlTwoButton.getComponent<VisualComponent>()->setTexture("2_pressed");
+			}
+			else { lvlTwoButton.getComponent<VisualComponent>()->setTexture("2_not_pressed"); }
+			if (ptr->isClicked()) {
+				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+				AppData::getSceneManager().nextScene();
+				return;
+			}
 		}
-		else { lvlTwoButton.getComponent<VisualComponent>()->setTexture("popcat"); }
-		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
-			AppData::getSceneManager().nextScene();
-			return;
-		}
+		else { lvlTwoButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
 
 		ptr = lvlThreeButton.getComponent<ButtonComponent>();
 		ptr->update();
-		if (ptr->isHovered()) {
-			lvlThreeButton.getComponent<VisualComponent>()->setTexture("sponge");
+		if (AppData::getSus().IsUnlocked(3)) {
+			if (ptr->isHovered()) {
+				lvlThreeButton.getComponent<VisualComponent>()->setTexture("3_pressed");
+			}
+			else { lvlThreeButton.getComponent<VisualComponent>()->setTexture("3_not_pressed"); }
+			if (ptr->isClicked()) {
+				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelThreeScene()));
+				AppData::getSceneManager().nextScene();
+				return;
+			}
 		}
-		else { lvlThreeButton.getComponent<VisualComponent>()->setTexture("popcat"); }
-		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelThreeScene()));
-			AppData::getSceneManager().nextScene();
-			return;
-		}
+		else { lvlThreeButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
+
 		ptr = lvlFourButton.getComponent<ButtonComponent>();
 		ptr->update();
-		if (ptr->isHovered()) {
-			lvlFourButton.getComponent<VisualComponent>()->setTexture("sponge");
+		if (AppData::getSus().IsUnlocked(4)) {
+			if (ptr->isHovered()) {
+				lvlFourButton.getComponent<VisualComponent>()->setTexture("4_pressed");
+			}
+			else { lvlFourButton.getComponent<VisualComponent>()->setTexture("4_not_pressed"); }
+			if (ptr->isClicked()) {
+				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFourScene()));
+				AppData::getSceneManager().nextScene();
+				return;
+			}
 		}
-		else { lvlFourButton.getComponent<VisualComponent>()->setTexture("popcat"); }
-		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFourScene()));
-			AppData::getSceneManager().nextScene();
-			return;
-		}
+		else { lvlFourButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
+
 		ptr = lvlFiveButton.getComponent<ButtonComponent>();
 		ptr->update();
-		if (ptr->isHovered()) {
-			lvlFiveButton.getComponent<VisualComponent>()->setTexture("sponge");
+		if (AppData::getSus().IsUnlocked(5)) {
+			if (ptr->isHovered()) {
+				lvlFiveButton.getComponent<VisualComponent>()->setTexture("5_pressed");
+			}
+			else { lvlFiveButton.getComponent<VisualComponent>()->setTexture("5_not_pressed"); }
+			if (ptr->isClicked()) {
+				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFiveScene()));
+				AppData::getSceneManager().nextScene();
+				return;
+			}
 		}
-		else { lvlFiveButton.getComponent<VisualComponent>()->setTexture("popcat"); }
-		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFiveScene()));
-			AppData::getSceneManager().nextScene();
-			return;
-		}
+		else { lvlFiveButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
+
 	}
 
 	void LevelSelectionScene::render()
