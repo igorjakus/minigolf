@@ -3,11 +3,11 @@
 #include<stb_image.h>
 #include<ImGui.h>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) //NOLINT
 { glViewport(0, 0, width, height); }
 
 agl::Window::Window(uint32_t width, uint32_t height, std::string title)
-	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(width), m_winSizeH(height) {}
+	:m_isVSync(true), m_isBorderless(false), m_ID(nullptr), m_title(title), m_monitor(nullptr), m_icon{0, 0}, m_winPosX(0), m_winPosY(0), m_winSizeW(static_cast<int>(width)), m_winSizeH(static_cast<int>(height)) {}
 agl::Window::~Window()
 { glfwDestroyWindow(m_ID); }
 
@@ -16,7 +16,7 @@ void agl::Window::create()
 	m_monitor = glfwGetPrimaryMonitor();
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	m_ID = glfwCreateWindow(m_winSizeW, m_winSizeH, m_title.c_str(), NULL, NULL);
-	if (!m_ID)
+	if (m_ID == nullptr)
 	{
 		DTL_ERR("Error with creation of a window named \"{0}\".", m_title);
 		glfwTerminate();
@@ -25,7 +25,7 @@ void agl::Window::create()
 	glfwMakeContextCurrent(m_ID);
 	// vsync on by default!
 	glfwSwapInterval(1);
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) //NOLINT
 	{
 		DTL_ERR("Failed to initialize GLAD.");
 		exit(EXIT_FAILURE);
@@ -36,8 +36,8 @@ void agl::Window::create()
 
 bool agl::Window::closeCallBack() const
 {
-	if (!m_ID) return false;
-	return glfwWindowShouldClose(m_ID);
+	if (m_ID == nullptr) return false; //NOLINT
+	return static_cast<bool>(glfwWindowShouldClose(m_ID));
 }
 
 void agl::Window::close() const
@@ -47,7 +47,7 @@ void agl::Window::setFullscreen(bool fullscreen)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set fullscreen."); return; }
-	if (isFullscreen() == fullscreen) return;
+	if (isFullscreen() == fullscreen) return; //NOLINT
 	if (fullscreen)
 	{
 		glfwGetWindowPos(m_ID, &m_winPosX, &m_winPosY);
@@ -64,7 +64,7 @@ void agl::Window::setBorderless(bool borderless)
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set borderless."); return; }
 
-	if (isBorderless() == borderless) return;
+	if (isBorderless() == borderless) return; //NOLINT
 	if (borderless)
 	{ glfwSetWindowAttrib(m_ID, GLFW_DECORATED, GLFW_FALSE); maximizeWindow(true); }
 	else
@@ -73,20 +73,20 @@ void agl::Window::setBorderless(bool borderless)
 }
 
 void agl::Window::setVSync(bool vsync)
-{ glfwSwapInterval(vsync); }
+{ glfwSwapInterval(static_cast<int>(vsync)); }
 
 void agl::Window::setWindowSize(uint32_t width, uint32_t height)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size."); return; }
-	glfwSetWindowSize(m_ID, width, height);
+	glfwSetWindowSize(m_ID, static_cast<int>(width), static_cast<int>(height));
 }
 
 void agl::Window::setWindowSize(glm::uvec2 dims)
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set size."); return; }
-	glfwSetWindowSize(m_ID, dims.x, dims.y);
+	glfwSetWindowSize(m_ID, static_cast<int>(dims.x), static_cast<int>(dims.y));
 }
 
 void agl::Window::setWindowPos(uint32_t x, uint32_t y)
@@ -148,7 +148,7 @@ void agl::Window::setIcon(std::string icon, std::string icon_small)
 	if (m_icon[0].pixels == nullptr || m_icon[1].pixels == nullptr)
 	{ DTL_ERR("Failed to load window icon."); return; }
 
-	glfwSetWindowIcon(m_ID, 2, m_icon);
+	glfwSetWindowIcon(m_ID, 2, m_icon); //NOLINT
 	stbi_image_free(m_icon[0].pixels);
 	stbi_image_free(m_icon[1].pixels);
 	stbi_set_flip_vertically_on_load(1);
@@ -158,16 +158,16 @@ void agl::Window::setIcon() const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set an icon."); return; }
-	glfwSetWindowIcon(m_ID, 0, NULL);
+	glfwSetWindowIcon(m_ID, 0, NULL); //NOLINT
 }
 
 void agl::Window::maximizeWindow(bool maximize) const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's maximization."); return; }
-	if (maximize)
+	if (maximize) //NOLINT
 	glfwMaximizeWindow(m_ID);
-	else
+	else //NOLINT
 	glfwRestoreWindow(m_ID);
 }
 
@@ -175,7 +175,7 @@ void agl::Window::setResizable(bool resizable) const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to set it's resizing."); return; }
-	glfwSetWindowAttrib(m_ID, GLFW_RESIZABLE, resizable);
+	glfwSetWindowAttrib(m_ID, GLFW_RESIZABLE, static_cast<int>(resizable));
 }
 
 bool agl::Window::isBorderless() const
@@ -189,7 +189,7 @@ std::string agl::Window::getTitle() const
 
 glm::uvec2 agl::Window::getWindowSize() const
 {
-	int w, h;
+	int w, h; //NOLINT
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window size."); return {}; }
 	glfwGetWindowSize(m_ID, &w, &h);
@@ -198,7 +198,7 @@ glm::uvec2 agl::Window::getWindowSize() const
 
 glm::ivec2 agl::Window::getWindowPos() const
 {
-	int x, y;
+	int x, y; // NOLINT
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window position."); return {}; }
 	glfwGetWindowSize(m_ID, &x, &y);
@@ -220,8 +220,8 @@ glm::ivec2 agl::Window::getAspectRatio() const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window aspect ratio."); return {}; }
-	auto winsize = getWindowSize();
-	int gcd = std::_Gcd(winsize.x, winsize.y);
+	const auto winsize = getWindowSize();
+	const int gcd = std::_Gcd(winsize.x, winsize.y);
 	return { winsize.x / gcd, winsize.y / gcd };
 }
 
