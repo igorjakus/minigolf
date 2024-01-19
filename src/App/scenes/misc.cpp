@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "misc.h"
-#include "../Graphics.h"
 #include "levels.h"
+#include "transition.h"
+#include "../Graphics.h"
 #include "../Core/AppData.h"
 
 
@@ -76,7 +77,10 @@ namespace golf {
 		auto ptr = lvlOneButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+			auto next = std::shared_ptr<Scene>(new LevelOneScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {

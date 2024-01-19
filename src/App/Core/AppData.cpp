@@ -31,9 +31,7 @@ void AppData::init(uint width, uint height, const std::string& title) {
 	//Sus initialization
 	getInstance().m_sus = std::make_unique<Sus>();
 	DTL_ENT("Loading assets...");
-
 	getInstance().m_sus->LoadListOfTextures({ "catcat.png", "sponge.png" }, 3, 3);
-
 	getInstance().m_sus->LoadAll();
 	DTL_INF("Assets loaded");
 

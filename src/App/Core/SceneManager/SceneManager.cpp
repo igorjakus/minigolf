@@ -6,7 +6,10 @@
 namespace golf {	
 
 void SceneManager::pushScene(std::shared_ptr<Scene> newScene) {
-	AppData::getInput().newScene();
+	if (m_lock) {
+		DTL_WAR("Attempted so push a scene in Scene Manager locked state!");
+		return;
+	}
 	m_sceneQueueBuffer.push(newScene);
 }
 
@@ -18,12 +21,25 @@ void SceneManager::nextScene() {
 	}
 #endif
 
+	if (m_lock) {
+		DTL_WAR("Attempted so switch scene in Scene Manager locked state!");
+		return;
+	}
+
 	m_changeScene = true;
 	m_bufferScene = m_currentScene;
 	m_currentScene = m_sceneQueueBuffer.front();
 	m_sceneQueueBuffer.pop();
 
 	AppData::getInput().resetCameras();
+}
+
+void SceneManager::lock() {
+	m_lock = true;
+}
+
+void SceneManager::unlock() {
+	m_lock = false;
 }
 
 void SceneManager::update(float deltaT) {
