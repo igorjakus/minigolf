@@ -13,8 +13,6 @@ namespace golf {
 
 		m_plane.addComponent<GUIComponent>(m_layer.createGUIComponent());
 		m_plane.addComponent<VisualComponent>(VisualComponent::create(m_layer));
-		m_plane.getComponent<VisualComponent>()->setColor(0, 0, 0, 55);
-		m_plane.getTransform()->setScale(1.f);
 
 		if (!m_scene2) {
 			DTL_ERR("Przejscie miedzy scenami nie ma drugiej sceny!");
