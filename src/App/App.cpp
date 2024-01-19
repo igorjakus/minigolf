@@ -13,7 +13,7 @@ namespace golf
 	
 		AppData::init(width, height, title);
 
-		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new MainMenu()));
 		AppData::getSceneManager().nextScene();
 	
 		DTL_INF("Application created: {0}", title);

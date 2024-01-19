@@ -6,6 +6,25 @@
 #include "../ECS/Entity.h"
 
 namespace golf {
+	class MainMenu : public Scene {
+	public:
+		MainMenu();
+
+		void update(float deltaT) override;
+		void render() override;
+
+	private:
+		agl::Camera m_camera;
+		agl::GraphicLayer m_graphicsLayer;
+
+		GUILayer guiLayer;
+		Entity playButton;
+		Entity creditsButton;
+
+	};
+
+
+
 	class LevelSelectionScene : public Scene {
 	public:
 		LevelSelectionScene();

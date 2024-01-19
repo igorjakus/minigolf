@@ -22,6 +22,42 @@ namespace golf {
 			AppData::getSceneManager().nextScene();
 		}
 	}
+	//================================
+	//MainMenu
+	//================================
+	MainMenu::MainMenu()
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
+	{
+		AppData::getInput().attachCamera(&m_camera, 1.0f);
+		playButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		playButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER,0.0f,0.0f, ModeType::RELATIVE);
+		playButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		playButton.getComponent<VisualComponent>()->setTexture("play_not_pressed");
+		playButton.getTransform()->setScale(0.34f, 0.22f);
+		playButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+	}
+	void MainMenu::update([[maybe_unused]] float deltaT) {
+
+		auto ptr = playButton.getComponent<ButtonComponent>();
+		ptr->update();
+
+
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			playButton.getComponent<VisualComponent>()->setTexture("play_pressed");
+		}
+		else { playButton.getComponent<VisualComponent>()->setTexture("play_not_pressed"); }
+		
+	}
+	void MainMenu::render()
+	{
+		m_graphicsLayer.draw();
+		guiLayer.render();
+	}
 
 
 	// ===============================
