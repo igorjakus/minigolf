@@ -30,7 +30,7 @@ PhysicsTestingScene::PhysicsTestingScene()
 
 	auto visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(visual);
-	m_kot.getComponent<VisualComponent>()->setTexture("popcat");
+	m_kot.getComponent<VisualComponent>()->setTexture("ballcat");
 	m_kot.getTransform()->setScale(0.1f);
 	
 	m_kot.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula,0.05f));
@@ -41,7 +41,8 @@ PhysicsTestingScene::PhysicsTestingScene()
 	visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot2.addComponent<VisualComponent>(visual);
 	m_kot2.getComponent<VisualComponent>()->setTexture("popcat");
-	m_kot2.getTransform()->setScale(0.1f);
+	m_kot2.getTransform()->setScale(0.2f);
+	m_kot2.getTransform()->setPos(0.3f, 0.f);
 	
 	m_kot2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box,0.f));
 
@@ -67,6 +68,13 @@ void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
 		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0.1f,0,0},{0,0,0});
 		
 	}
+
+	if(AppData::getInput().isLeftMousePressed()) {
+		float xPos = AppData::getInput().getMouseX()/static_cast<float>(AppData::getWindow().getWindowSize().y) - 0.5f;
+		float yPos = -AppData::getInput().getMouseY()/static_cast<float>(AppData::getWindow().getWindowSize().y) + 0.5f;
+		m_kot.getTransform()->setPos(xPos, yPos);
+	}
+
 	Engine.update(deltaT);
 }
 

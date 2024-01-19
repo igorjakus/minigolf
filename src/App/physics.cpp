@@ -78,7 +78,7 @@ namespace golf {
 		//stworz siatke boxa
 		float Ballx = A->getOwner()->getTransform()->x;
 		float Bally = A->getOwner()->getTransform()->y;
-		float Ballradius = A->getOwner()->getTransform()->xScale;
+		float Ballradius = A->m_radius;
 		float Boxx = B->getOwner()->getTransform()->x;
 		float Boxy = B->getOwner()->getTransform()->y;
 		float BoxRot = B->getOwner()->getTransform()->rot*GML::F_DEG_TO_RAD;
@@ -110,8 +110,8 @@ namespace golf {
 		normalny = RotBox*normalny;
 
 		ColideQue.emplace(A,B,closest,normalny,ruchanie);
-		
-		DTL_ENT("Koliduje mi siurtek");
+
+		DTL_ENT("Status siura: kolidowany");
 	}
 
 	Physics_Engine::Collision::Collision(std::shared_ptr<HitboxComponent> O1,std::shared_ptr<HitboxComponent> O2,
@@ -132,19 +132,19 @@ namespace golf {
 
 		//ball with box colliison
 		
-		// if(Owner1->hasComponent<DynamicPhysicsComponent>()){
+		if(Owner1->hasComponent<DynamicPhysicsComponent>()){
 
-		// 	if(Owner2->hasComponent<KinematicPhysicsComponent>()){
+			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
 				
-		// 	}
+			}
 
-		// 	if(Owner2->hasComponent<StaticPhysicsComponent>()){
+			if(Owner2->hasComponent<StaticPhysicsComponent>()){
 
 				
 
-		// 	}
+			}
 
-		// }
+		}
 
 		
 	}
