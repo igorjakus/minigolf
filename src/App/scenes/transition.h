@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Core/SceneManager/Scene.h"
-#include "Agl.h"
 #include "../GUI.h"
 #include "../ECS/Entity.h"
 
