@@ -184,10 +184,10 @@ bool agl::Window::isBorderless() const
 bool agl::Window::isFullscreen() const
 { return (m_ID == nullptr) ? false : glfwGetWindowMonitor(m_ID) != nullptr; }
 
-std::string agl::Window::getTitle()
+std::string agl::Window::getTitle() const
 { return m_title; }
 
-glm::uvec2 agl::Window::getWindowSize()
+glm::uvec2 agl::Window::getWindowSize() const
 {
 	int w, h;
 	if (m_ID == nullptr)
@@ -196,7 +196,7 @@ glm::uvec2 agl::Window::getWindowSize()
 	return { static_cast<uint>(w), static_cast<uint>(h) };
 }
 
-glm::ivec2 agl::Window::getWindowPos()
+glm::ivec2 agl::Window::getWindowPos() const
 {
 	int x, y;
 	if (m_ID == nullptr)
@@ -205,7 +205,7 @@ glm::ivec2 agl::Window::getWindowPos()
 	return { x, y };
 }
 
-glm::uvec2 agl::Window::getScreenResolution()
+glm::uvec2 agl::Window::getScreenResolution() const
 {
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get screen resolution."); return {}; }
@@ -215,6 +215,15 @@ glm::uvec2 agl::Window::getScreenResolution()
 
 bool agl::Window::getVSync() const
 { return m_isVSync; }
+
+glm::ivec2 agl::Window::getAspectRatio() const
+{
+	if (m_ID == nullptr)
+	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window aspect ratio."); return {}; }
+	auto winsize = getWindowSize();
+	int gcd = std::_Gcd(winsize.x, winsize.y);
+	return { winsize.x / gcd, winsize.y / gcd };
+}
 
 GLFWwindow* agl::Window::passPointer() const
 { return m_ID; }

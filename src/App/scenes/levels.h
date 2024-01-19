@@ -30,7 +30,7 @@ namespace golf {
 		Entity frame3;
 		Entity frame4;
 		Entity pauseButton;
-		bool won;
+		[[maybe_unused]] bool won;
 	};
 
 	
@@ -146,6 +146,6 @@ namespace golf {
 		Entity q5;
 		Entity q6;
 
-		bool won;
+		[[maybe_unused]] bool won;
 	};
 }
