@@ -3,6 +3,7 @@
 // #include <thread> // playing audio is gonna be on another thread
 #include <string> // std::string
 
+
 // Init engine and check if everything went ok
 void initSoundEngine(ma_engine* engine, float volume) {
     ma_result result;
@@ -25,28 +26,21 @@ void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine, fl
     ma_sound_set_volume(sound, volume);
 }
 
-// Here will be playSound function that *play some sound*
 void playSound(ma_sound* sound) {
     ma_sound_start(sound);
-    getchar();
+    while (true); // XD
 }
 
-// TODO
-void playInLoop(ma_sound* sound) {
+void playSoundInLoop(ma_sound* sound) {
     ma_sound_set_looping(sound, true);
     ma_sound_start(sound);
     /* cały dźwięk będzie na osobnym wątku ale nie wiem jeszcze
        jak rozwiązać problem ze zmianą głośności w czasie trwania programu
-       być może po przy byciu w ustawieniach wątek będzie zatrzymywany
+       być może przy byciu w ustawieniach wątek będzie zatrzymywany
        a następnie wznawiany przy wyjściu z ustawień,
        już z odpowiednimi ustawieniami
     */
-    // std::thread SoundThread(playSound, &sound);
-
-    // jak testowałem odpalanie dźwięku to bez getchara od razu się kończy
-    // gdzie w dokumentacji nie jest to w żaden sposob rozwiniete
-    // a w podanych przykladach autor wykorzystuje getchara
-    getchar();
+    while (true); // XD
 }
 
 // Maybe will check if everything went ok
@@ -54,7 +48,7 @@ void uninitSoundEngine(ma_engine* engine) {
     ma_engine_uninit(engine);
 }
 
-// Maybe will check if everything went ok
+// Uninit all sounds previously loaded
 void uninitSounds(ma_sound sounds[], const int soundCount) {
     for (int i = 0; i < soundCount; i++)
         ma_sound_uninit(&sounds[i]);
