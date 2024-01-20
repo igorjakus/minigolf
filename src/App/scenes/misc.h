@@ -18,6 +18,7 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 
 		GUILayer guiLayer;
+		Entity logo;
 		Entity playButton;
 		Entity howToGolfButton;
 		Entity creditsButton;

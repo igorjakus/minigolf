@@ -41,22 +41,30 @@ namespace golf {
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
 	{
 		AppData::getInput().attachCamera(&m_camera, 1.0f);
+
+		logo.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		logo.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.25f, ModeType::RELATIVE);
+		logo.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		logo.getComponent<VisualComponent>()->setTexture("golf_logo");
+		logo.getTransform()->setScale(0.82f, 0.41f);
+
+
 		playButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		playButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER,0.0f,0.0f, ModeType::RELATIVE);
+		playButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER,0.0f,-0.1f, ModeType::RELATIVE);
 		playButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		playButton.getComponent<VisualComponent>()->setTexture("play_not_pressed");
-		playButton.getTransform()->setScale(0.34f, 0.22f);
+		playButton.getTransform()->setScale(0.28f, 0.18f);
 		playButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		howToGolfButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		howToGolfButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.2f, ModeType::RELATIVE);
+		howToGolfButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.25f, ModeType::RELATIVE);
 		howToGolfButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		howToGolfButton.getComponent<VisualComponent>()->setTexture("how_to_golf_not_pressed");
-		howToGolfButton.getTransform()->setScale(0.43f, 0.11f);
+		howToGolfButton.getTransform()->setScale(0.48f, 0.11f);
 		howToGolfButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		creditsButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		creditsButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.35f, ModeType::RELATIVE);
+		creditsButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.37f, ModeType::RELATIVE);
 		creditsButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		creditsButton.getComponent<VisualComponent>()->setTexture("credits_not_pressed");
 		creditsButton.getTransform()->setScale(0.28f, 0.11f);
