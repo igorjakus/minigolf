@@ -69,8 +69,10 @@ namespace golf {
 		exitButton.getTransform()->setScale(0.12f, 0.12f);
 		exitButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		glClearColor(0.1f, 0.4f, 0.1f, 255);
 	}
 	void MainMenu::update([[maybe_unused]] float deltaT) {
+
 
 		auto ptr = playButton.getComponent<ButtonComponent>();
 		ptr->update();
@@ -265,6 +267,7 @@ namespace golf {
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
 		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		glClearColor(0.06f, 0.24f, 0.06f, 255);
 	}
 
 	void LevelSelectionScene::update([[maybe_unused]] float deltaT)
@@ -475,7 +478,7 @@ namespace golf {
 		creditsSheet.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
 		creditsSheet.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		creditsSheet.getComponent<VisualComponent>()->setTexture("credits");
-		creditsSheet.getTransform()->setScale(0.9f, 0.9f);
+		creditsSheet.getTransform()->setScale(0.844f, 0.718f);
 
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
@@ -484,6 +487,8 @@ namespace golf {
 		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
 		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		glClearColor(0.06f, 0.24f, 0.06f, 255);
 	}
 	void CreditsScene::update([[maybe_unused]] float deltaT) {
 		auto ptr = mainMenuButton.getComponent<ButtonComponent>();
