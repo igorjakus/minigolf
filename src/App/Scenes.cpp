@@ -38,38 +38,40 @@ PhysicsTestingScene::PhysicsTestingScene()
 
 	auto physics = Engine.addDynamicElement();
 	m_kot.addComponent<DynamicPhysicsComponent>(physics);
+	m_kot.getComponent<DynamicPhysicsComponent>()->m_mass = 0.1f;
+	m_kot.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.0001f;
 
 	visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot2.addComponent<VisualComponent>(visual);
 	m_kot2.getComponent<VisualComponent>()->setTexture("popcat");
 	m_kot2.getTransform()->setScale(0.7f,0.1f);
 	m_kot2.getTransform()->setPos(-0.5f, 0.f);
-	m_kot2.getTransform()->rot=45;
+	m_kot2.getTransform()->rot = 0;
 	
 	m_kot2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box,0.f));
 
 	auto physics2 = Engine.addKinematicElement();
 	m_kot2.addComponent<KinematicPhysicsComponent>(physics2);
-	m_kot2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0,0,1.f};
-	m_kot2.getComponent<KinematicPhysicsComponent>()->m_velocity = {0.1f,0};
+	// m_kot2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0,0,1.f};
+	// m_kot2.getComponent<KinematicPhysicsComponent>()->m_velocity = {0.1f,0};
 
 }
 
 void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
 	
 	if (AppData::getInput().isKeyClicked("UP")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,0.1f,0},{0,0,0});
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,0.01f,0},{0,0,0});
 	}
 	if (AppData::getInput().isKeyClicked("DOWN")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,-0.1f,0},{0,0,0});
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,-0.01f,0},{0,0,0});
 		
 	}
 	if (AppData::getInput().isKeyClicked("LEFT")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({-0.1f,0,0},{0,0,0});
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({-0.01f,0,0},{0,0,0});
 		
 	}
 	if (AppData::getInput().isKeyClicked("RIGHT")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0.1f,0,0},{0,0,0});
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0.01f,0,0},{0,0,0});
 		
 	}
 
@@ -77,6 +79,7 @@ void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
 		float xPos = AppData::getInput().getMouseX()/static_cast<float>(AppData::getWindow().getWindowSize().y) - 0.5f;
 		float yPos = -AppData::getInput().getMouseY()/static_cast<float>(AppData::getWindow().getWindowSize().y) + 0.5f;
 		m_kot.getTransform()->setPos(xPos, yPos);
+		m_kot.getComponent<DynamicPhysicsComponent>()->m_velocity = {0, 0};
 	}
 
 	Engine.update(deltaT);

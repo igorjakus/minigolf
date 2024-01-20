@@ -136,30 +136,61 @@ namespace golf {
 		if(Owner1->hasComponent<DynamicPhysicsComponent>()){
 
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
+			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius) {
+				DTL_ERR("kot wybuchł");
+				return;
+			}
 			Owner1->getTransform()->x += Wiemcoto.x;
 			Owner1->getTransform()->y += Wiemcoto.y;
 
-			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
-				auto maciej = Owner2->getComponent<KinematicPhysicsComponent>();
-				GML::Vec2f Pos = {Owner2->getTransform()->x,Owner2->getTransform()->y};
-				float RelativeVelocity = (Owner1->getComponent<DynamicPhysicsComponent>()->m_velocity - (maciej->m_velocity + GML::Vec2f( GML::Vec3f( Pos - m_collidePoint )% maciej->m_angular_velocity ) ))*m_normalCollidePoint;
-				float odbijability = 0.5f; //0 - 1 im wyzej tym odbijablej
-				if(RelativeVelocity < 0) return; //to jest problem, za czesto sie uruchamia
-				DTL_ENT("Status siura: kolidowany");
-				Owner1->getComponent<DynamicPhysicsComponent>()->apply_impulse( GML::Vec3f(m_normalCollidePoint) * (-(1+odbijability) * RelativeVelocity * Owner1->getComponent<DynamicPhysicsComponent>()->m_mass)
-																				, GML::Vec3f(m_collidePoint) );
+			const float odbijability = 0.7f; //0 - 1 im wyzej tym odbijablej
+			const float tarcielity = 0.2f;
 
+			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
+				auto CircleComp = Owner1->getComponent<DynamicPhysicsComponent>();
+				GML::Vec2f CirclePos = {Owner1->getTransform()->x, Owner1->getTransform()->y};
+				GML::Vec2f PointOnCircleVelocity = CircleComp->m_velocity + static_cast<GML::Vec2f>( static_cast<GML::Vec3f>(CirclePos - m_collidePoint) % CircleComp->m_angular_velocity);
+
+				auto BoxComp = Owner2->getComponent<KinematicPhysicsComponent>();
+				GML::Vec2f BoxPos = {Owner2->getTransform()->x, Owner2->getTransform()->y};
+				GML::Vec2f PointOnBoxVelocity = BoxComp->m_velocity + static_cast<GML::Vec2f>( static_cast<GML::Vec3f>(BoxPos - m_collidePoint) % BoxComp->m_angular_velocity);
+
+				GML::Vec2f RelativeVelocity = PointOnCircleVelocity - PointOnBoxVelocity;
+				float NormalRelVel = m_normalCollidePoint * RelativeVelocity;
+				float TangentRelVel = GML::Vec2f(m_normalCollidePoint.y, -m_normalCollidePoint.x) * RelativeVelocity;
+				if(TangentRelVel > 0) { TangentRelVel = 1; }
+				else if(TangentRelVel < 0) { TangentRelVel = -1; }
+				else { TangentRelVel = 0; }
+
+				if(NormalRelVel < 0) { return; } //Jeśli obiekty już się oddalają to git elegancko super bomba
+
+				float impulseStrenght = (-(1+odbijability) * NormalRelVel * CircleComp->m_mass);
+				GML::Vec3f impulse = static_cast<GML::Vec3f>(m_normalCollidePoint) * impulseStrenght;
+				CircleComp->apply_impulse(impulse, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
+
+				GML::Vec3f tarcie = (GML::Vec3f(m_normalCollidePoint.y, -m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
+				CircleComp->apply_impulse(tarcie, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
 			}
 
 			if(Owner2->hasComponent<StaticPhysicsComponent>()){
+				auto CircleComp = Owner1->getComponent<DynamicPhysicsComponent>();
+				GML::Vec2f CirclePos = {Owner1->getTransform()->x, Owner1->getTransform()->y};
+				GML::Vec2f RelativeVelocity = CircleComp->m_velocity + static_cast<GML::Vec2f>( static_cast<GML::Vec3f>(CirclePos - m_collidePoint) % CircleComp->m_angular_velocity);
 
-				float RelativeVelocity = Owner1->getComponent<DynamicPhysicsComponent>()->m_velocity*m_normalCollidePoint;
-				float odbijability = 0.5f; //0 - 1 im wyzej tym odbijablej
-				DTL_ENT("Status siura: kolidowany");
-				if(RelativeVelocity < 0) return; //to jest problem, za czesto sie uruchamia
-				Owner1->getComponent<DynamicPhysicsComponent>()->apply_impulse( GML::Vec3f(m_normalCollidePoint) * (-(1+odbijability) * RelativeVelocity * Owner1->getComponent<DynamicPhysicsComponent>()->m_mass)
-																				, GML::Vec3f(m_collidePoint) );
+				float NormalRelVel = m_normalCollidePoint * RelativeVelocity;
+				float TangentRelVel = GML::Vec2f(m_normalCollidePoint.y, -m_normalCollidePoint.x) * RelativeVelocity;
+				if(TangentRelVel > 0) { TangentRelVel = 1; }
+				else if(TangentRelVel < 0) { TangentRelVel = -1; }
+				else { TangentRelVel = 0; }
 
+				if(NormalRelVel < 0) { return; } //Jeśli obiekty już się oddalają to git elegancko super bomba
+
+				float impulseStrenght = (-(1+odbijability) * NormalRelVel * CircleComp->m_mass);
+				GML::Vec3f impulse = static_cast<GML::Vec3f>(m_normalCollidePoint) * impulseStrenght;
+				CircleComp->apply_impulse(impulse, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
+
+				GML::Vec3f tarcie = (GML::Vec3f(m_normalCollidePoint.y, -m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
+				CircleComp->apply_impulse(tarcie, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
 			}
 
 		}
@@ -183,11 +214,11 @@ namespace golf {
 		//float& y = getTransform()->y;
 		auto[x, y] = getTransform()->getPos();
 		
-		float& rotation = getTransform()->rot;
+		//get rotation
+		float rotation = getTransform()->rot * GML::F_DEG_TO_RAD;
 
 		m_position.set(x,y);
 
-		//get rotation
 
 		//aktualnie rotacja skosna nie jest przechowywana w transformie, trzeba to zmienic //rotacja skośna nie będzie przechowywana w transformie xD
 		m_rotation.z = rotation; //to be changed
@@ -213,6 +244,8 @@ namespace golf {
 		//set rotation
 		
 		rotation = m_rotation.z; //to be changed!!!
+
+		getTransform()->rot = rotation*GML::F_RAD_TO_DEG;
 
 		m_net_force.set(0,0); //suma wszystkich sil
 		m_net_torque.set(0,0,0); //suma wszystkich sil obrotowych
