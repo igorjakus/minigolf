@@ -31,15 +31,15 @@ PhysicsTestingScene::PhysicsTestingScene()
 	auto visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot.addComponent<VisualComponent>(visual);
 	m_kot.getComponent<VisualComponent>()->setTexture("ballcat");
-	m_kot.getTransform()->setScale(0.1f);
+	m_kot.getTransform()->setScale(0.04f);
 	m_kot.getTransform()->setPos(2.f,2.f);
 	
-	m_kot.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula,0.05f));
+	m_kot.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula,0.02f));
 
 	auto physics = Engine.addDynamicElement();
 	m_kot.addComponent<DynamicPhysicsComponent>(physics);
-	m_kot.getComponent<DynamicPhysicsComponent>()->m_mass = 0.1f;
-	m_kot.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.0001f;
+	m_kot.getComponent<DynamicPhysicsComponent>()->m_mass = 0.01f;
+	m_kot.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.00001f;
 
 	visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot2.addComponent<VisualComponent>(visual);
@@ -52,7 +52,7 @@ PhysicsTestingScene::PhysicsTestingScene()
 
 	auto physics2 = Engine.addKinematicElement();
 	m_kot2.addComponent<KinematicPhysicsComponent>(physics2);
-	// m_kot2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0,0,1.f};
+	m_kot2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0,0,1.f};
 	// m_kot2.getComponent<KinematicPhysicsComponent>()->m_velocity = {0.1f,0};
 
 }
@@ -70,12 +70,6 @@ void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
 	}
 	if (AppData::getInput().isKeyClicked("RIGHT")) {
 		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0.01f,0,0},{0,0,0});
-	}
-	if (AppData::getInput().isKeyClicked("Q")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_torque_impulse({ 0,0,0.001f });
-	}
-	if (AppData::getInput().isKeyClicked("E")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_torque_impulse({ 0,0,-0.001f });
 	}
 
 	if(AppData::getInput().isLeftMousePressed()) {

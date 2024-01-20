@@ -22,8 +22,8 @@ namespace golf {
 
 	class SurfaceComponent : public Component{
 	public:
-		float kineticFrict;
-		float rollingResitance;
+		float rollingResistance;
+		float spinningResistance;
 
 		SurfaceComponent(float,float);
 
@@ -38,6 +38,8 @@ namespace golf {
 		void apply_torque(GML::Vec3f torque);
 		void apply_torque_impulse(GML::Vec3f torque);
 		void update_positions(float deltaT,std::vector<std::shared_ptr<SurfaceComponent>> &Surfaces);  
+
+		bool isMoving();
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
 

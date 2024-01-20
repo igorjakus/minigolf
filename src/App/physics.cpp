@@ -14,7 +14,7 @@ namespace golf {
 		: m_Typ_obiektu(tego_typu), m_radius(radius) {}
 
 	SurfaceComponent::SurfaceComponent(float a,float c)
-		: kineticFrict(a), rollingResitance(c) {}
+		: rollingResistance(a), spinningResistance(c) {}
 		
 	
 
@@ -241,8 +241,8 @@ namespace golf {
 			radius = Hitbox->m_radius;
 		}
 
-		[[maybe_unused]] float kineticFrict = 0.1f;
-		[[maybe_unused]] float rollingResitance = 0.01f;
+		float rollingResistance = 0.03f;
+		float spinningResistance = 0.01f;
 
 		for (auto& ref : Surfaces) {
 			float xScale = ref->getOwner()->getTransform()->xScale / 2, yScale = ref->getOwner()->getTransform()->yScale / 2;
@@ -255,37 +255,11 @@ namespace golf {
 
 			if (xSurf - xScale < newPoint.x && newPoint.x < xSurf + xScale && ySurf - yScale < newPoint.y && newPoint.y < ySurf + yScale) {
 				//koliduje z powierzchnia
-				kineticFrict = ref->kineticFrict;
-				rollingResitance = ref->rollingResitance;
+				rollingResistance = ref->rollingResistance;
+				spinningResistance = ref->spinningResistance;
 				break;
 			}
 		}
-
-		//GML::Vec3f rollingResForce = {0,0,0};
-
-		//if(m_velocity.getLength() > 0){
-		//	rollingResForce  = -1*(static_cast<GML::Vec3f>(m_velocity.normalized())) * m_mass * Gravity * rollingResitance * radius;
-		//}
-
-		//GML::Vec2f contactPointVel = (m_velocity + static_cast<GML::Vec2f>( GML::Vec3f(0,0,-radius) % m_angular_velocity)) * -1;
-		//GML::Vec3f friction;
-		//if(contactPointVel.getLength() < 0.001f){ //mało
-		//	friction = (static_cast<GML::Vec3f>(m_net_force) + rollingResForce);
-		//	if(friction.getLength() > m_mass*Gravity*staticFrict ){
-		//		friction = {0,0,0};
-		//	}
-		//}
-		//else{
-		//	friction = (static_cast<GML::Vec3f>(contactPointVel.normalized())) * m_mass * Gravity * kineticFrict * -1;
-		//}
-		//DTL_WAR("{0} {0} {0}", friction.x, friction.y, friction.z);
-		//
-		//DTL_WAR("{0}", static_cast<GML::Vec2f>(GML::Vec3f(0, 0, -radius) % m_angular_velocity));
-		//
-		//apply_force(rollingResForce, {0,0,0});
-		//apply_force(friction, {0,0,-radius});
-
-
 
 		m_acceleration = m_net_force / m_mass;
 		m_velocity += m_acceleration * deltaT;
@@ -293,6 +267,7 @@ namespace golf {
 
 		m_angular_acceleration = m_net_torque / m_inertia;
 		m_angular_velocity += m_angular_acceleration * deltaT;
+		m_angular_velocity = {0, 0, m_angular_velocity.z};
 		m_rotation += m_angular_velocity * deltaT;
 
 		m_rotation.x = (m_rotation.x > GML::F_2_PI) ? m_rotation.x - GML::F_2_PI : m_rotation.x;
@@ -319,7 +294,7 @@ namespace golf {
 		// Spinning in Z-axis
 		if (m_angular_velocity.z != 0) {
 			float direction = m_angular_velocity.z / abs(m_angular_velocity.z);
-			float spinningDamping = 2.5f * rollingResitance * gravity / radius * deltaT * direction;
+			float spinningDamping = 2.5f * spinningResistance * gravity / radius * deltaT * direction;
 			if (abs(spinningDamping) >= abs(m_angular_velocity.z)) {
 				m_angular_velocity.z = 0;
 			} else {
@@ -327,40 +302,15 @@ namespace golf {
 			}
 		}
 
-		GML::Vec2f contactPointVel = (m_velocity + static_cast<GML::Vec2f>(GML::Vec3f(0, 0, -radius) % m_angular_velocity));
-
-		if(contactPointVel.getLengthSquared() > 0) {
-			float linearDamping = kineticFrict * gravity * deltaT;
-			m_velocity -= linearDamping * contactPointVel / contactPointVel.getLength();
-			float rollDamping = 2.5f * linearDamping / radius;
-			GML::Vec2f delta = contactPointVel.normalized() * rollDamping;
-			float tanDelta = -1 * delta * static_cast<GML::Vec2f>(m_angular_velocity).normalized();
-			GML::Vec2f perp = delta + tanDelta * static_cast<GML::Vec2f>(m_angular_velocity).normalized();
-			
-			if (tanDelta > static_cast<GML::Vec2f>(m_angular_velocity).getLength()) {
-				tanDelta = static_cast<GML::Vec2f>(m_angular_velocity).getLength();
-			}
-			GML::Vec2f tan = static_cast<GML::Vec2f>(m_angular_velocity).normalized() * tanDelta * -1;
-
-			m_angular_velocity += static_cast<GML::Vec3f>(tan + perp);
-
-		} else if (m_velocity.getLengthSquared() > 0) {
-			float linearDamping = rollingResitance * gravity * deltaT;
+		if (m_velocity.getLengthSquared() > 0) {
+			float linearDamping = rollingResistance * gravity * deltaT;
 			if (linearDamping >= m_velocity.getLength()) {
 				m_velocity = { 0, 0 };
-				m_angular_velocity.x = 0;
-				m_angular_velocity.y = 0;
-			} else {
+			}
+			else {
 				m_velocity -= linearDamping * m_velocity / m_velocity.getLength();
-				m_angular_velocity.x = (GML::Vec3f(0,0,-1) % static_cast<GML::Vec3f>(m_velocity)).x;
-				m_angular_velocity.y = (GML::Vec3f(0,0,-1) % static_cast<GML::Vec3f>(m_velocity)).y;
 			}
 		}
-
-		DTL_WAR("{0}", contactPointVel);
-
-
-		DTL_ENT("{0} {0} {0}",m_angular_velocity.x,m_angular_velocity.y,m_angular_velocity.z);
 
 		m_net_force.set(0,0); //suma wszystkich sil
 		m_net_torque.set(0,0,0); //suma wszystkich sil obrotowych
@@ -369,6 +319,10 @@ namespace golf {
 
 	DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia)
 		: m_in_physics_scope(true), m_mass(mass), m_inertia(inertia) {}
+
+	bool DynamicPhysicsComponent::isMoving() {
+		return m_velocity.getLengthSquared() > 0 && m_angular_acceleration.z > 0;
+	}
 		
 
 
