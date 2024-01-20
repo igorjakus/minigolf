@@ -4,6 +4,7 @@
 #include "Agl.h"
 #include "../GUI.h"
 #include "../ECS/Entity.h"
+#include "../physics.h"
 
 
 namespace golf {
@@ -20,6 +21,8 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
 
+		PhysicsEngine physics;
+
 		Entity grass;
 
 		Entity wallA;
@@ -29,6 +32,10 @@ namespace golf {
 		Entity frame2;
 		Entity frame3;
 		Entity frame4;
+
+		Entity ball;
+		Entity hole;
+
 		Entity pauseButton;
 
 		bool won;

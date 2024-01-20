@@ -183,15 +183,19 @@ float Input::getMouseOffsetY() const {
 }
 
 std::pair<float, float> Input::getMouseWorldOffset(agl::Camera& camera) const {
-	return screenToWorld(getMouseOffset(), camera);
+	auto [xPos, yPos] = getMouseWorldPos(camera);
+	auto [xPrev, yPrev] = screenToWorld(m_prevMousePos, camera);
+	xPos -= xPrev;
+	yPos -= yPrev;
+	return { xPos, yPos };
 }
 
 float Input::getMouseWorldOffsetX(agl::Camera& camera) const {
-	return screenToWorld(getMouseOffset(), camera).first;
+	return getMouseWorldOffset(camera).first;
 }
 
 float Input::getMouseWorldOffsetY(agl::Camera& camera) const {
-	return screenToWorld(getMouseOffset(), camera).second;
+	return getMouseWorldOffset(camera).second;
 }
 
 //////////////////////////////////////////////

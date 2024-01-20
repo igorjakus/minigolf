@@ -41,36 +41,63 @@ namespace golf {
 		frame1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame1.getTransform()->setPos(0.0f, 3.0f);
 		frame1.getTransform()->setScale(0.2f, 6.19f);
+		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setTexture("Wood");
 		frame2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame2.getTransform()->setPos(4.0f, 6.0f);
 		frame2.getTransform()->setScale(8.15f, 0.2f);
+		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setTexture("Wood");
 		frame3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame3.getTransform()->setPos(8.1f, 3.0f);
 		frame3.getTransform()->setScale(0.2f, 6.19f);
+		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame4.getComponent<VisualComponent>()->setTexture("Wood");
 		frame4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame4.getTransform()->setPos(4.0f, 0.0f);
 		frame4.getTransform()->setScale(8.15f, 0.2f);
+		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallA.getTransform()->setPos(3.0f, 2.0f);
 		wallA.getTransform()->setScale(6.0f, 0.2f);
+		wallA.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		wallB.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
 		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallB.getTransform()->setPos(5.0f, 4.0f);
 		wallB.getTransform()->setScale(6.0f, 0.2f);
+		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ball.getComponent<VisualComponent>()->setTexture("ballcat");
+		ball.getTransform()->setPos(1.0f, 1.0f);
+		ball.getTransform()->setScale(0.3f);
+		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement());
+		ball.getComponent<DynamicPhysicsComponent>()->m_mass = 0.1f;
+		ball.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.005f;
+		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.15f));
+		ball.addComponent<ButtonComponent>(ButtonComponent::create(m_camera));
+
+		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ball.getComponent<VisualComponent>()->setTexture("sponge");
+		ball.getTransform()->setPos(7.0f, 5.0f);
+		ball.getTransform()->setScale(0.5f);
 
 		won = false;
 		score = 0;
@@ -81,22 +108,45 @@ namespace golf {
 
 	void LevelOneScene::update(float deltaT)
 	{
-		
+		// camera
 		const float cameraSpeed = 5;
 		if (AppData::getInput().isKeyPressed("UP")) {
 			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y + deltaT * cameraSpeed);
 		}
-
 		if (AppData::getInput().isKeyPressed("LEFT")) {
 			m_camera.setPosition(m_camera.getPosition().x - deltaT * cameraSpeed, m_camera.getPosition().y );
 		}
-
 		if (AppData::getInput().isKeyPressed("RIGHT")) {
 			m_camera.setPosition(m_camera.getPosition().x + deltaT * cameraSpeed, m_camera.getPosition().y );
 		}
 		if (AppData::getInput().isKeyPressed("DOWN")) {
 			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y - deltaT * cameraSpeed);
 		}
+
+		if (AppData::getInput().getWheelOffset() >= 1) {
+			m_camera.setFocalLength(m_camera.getFocalLength() * 0.8f);
+		}
+		if (AppData::getInput().getWheelOffset() <= -1) {
+			m_camera.setFocalLength(m_camera.getFocalLength() * 1.25f);
+		}
+
+		// pilka
+		if (!ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
+			ball.getComponent<ButtonComponent>()->update();
+		}
+		if (ball.getComponent<ButtonComponent>()->isPressed()) {
+			AppData::getInput().setMousePosLock(true);
+		} else if(ball.getComponent<ButtonComponent>()->isReleased()) {
+			auto [x, y] = AppData::getInput().getMouseWorldOffset(m_camera);
+			ball.getComponent<DynamicPhysicsComponent>()->apply_impulse({ -x,-y,0 }, {0, 0, 0});
+			ball.getComponent<ButtonComponent>()->update();
+		} else {
+			AppData::getInput().setMousePosLock(false);
+		}
+
+		
+
+		physics.update(deltaT);
 
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		ptr->update();
