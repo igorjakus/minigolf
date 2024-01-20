@@ -1,8 +1,7 @@
 #include <pch.h>
 #include "Scenes.h"
 #include "Core/AppData.h"
-
-#include <miniaudio.h>
+#include "Core/Audio/Audio.h"
 
 #include "ECS/Entity.h"
 #include "Graphics.h"
@@ -39,12 +38,24 @@ BlankScene::BlankScene()
 	//! example audio code (getchar pauses the execution of the code so the sound can play, in the implementation it sould be handed to a different thread)
 	//! to stop the audio you should focuse the console and press ENTER
 	//! the documentation of this API can be found here https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h
-	ma_engine eng;
-	ma_engine_init(NULL, &eng);
-	ma_engine_play_sound(&eng, "assets/audio/neon.wav", NULL);
-	ma_engine_set_volume(&eng, .02f);
+
+	// chyba sie zrobi dwa soundEngine gdzie jeden będzie mial w tle muzyke a drugi dzwieki przy zderzeniach itp
+	// bede sie inspirowal tym https://miniaud.io/docs/examples/engine_advanced.html
+	ma_engine soundEngine;
+	initSoundEngine(&soundEngine);
+
+	ma_sound neon;
+	loadSound(&neon, "assets/audio/neon.wav", &soundEngine);
+
+	playSound(&neon);
+	// ma_engine_play_sound(&soundEngine, "assets/audio/neon.wav", NULL);
+
 	getchar();
-	ma_engine_uninit(&eng);
+
+	uninitSoundEngine(&soundEngine);
+	
+	// potem zmienić na uninitSounds i w susie przechowywac soundCount czyli ile zaladowalismy dzwiekow, albo jakis std::vector czy inna liste
+	ma_sound_uninit(&neon);
 
 }
 
