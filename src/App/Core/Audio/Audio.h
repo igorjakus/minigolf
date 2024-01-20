@@ -21,9 +21,6 @@ namespace golf {
 		// Play sound once
 		void playSound(int number);
 
-		// Play sound forever
-		void playSoundInLoop(int number);
-
 		void playMusic();
 
 		ma_sound* getSound(int number);

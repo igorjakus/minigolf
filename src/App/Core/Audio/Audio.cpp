@@ -28,11 +28,11 @@ namespace golf {
         }
 
         // ZAPEWNE SIE WYKRZACZY POTEM TO
-        std::thread musicThread([&]() {
-            playMusic();
-            });
+        //std::thread musicThread([&]() {
+            //playMusic();
+           // });
         // UWAGA UWAGA
-        musicThread.detach();
+        //musicThread.detach();
     }
 
     Audio::~Audio() {
@@ -74,20 +74,9 @@ namespace golf {
     }
 
     void Audio::playSound(int number) {
-        ma_sound_start(music[number].get());
-        while (true); // XD
-    }
-
-    void Audio::playSoundInLoop(int number) {
-        ma_sound_set_looping(music[number].get(), true);
-        ma_sound_start(music[number].get());
-        while (true); // XD
-        /* cały dźwięk będzie na osobnym wątku ale nie wiem jeszcze
-            jak rozwiązać problem ze zmianą głośności w czasie trwania programu
-            być może przy byciu w ustawieniach wątek będzie zatrzymywany
-            a następnie wznawiany przy wyjściu z ustawień,
-            już z odpowiednimi ustawieniami
-        */
+        // to nie jest bezpieczne raczej
+        std::thread tmp(ma_sound_start, music[number].get());
+        tmp.detach();  
     }
 
     void Audio::playMusic() {

@@ -59,7 +59,6 @@ BlankScene::BlankScene()
 	m_button3.getComponent<VisualComponent>()->setColor(0, 100, 255, 255);
 	m_button3.addComponent<GUIComponent>(m_gui.createGUIComponent());
 	m_button3.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0, -0.1f, ModeType::RELATIVE);
-
 }
 
 void BlankScene::update(float deltaT) {
