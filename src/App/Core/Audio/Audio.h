@@ -11,10 +11,10 @@ void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine, fl
 void playSound(ma_sound* sound);
 
 // TODO
-void playInLoop();
+void playInLoop(ma_sound* sound);
 
 // Maybe will check if everything went ok
 void uninitSoundEngine(ma_engine* engine);
 
 // Maybe will check if everything went ok
-void uninitSound(ma_sound sounds[], const int soundCount);
+void uninitSounds(ma_sound sounds[], const int soundCount);

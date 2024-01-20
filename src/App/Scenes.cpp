@@ -45,9 +45,9 @@ BlankScene::BlankScene()
 	initSoundEngine(&soundEngine, 0.2f);
 
 	ma_sound neon;
-	loadSound(&neon, "assets/audio/neon.wav", &soundEngine, 0.5f);
+	loadSound(&neon, "assets/audio/zawrot-glowy.mp3", &soundEngine, 0.5f);
 
-	playSound(&neon);
+	playInLoop(&neon);
 
 	uninitSoundEngine(&soundEngine);
 	

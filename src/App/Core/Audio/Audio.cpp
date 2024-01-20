@@ -32,7 +32,9 @@ void playSound(ma_sound* sound) {
 }
 
 // TODO
-void playInLoop() {
+void playInLoop(ma_sound* sound) {
+    ma_sound_set_looping(sound, true);
+    ma_sound_start(sound);
     /* cały dźwięk będzie na osobnym wątku ale nie wiem jeszcze
        jak rozwiązać problem ze zmianą głośności w czasie trwania programu
        być może po przy byciu w ustawieniach wątek będzie zatrzymywany
