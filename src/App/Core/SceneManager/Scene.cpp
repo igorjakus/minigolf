@@ -7,7 +7,7 @@ namespace golf {
 	Scene::Scene() {
 		DTL_INF("New scene created.");
 
-		AppData::getInput().newScene();
+		AppData::getInput().newScene(shared_from_this());
 	}
 
 }

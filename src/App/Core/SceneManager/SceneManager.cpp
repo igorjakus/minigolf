@@ -31,7 +31,7 @@ void SceneManager::nextScene() {
 	m_currentScene = m_sceneQueueBuffer.front();
 	m_sceneQueueBuffer.pop();
 
-	AppData::getInput().resetCameras();
+	AppData::getInput().changeCameraSet(m_currentScene);
 }
 
 void SceneManager::lock() {
