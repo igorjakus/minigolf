@@ -142,10 +142,10 @@ namespace golf {
 			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
 				auto maciej = Owner2->getComponent<KinematicPhysicsComponent>();
 				GML::Vec2f Pos = {Owner2->getTransform()->x,Owner2->getTransform()->y};
-				float RelativeVelocity = (Owner1->getComponent<DynamicPhysicsComponent>()->m_velocity - (maciej->m_velocity + GML::Vec2f( GML::Vec3f( m_collidePoint - Pos )% maciej->m_angular_velocity ) ))*m_normalCollidePoint;
+				float RelativeVelocity = (Owner1->getComponent<DynamicPhysicsComponent>()->m_velocity - (maciej->m_velocity + GML::Vec2f( GML::Vec3f( Pos - m_collidePoint )% maciej->m_angular_velocity ) ))*m_normalCollidePoint;
 				float odbijability = 0.5f; //0 - 1 im wyzej tym odbijablej
-				DTL_ENT("Status siura: kolidowany");
 				if(RelativeVelocity < 0) return; //to jest problem, za czesto sie uruchamia
+				DTL_ENT("Status siura: kolidowany");
 				Owner1->getComponent<DynamicPhysicsComponent>()->apply_impulse( GML::Vec3f(m_normalCollidePoint) * (-(1+odbijability) * RelativeVelocity * Owner1->getComponent<DynamicPhysicsComponent>()->m_mass)
 																				, GML::Vec3f(m_collidePoint) );
 
@@ -229,7 +229,7 @@ namespace golf {
 		float& x = getTransform()->x;
 		float& y = getTransform()->y;
 		
-		float& rotation = getTransform()->rot;
+		float rotation = getTransform()->rot * GML::F_DEG_TO_RAD;
 
 		m_position.set(x, y);
 
@@ -257,6 +257,8 @@ namespace golf {
 		//set rotation
 		
 		rotation = m_rotation.z; //to be changed!!!
+
+		getTransform()->rot = rotation*GML::F_RAD_TO_DEG;
 
 		m_acceleration.set(0,0); //suma wszystkich sil
 		m_angular_acceleration.set(0,0,0); //suma wszystkich sil obrotowych

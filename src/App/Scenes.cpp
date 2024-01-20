@@ -42,7 +42,7 @@ PhysicsTestingScene::PhysicsTestingScene()
 	visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot2.addComponent<VisualComponent>(visual);
 	m_kot2.getComponent<VisualComponent>()->setTexture("popcat");
-	m_kot2.getTransform()->setScale(0.3f,0.1f);
+	m_kot2.getTransform()->setScale(0.7f,0.1f);
 	m_kot2.getTransform()->setPos(-0.5f, 0.f);
 	m_kot2.getTransform()->rot=45;
 	
@@ -50,7 +50,8 @@ PhysicsTestingScene::PhysicsTestingScene()
 
 	auto physics2 = Engine.addKinematicElement();
 	m_kot2.addComponent<KinematicPhysicsComponent>(physics2);
-	m_kot2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0,0,45.f};
+	m_kot2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0,0,1.f};
+	m_kot2.getComponent<KinematicPhysicsComponent>()->m_velocity = {0.1f,0};
 
 }
 
