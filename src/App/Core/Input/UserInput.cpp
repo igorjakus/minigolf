@@ -228,26 +228,30 @@ bool Input::isFocused() const {
 ///				Camera resize control
 //////////////////////////////////////////////
 
-Input::CameraSet::CameraSet(std::shared_ptr<Scene> scene) : owner(std::move(scene)) {}
+Input::CameraSet::CameraSet(uint64_t id) : setID(id) {}
 
 void Input::attachCamera(agl::Camera* camera, float constvalue, bool dynamic) {
-	m_cameraSets.back().cameras.push_back({camera, constvalue, dynamic});
+	m_cameraSets.back()->cameras.push_back({camera, constvalue, dynamic});
 	const float screenX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float screenY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	m_cameraSets.back().cameras.front().updateSize(screenX, screenY);
+	m_cameraSets.back()->cameras.back().updateSize(screenX, screenY);
 }
 
-void Input::changeCameraSet(const std::shared_ptr<Scene>& scene) {
-	m_cameraSets.erase(m_currentCameraSet);
+void Input::changeCameraSet(uint64_t setID) {
+	if (m_currentCameraSet != m_cameraSets.end()) {
+		m_cameraSets.erase(m_currentCameraSet);
+	}
 	for(m_currentCameraSet = m_cameraSets.begin(); m_currentCameraSet != m_cameraSets.end(); m_currentCameraSet++) {
-		if(scene.get() == m_currentCameraSet->owner.get()) {
+		if(setID == m_currentCameraSet->get()->setID) {
 			break;
 		}
 	}
 }
 
-void Input::newScene(std::shared_ptr<Scene> scene) {
-	m_cameraSets.emplace_back(scene);
+uint64_t Input::newScene() {
+	m_cameraSets.emplace_back(std::make_shared<CameraSet>(m_cameraSetsCount));
+	m_cameraSetsCount++;
+	return m_cameraSets.back()->setID;
 }
 
 //////////////////////////////////////////////
@@ -301,7 +305,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 //
 // }
 void Input::s_resizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height) { //NOLINT
-	for(auto& cam : s_instance->m_currentCameraSet->cameras) {
+	for(auto& cam : s_instance->m_currentCameraSet->get()->cameras) {
 		cam.updateSize(static_cast<float>(width), static_cast<float>(height));
 	}
 }
@@ -318,7 +322,7 @@ Input::Input()
 :m_window(nullptr), m_customCursor(nullptr) {
 	s_instance = this;
 	setKeys();
-	m_cameraSets.emplace_back(nullptr);
+	m_currentCameraSet = m_cameraSets.end();
 }
 
 Input::~Input() {

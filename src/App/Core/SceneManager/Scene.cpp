@@ -4,10 +4,15 @@
 
 namespace golf {
 
-	Scene::Scene() {
+	Scene::Scene()
+		: m_cameraSetID(0) {
 		DTL_INF("New scene created.");
 
-		AppData::getInput().newScene(shared_from_this());
+		m_cameraSetID = AppData::getInput().newScene();
+	}
+
+	uint64_t Scene::getCameraSetID() {
+		return m_cameraSetID;
 	}
 
 }
