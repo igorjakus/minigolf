@@ -16,6 +16,8 @@ set(SOURCES
 	# Components
 	Graphics.h
 	Graphics.cpp
+	GUI.h 
+	GUI.cpp
 
 	# Core
 	Core/AppData.h
@@ -34,6 +36,11 @@ set(SOURCES
 	Core/Input/UserInput.h
 	Core/Input/UserInput.cpp
 	
+	# Scenes
+	scenes/levels.cpp 
+	scenes/levels.h
+	scenes/misc.cpp 
+	scenes/misc.h 
 	# Audio
 	Core/Audio/Audio.h
 	Core/Audio/Audio.cpp

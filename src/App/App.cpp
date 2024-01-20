@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "App.h"
 #include "Core/AppData.h"
-#include "Scenes.h"
+#include "scenes/misc.h"
 #include "dtl.h"
 
 namespace golf 
@@ -13,7 +13,7 @@ namespace golf
 	
 		AppData::init(width, height, title);
 
-		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlankScene()));
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
 		AppData::getSceneManager().nextScene();
 	
 		DTL_INF("Application created: {0}", title);
@@ -58,7 +58,7 @@ namespace golf
 	
 	void App::render() {
 		IMGUI_NEW_FRAME;
-		IMGUI_CALL(ImGui::ShowDemoWindow());
+		
 		AppData::getSceneManager().render();
 	
 		AppData::getInput().frameEnd();
@@ -70,7 +70,7 @@ namespace golf
 	}
 	
 	void App::terminate() {
-	
+
 		AppData::terminate();
 	
 		DTL_INF("Application terminated: {0}", m_title);

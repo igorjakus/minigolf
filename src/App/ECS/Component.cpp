@@ -36,7 +36,7 @@ Transform* Component::getTransform() {
 	if (m_owner == nullptr) [[unlikely]] {
 #ifndef __DIST__
 		DTL_ERR("Komponent sprawdza wartosc transform, gdy nie ma wlasciciela!");
-#endif // !__DIST__
+#endif
 		return nullptr;
 	}
 

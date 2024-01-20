@@ -86,7 +86,7 @@ namespace agl
 		uint m_w, m_h;
 	};
 
-	//Rendering
+	//!rendering==================================================================================================================================
 	class Quad
 	{
 	public:
@@ -104,6 +104,7 @@ namespace agl
 		void setRotationPtr(float* rotation);
 		void setColor(uchar red, uchar green, uchar blue, uchar alpha);
 		void setColor(Color color);
+		void setTexRepeat(float defxScale, float defyScale);
 		[[nodiscard]] Color getColor() const;
 
 		friend class GraphicLayer;
@@ -111,6 +112,7 @@ namespace agl
 		float* m_x, *m_y;
 		float* m_xScale, *m_yScale;
 		float* m_rotation;
+		float m_defxScale = 0.f, m_defyScale = 0.f;
 		agl::Visual* m_vis;
 		Color m_color;
 		GLuint m_VBO, m_EBO, m_VAO;
@@ -120,6 +122,7 @@ namespace agl
 	class Camera
 	{
 	public:
+		Camera();
 		Camera(float x, float y, glm::vec2 size, float focalLength);
 		Camera(glm::vec2 position, float w, float h, float focalLength);
 		Camera(float x, float y, float w, float h, float focalLength);

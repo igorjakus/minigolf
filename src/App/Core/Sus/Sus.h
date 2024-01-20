@@ -9,9 +9,9 @@ namespace golf {
 		void LoadAll();
 
 		//=====[Textures]=====
-		void LoadListOfTextures(std::initializer_list<std::string> files);
+		void LoadListOfTextures(std::initializer_list<std::string> files, int scaleX = 1, int scaleY = 1);
 
-		void LoadTexture(const std::string& file, int filter = GL_LINEAR, int sWrap = GL_REPEAT, int tWrap = GL_REPEAT);
+		void LoadTexture(const std::string& file, glm::ivec2 textureRatio = { 1, 1 }, int filter = GL_LINEAR, int sWrap = GL_REPEAT, int tWrap = GL_REPEAT);
 
 		void LoadAllTextures();
 
@@ -28,22 +28,62 @@ namespace golf {
 		agl::Shader* LoadAndGetShader(const std::string& file);
 
 		void LoadAllShaders();
+		
+		//=====[Animation]=====
 
-		//=====[Data File]=====
+		void LoadAnimation(const std::string& file, int filter= GL_LINEAR, uint frames = 1, float frametime = 1, uint width = 1, uint heigth = 1);
 
-		void ReadLevelFile();
+		agl::Animation* GetAnimation(const std::string& file);
+
+		//=====[Level Data File]=====
+		class LevelData {
+		public:
+			LevelData(int HighScore, int Stars, bool isUnlocked);
+
+			int HighScore();
+			int StarCount();
+			bool IsUnlocked();
+
+			void ChangeHighScore(int nr);
+			void ChangeStars(int nr);
+			void Unlock(int nr);
 
 
+		private:
+			int highScore;
+			int stars;
+			bool isUnlocked;
+		};
+
+
+		void LoadLevelFile(int log=false);
+
+		
+		bool IsUnlocked(int nr);
+		int StarCount(int nr);
+		int HighScore(int nr);
+
+		void ChangeHighScore(int nr, int score);
+		void ChangeStars(int nr, int stars);
+		void Unlock(int nr);
+		
+		void UpdateSaveFile();
+
+		//TO DO: zapis zmieniony przy koñcu programu
 
 		//=====[Audio (Igor :3)]
 		void LoadAllAudio();
+
+
 		//===========
 	private:
 		std::map<std::string, agl::Texture> m_Textures;
 
 		std::map<std::string, agl::Shader> m_Shaders;
 
-		std::map<int, std::pair<bool, int>> m_Levels;
+		std::map<std::string, agl::Animation> m_Animations;
+
+		std::map<int, Sus::LevelData> m_Levels;
 
 	};
 
