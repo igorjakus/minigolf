@@ -26,7 +26,11 @@ void AppData::init(uint width, uint height, const std::string& title) {
 	getInstance().m_window->setIcon("assets/icon/icon.png", "assets/icon/icon.png");
 	DTL_INF("Window created");
 
-	//Sus initialization
+	// Audio initialization
+	getInstance().m_audio = std::make_unique<Audio>(); // in constructor it init everything it needs outside of loading audio
+	DTL_INF("Audio engine initialized successfully");
+
+	// Sus initialization
 	getInstance().m_sus = std::make_unique<Sus>();
 	DTL_ENT("Loading assets...");
 	getInstance().m_sus->LoadAll();
@@ -54,6 +58,7 @@ void AppData::terminate() {
 	getInstance().m_sceneManager.reset();
 	getInstance().m_sus.reset();
 	getInstance().m_input.reset();
+	getInstance().m_audio.reset();
 	DTL_INF("Application systems terminated successfully");
 	DTL_ENT("===============================================================================");
 }
@@ -74,6 +79,8 @@ Input& AppData::getInput() {
 	return *getInstance().m_input;
 }
 
-
+Audio& AppData::getAudio() {
+	return *getInstance().m_audio;
+}
 
 }

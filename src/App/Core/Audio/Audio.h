@@ -1,21 +1,33 @@
+#pragma once
+
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
+#include <vector>
 
+namespace golf {
 
-// Init engine and check if everything went ok
-void initSoundEngine(ma_engine* engine, float volume);
+	class Audio {
+	public:
+		Audio();
+		~Audio();
 
-// Init and load sound and check if everything went ok
-void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine, float volume);
+		// Init engine and check if everything went ok
+		void initSoundEngine(ma_engine* engine, float volume);
 
-// Play sound once
-void playSound(ma_sound* sound);
+		// Init and load sound and check if everything went ok
+		void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine);
 
-// Play sound forever
-void playSoundInLoop(ma_sound* sound);
+		// Play sound once
+		void playSound(ma_sound* sound);
 
-// Maybe will check if everything went ok
-void uninitSoundEngine(ma_engine* engine);
+		// Play sound forever
+		void playSoundInLoop(ma_sound* sound);
 
-// Uninit all sounds previously loaded
-void uninitSounds(ma_sound sounds[], const int soundCount);
+	private:
+		ma_engine musicEngine;
+		ma_engine soundEventEngine;
+
+		std::vector<std::shared_ptr<ma_sound>> music;
+		std::vector<std::shared_ptr<ma_sound>> sounds;
+	};
+}

@@ -1,7 +1,6 @@
 #include<pch.h>
 #include"Sus.h"
 #include"dtl.h"
-
 #define TEXTURE_PATH "assets/textures/"
 #define SHADER_PATH "assets/shaders/"
 #define ANIMATION_PATH "assets/animation/"
@@ -136,10 +135,8 @@ namespace golf
 
 
 
-	//=====================
-	void Sus::LoadAllAudio() {
-
-	}
+	//=======[Audio]=============
+	void Sus::LoadAllAudio() {}
 }
 
 //NOLINTEND
