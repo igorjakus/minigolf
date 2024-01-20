@@ -25,12 +25,23 @@ namespace golf {
 		HitboxComponent(Typ,float);
 	};
 
+	class SurfaceComponent : public Component{
+	public:
+		float kineticFrict;
+		float staticFrict;
+		float rollingResitance;
+
+		SurfaceComponent(float,float,float);
+
+	};
+
+
 	class DynamicPhysicsComponent : public Component{
 	public:
 		bool m_in_physics_scope;
 		void apply_force(GML::Vec3f force, GML::Vec3f apply_point);   //zmienia acceleration
 		void apply_impulse(GML::Vec3f impulse, GML::Vec3f apply_point); //zmienia velocity
-		void update_positions(float deltaT);  
+		void update_positions(float deltaT,std::vector<std::shared_ptr<SurfaceComponent>> &Surfaces);  
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
 
@@ -93,6 +104,8 @@ namespace golf {
 		std::vector<std::shared_ptr<DynamicPhysicsComponent>> m_Dynamic_Objects;
 		std::vector<std::shared_ptr<KinematicPhysicsComponent>> m_Kinematic_Objects;
 		std::vector<std::shared_ptr<StaticPhysicsComponent>> m_Static_Objects;
+
+		std::vector<std::shared_ptr<SurfaceComponent>> m_Surfaces;
 
 		class Collision{
 		public:

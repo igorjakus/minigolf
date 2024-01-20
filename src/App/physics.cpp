@@ -1,7 +1,9 @@
+#include <memory>
 #include <pch.h>
 #include <dtl.h>
 
 #include <utility>
+#include <vector>
 #include "physics.h"
 
 #include "Util.hpp"
@@ -12,6 +14,11 @@ namespace golf {
 
 	HitboxComponent::HitboxComponent(HitboxComponent::Typ tego_typu ,float radius = 0) 
 		: m_Typ_obiektu(tego_typu), m_radius(radius) {}
+
+	SurfaceComponent::SurfaceComponent(float a,float b,float c)
+		: kineticFrict(a), staticFrict(b), rollingResitance(c) {}
+		
+	
 
 	//physics engine
 
@@ -48,7 +55,7 @@ namespace golf {
 		}
 
 		for(auto & m_Dynamic_Object : m_Dynamic_Objects){
-			m_Dynamic_Object->update_positions(deltaT);
+			m_Dynamic_Object->update_positions(deltaT,m_Surfaces);
 		}
 
 		for(auto & m_Kinematic_Object : m_Kinematic_Objects){
@@ -71,6 +78,8 @@ namespace golf {
 		m_Static_Objects.push_back(Obj);
 		return Obj;
 	}
+
+
 
 
 	//Kula z kwadratem
@@ -209,7 +218,7 @@ namespace golf {
 		m_velocity += static_cast<GML::Vec2f>(impulse) * (1/m_mass);
 		m_angular_velocity += GML::Vec3f::crossProduct(impulse,apply_point)*(1/m_inertia);
 	}
-	void DynamicPhysicsComponent::update_positions(float deltaT){                          //apply net_force and net_torque i zeruj
+	void DynamicPhysicsComponent::update_positions(float deltaT,std::vector<std::shared_ptr<SurfaceComponent>> &Surfaces){                          //apply net_force and net_torque i zeruj
 		//float& x = getTransform()->x;
 		//float& y = getTransform()->y;
 		auto[x, y] = getTransform()->getPos();
@@ -217,7 +226,59 @@ namespace golf {
 		//get rotation
 		float rotation = getTransform()->rot * GML::F_DEG_TO_RAD;
 
+		auto Hitbox = getOwner()->getComponent<HitboxComponent>();
+		float radius = 0;
+		if(Hitbox){
+			radius = Hitbox->m_radius;
+		}
+
 		m_position.set(x,y);
+
+		[[maybe_unused]]float kineticFrict = 0.1f;
+		[[maybe_unused]]float staticFrict = 0.15f;
+		[[maybe_unused]]float rollingResitance = 0.05f;
+
+		for(auto &ref : Surfaces){
+
+			float xScale = ref->getOwner()->getTransform()->xScale/2, yScale=ref->getOwner()->getTransform()->yScale/2;
+			float xSurf = ref->getOwner()->getTransform()->x, ySurf = ref->getOwner()->getTransform()->y;
+			float rotSurf = ref->getOwner()->getTransform()->rot;
+
+			GML::Mat2f AntyRotSurf = {std::cos(rotSurf),std::sin(rotSurf),-std::sin(rotSurf),std::cos(rotSurf)};
+
+			GML::Vec2f newPoint = AntyRotSurf*(m_position - GML::Vec2f(xSurf,ySurf)) + GML::Vec2f(xSurf,ySurf);
+
+			if( xSurf - xScale < newPoint.x && newPoint.x < xSurf + xScale && ySurf - yScale < newPoint.y && newPoint.y < ySurf + yScale ){
+				//koliduje z powierzchnia
+				kineticFrict = ref->kineticFrict;
+				staticFrict = ref->staticFrict;
+				rollingResitance = ref->rollingResitance;
+				break;
+			}
+
+		}
+
+		const float Gravity = 9.81f;
+		GML::Vec3f rollingResForce = {0,0,0};
+
+		if(m_velocity.getLength() > 0){
+			rollingResForce  = -1*(static_cast<GML::Vec3f>(m_velocity.normalized())) * m_mass * Gravity * rollingResitance * radius;
+		}
+
+		GML::Vec2f contactPointVel = m_velocity + static_cast<GML::Vec2f>( GML::Vec3f(0,0,-radius) % m_angular_velocity);
+		GML::Vec3f friction;
+		if(contactPointVel.getLength() < 0.001f){ //mało
+			friction = -1*(static_cast<GML::Vec3f>(m_net_force) + rollingResForce);
+			if(friction.getLength() > m_mass*Gravity*staticFrict ){
+				friction = {0,0,0};
+			}
+		}
+		else{
+			friction = (static_cast<GML::Vec3f>(contactPointVel.normalized())) * m_mass * Gravity * kineticFrict;
+		}
+		
+		apply_force(rollingResForce, {0,0,0});
+		apply_force(friction, {0,0,-radius});
 
 
 		//aktualnie rotacja skosna nie jest przechowywana w transformie, trzeba to zmienic //rotacja skośna nie będzie przechowywana w transformie xD
@@ -246,6 +307,8 @@ namespace golf {
 		rotation = m_rotation.z; //to be changed!!!
 
 		getTransform()->rot = rotation*GML::F_RAD_TO_DEG;
+
+		DTL_ENT("{0} {0} {0}",m_angular_velocity.x,m_angular_velocity.y,m_angular_velocity.z);
 
 		m_net_force.set(0,0); //suma wszystkich sil
 		m_net_torque.set(0,0,0); //suma wszystkich sil obrotowych
