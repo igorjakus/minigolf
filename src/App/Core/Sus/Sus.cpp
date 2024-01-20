@@ -20,9 +20,9 @@ namespace golf
 	}
 
 	//=====[Textures]=====
-	void Sus::LoadListOfTextures(std::initializer_list<std::string> files,int scaleX,int scaleY) {
+	void Sus::LoadListOfTextures(std::initializer_list<std::string> files,int scaleX,int scaleY, int filter, int sWrap, int tWrap) {
 		for (auto file : files) {
-			Sus::LoadTexture(file,glm::ivec2(scaleX,scaleY));
+			Sus::LoadTexture(file,glm::ivec2(scaleX,scaleY), filter, sWrap, tWrap);
 		}
 	}
 	void Sus::LoadTexture(const std::string& file, glm::ivec2 textureRatio, int filter, int sWrap, int tWrap) {

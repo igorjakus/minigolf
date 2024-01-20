@@ -21,6 +21,18 @@ namespace golf {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
 			AppData::getSceneManager().nextScene();
 		}
+		if (levelNumber == 3) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelThreeScene()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (levelNumber == 4) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFourScene()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (levelNumber == 5) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFiveScene()));
+			AppData::getSceneManager().nextScene();
+		}
 	}
 	//================================
 	//MainMenu
@@ -120,12 +132,32 @@ namespace golf {
 	{
 		AppData::getInput().attachCamera(&m_camera, 1.0f);
 		lvlOneButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		lvlOneButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.3f, 0.3f, ModeType::RELATIVE);
+		lvlOneButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.4f, 0.3f, ModeType::RELATIVE);
 		lvlOneButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		lvlOneButton.getComponent<VisualComponent>()->setTexture("1_not_pressed");
 		lvlOneButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlOneButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		//mo¿e: sprawdza przy gwiazdkach czy zablokowany
+		//==Level 1
+		lvlOneStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlOneStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.4f, 0.2f, ModeType::RELATIVE);
+		lvlOneStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		if (AppData::getSus().StarCount(1) == 3) {
+			lvlOneStars.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (AppData::getSus().StarCount(1) == 2) {
+			lvlOneStars.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (AppData::getSus().StarCount(1) == 1) {
+			lvlOneStars.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (AppData::getSus().StarCount(1) == 0) {
+			lvlOneStars.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+		lvlOneStars.getTransform()->setScale(0.295f, 0.095f);
+
+		//==Level 2
 		lvlTwoButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlTwoButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.3f, ModeType::RELATIVE);
 		lvlTwoButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
@@ -133,27 +165,97 @@ namespace golf {
 		lvlTwoButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlTwoButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		lvlTwoStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlTwoStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.2f, ModeType::RELATIVE);
+		lvlTwoStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		if (AppData::getSus().StarCount(2) == 3) {
+			lvlTwoStars.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (AppData::getSus().StarCount(2) == 2) {
+			lvlTwoStars.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (AppData::getSus().StarCount(2) == 1) {
+			lvlTwoStars.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (AppData::getSus().StarCount(2) == 0) {
+			lvlTwoStars.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+		lvlTwoStars.getTransform()->setScale(0.295f, 0.095f);
 
+		//==Level 3
 		lvlThreeButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		lvlThreeButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.3f, 0.3f, ModeType::RELATIVE);
+		lvlThreeButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.4f, 0.3f, ModeType::RELATIVE);
 		lvlThreeButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		lvlThreeButton.getComponent<VisualComponent>()->setTexture("3_not_pressed");
 		lvlThreeButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlThreeButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		lvlThreeStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlThreeStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.4f, 0.2f, ModeType::RELATIVE);
+		lvlThreeStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		if (AppData::getSus().StarCount(3) == 3) {
+			lvlThreeStars.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (AppData::getSus().StarCount(3) == 2) {
+			lvlThreeStars.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (AppData::getSus().StarCount(3) == 1) {
+			lvlThreeStars.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (AppData::getSus().StarCount(3) == 0) {
+			lvlThreeStars.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+		lvlThreeStars.getTransform()->setScale(0.295f, 0.095f);
+
+		//===Level 4
 		lvlFourButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		lvlFourButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.3f, 0.0f, ModeType::RELATIVE);
+		lvlFourButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.4f, 0.0f, ModeType::RELATIVE);
 		lvlFourButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		lvlFourButton.getComponent<VisualComponent>()->setTexture("4_not_pressed");
 		lvlFourButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlFourButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		lvlFourStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlFourStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.4f, -0.1f, ModeType::RELATIVE);
+		lvlFourStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		if (AppData::getSus().StarCount(4) == 3) {
+			lvlFourStars.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (AppData::getSus().StarCount(4) == 2) {
+			lvlFourStars.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (AppData::getSus().StarCount(4) == 1) {
+			lvlFourStars.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (AppData::getSus().StarCount(4) == 0) {
+			lvlFourStars.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+		lvlFourStars.getTransform()->setScale(0.295f, 0.095f);
+
+		//===Level 5
 		lvlFiveButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		lvlFiveButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.0f, 0.0f, ModeType::RELATIVE);
+		lvlFiveButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
 		lvlFiveButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		lvlFiveButton.getComponent<VisualComponent>()->setTexture("5_not_pressed");
 		lvlFiveButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlFiveButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		lvlFiveStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlFiveStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.1f, ModeType::RELATIVE);
+		lvlFiveStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		if (AppData::getSus().StarCount(5) == 3) {
+			lvlFiveStars.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (AppData::getSus().StarCount(5) == 2) {
+			lvlFiveStars.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (AppData::getSus().StarCount(5) == 1) {
+			lvlFiveStars.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (AppData::getSus().StarCount(5) == 0) {
+			lvlFiveStars.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+		lvlFiveStars.getTransform()->setScale(0.295f, 0.095f);
 
 	}
 
@@ -248,40 +350,95 @@ namespace golf {
 
 
 
-	ResultsScene::ResultsScene(int score, int lvlNumber)
-		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera), playerScore(score), finishedLevelNumber(lvlNumber)
+	ResultsScene::ResultsScene(int score, int stars, int lvlNumber)
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera), playerScore(score), nrOfStars(stars), finishedLevelNumber(lvlNumber)
 	{
-		const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
-		const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-		m_camera.setSize(tempX / tempY, 1.0f);
 
+		AppData::getInput().attachCamera(&m_camera, 1.0f);
+
+		menuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		menuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.5f, -0.3f, ModeType::RELATIVE);
+		menuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		menuButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed");
+		menuButton.getTransform()->setScale(0.2f, 0.2f);
+		menuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		replayButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		replayButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.3f, ModeType::RELATIVE);
+		replayButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		replayButton.getComponent<VisualComponent>()->setTexture("replay_not_pressed");
+		replayButton.getTransform()->setScale(0.2f, 0.2f);
+		replayButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		nextLevelButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		nextLevelButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.5f, -0.3f, ModeType::RELATIVE);
+		nextLevelButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		nextLevelButton.getComponent<VisualComponent>()->setTexture("next_not_pressed");
+		nextLevelButton.getTransform()->setScale(0.2f, 0.2f);
+		nextLevelButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
+		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		starDisplay.getTransform()->setScale(1.02f, 0.38f);
+		if (stars == 3) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (stars == 2) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (stars == 1) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (stars == 0) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+
+		if (playerScore < AppData::getSus().HighScore(finishedLevelNumber) || AppData::getSus().HighScore(finishedLevelNumber) == 0) {
+			AppData::getSus().ChangeHighScore(finishedLevelNumber, playerScore);
+		}
+		if (nrOfStars > AppData::getSus().StarCount(finishedLevelNumber)) {
+			AppData::getSus().ChangeStars(finishedLevelNumber, nrOfStars);
+		}
+		AppData::getSus().Unlock(finishedLevelNumber + 1);
 	}
 
 	void ResultsScene::update([[maybe_unused]] float deltaT)
 	{
-		if (isFirstUpdate) {
-			DTL_INF("results scene -- click q to quit, r to play again, c to continue (next lvl)");
-			isFirstUpdate = false;
-			AppData::getSus().Unlock(finishedLevelNumber + 1);
-			
-		}
-
 		//quit
-		if (AppData::getInput().isKeyClicked("Q")) {
+		auto ptr = menuButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
 			AppData::getSceneManager().nextScene();
 		}
+		if (ptr->isHovered()) {
+			menuButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
+		}
+		else { menuButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
+
 
 		//play again
-		if (AppData::getInput().isKeyClicked("R")) {
+		ptr = replayButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
 			startLevel(finishedLevelNumber);
 		}
+		if (ptr->isHovered()) {
+			replayButton.getComponent<VisualComponent>()->setTexture("replay_pressed");
+		}
+		else { replayButton.getComponent<VisualComponent>()->setTexture("replay_not_pressed"); }
 
 		//next level
-
-		if (AppData::getInput().isKeyClicked("C")) {
+		ptr = nextLevelButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
 			startLevel(finishedLevelNumber + 1);
 		}
+		if (ptr->isHovered()) {
+			nextLevelButton.getComponent<VisualComponent>()->setTexture("next_pressed");
+		}
+		else { nextLevelButton.getComponent<VisualComponent>()->setTexture("next_not_pressed"); }
 
 
 	}
@@ -289,6 +446,7 @@ namespace golf {
 	void ResultsScene::render()
 	{
 		m_graphicsLayer.draw();
+		guiLayer.render();
 	}
 
 

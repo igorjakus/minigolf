@@ -72,6 +72,11 @@ namespace golf {
 		wallB.getTransform()->setPos(5.0f, 4.0f);
 		wallB.getTransform()->setScale(6.0f, 0.2f);
 
+		won = false;
+		score = 0;
+		scoreChanged = false;
+		stars = 3;
+
 	}
 
 	void LevelOneScene::update(float deltaT)
@@ -104,9 +109,24 @@ namespace golf {
 		}
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
-		
-		if (AppData::getInput().isKeyPressed("P")) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(3,1)));
+		//logika poziomu:
+		if (scoreChanged) {
+			scoreChanged = false;
+			score++;
+			//mozna uzaleznic gwiazdki od dowolnych tresholdów
+			if (score > 11) {
+				stars = 0;
+			}
+			if (score > 6) {
+				stars = 1;
+			}
+			if (score > 3) {
+				stars = 2;
+			}
+		}
+
+		if (AppData::getInput().isKeyPressed("P") || won) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score,stars,1)));
 			AppData::getSceneManager().nextScene();
 		}
 	}
@@ -166,6 +186,11 @@ namespace golf {
 		wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 		wallB.getTransform()->setPos(5.5f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 2.0f);
+
+		won = false;
+		score = 0;
+		scoreChanged = false;
+		stars = 3;
 
 	}
 
@@ -227,6 +252,27 @@ namespace golf {
 			moveUp = true;
 		}
 
+
+		//logika poziomu:
+		if (scoreChanged) {
+			scoreChanged = false;
+			score++;
+			//mozna uzaleznic gwiazdki od dowolnych tresholdów
+			if (score > 11) {
+				stars = 0;
+			}
+			if (score > 6) {
+				stars = 1;
+			}
+			if (score > 3) {
+				stars = 2;
+			}
+		}
+
+		if (AppData::getInput().isKeyPressed("P") || won) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 2)));
+			AppData::getSceneManager().nextScene();
+		}
 	}
 
 	void LevelTwoScene::render() {
@@ -281,6 +327,11 @@ namespace golf {
 		wallB.getTransform()->setPos(4.0f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 6.0f);
 
+
+		won = false;
+		score = 0;
+		scoreChanged = false;
+		stars = 3;
 	}
 
 	void LevelThreeScene::update(float deltaT)
@@ -316,7 +367,26 @@ namespace golf {
 		wallB.getTransform()->rot += deltaT * rotateSpeed;
 
 
+		//logika poziomu:
+		if (scoreChanged) {
+			scoreChanged = false;
+			score++;
+			//mozna uzaleznic gwiazdki od dowolnych tresholdów
+			if (score > 11) {
+				stars = 0;
+			}
+			if (score > 6) {
+				stars = 1;
+			}
+			if (score > 3) {
+				stars = 2;
+			}
+		}
 
+		if (AppData::getInput().isKeyPressed("P") || won) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 3)));
+			AppData::getSceneManager().nextScene();
+		}
 	}
 
 	void LevelThreeScene::render() {
@@ -391,7 +461,10 @@ namespace golf {
 
 		
 
-		
+		won = false;
+		score = 0;
+		scoreChanged = false;
+		stars = 3;
 
 	}
 
@@ -428,6 +501,28 @@ namespace golf {
 		wall1.getTransform()->rot -= deltaT * rotateSpeed1;
 		wall2.getTransform()->rot += deltaT * rotateSpeed1;
 		wall3.getTransform()->rot -= deltaT * rotateSpeed1;
+
+
+		//logika poziomu:
+		if (scoreChanged) {
+			scoreChanged = false;
+			score++;
+			//mozna uzaleznic gwiazdki od dowolnych tresholdów
+			if (score > 11) {
+				stars = 0;
+			}
+			if (score > 6) {
+				stars = 1;
+			}
+			if (score > 3) {
+				stars = 2;
+			}
+		}
+
+		if (AppData::getInput().isKeyPressed("P") || won) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 4)));
+			AppData::getSceneManager().nextScene();
+		}
 	}
 
 	void LevelFourScene::render() {
@@ -513,6 +608,12 @@ namespace golf {
 		q3.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 		q3.getTransform()->setPos(11.0f, 3.3f);
 		q3.getTransform()->setScale(1.0f, 2.0f);
+
+
+		won = false;
+		score = 0;
+		scoreChanged = false;
+		stars = 3;
 
 	}
 
@@ -604,6 +705,26 @@ namespace golf {
 			moveUp3 = true;
 		}
 
+		//logika poziomu:
+		if (scoreChanged) {
+			scoreChanged = false;
+			score++;
+			//mozna uzaleznic gwiazdki od dowolnych tresholdów
+			if (score > 11) {
+				stars = 0;
+			}
+			if (score > 6) {
+				stars = 1;
+			}
+			if (score > 3) {
+				stars = 2;
+			}
+		}
+
+		if (AppData::getInput().isKeyPressed("P") || won) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 5)));
+			AppData::getSceneManager().nextScene();
+		}
 	}
 
 	void LevelFiveScene::render() {

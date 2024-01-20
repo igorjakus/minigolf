@@ -44,13 +44,19 @@ namespace golf {
 		Entity lvlFourButton;
 		Entity lvlFiveButton;
 
+		Entity lvlOneStars;
+		Entity lvlTwoStars;
+		Entity lvlThreeStars;
+		Entity lvlFourStars;
+		Entity lvlFiveStars;
+
 	};
 
 
 
 	class ResultsScene : public Scene {
 	public:
-		ResultsScene(int score, int lvlNumber);
+		ResultsScene(int score,int stars, int lvlNumber);
 
 		void update(float deltaT) override;
 		void render() override;
@@ -59,7 +65,14 @@ namespace golf {
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
 		[[maybe_unused]] int playerScore;
+		int nrOfStars;
 		bool isFirstUpdate = true;
 		int finishedLevelNumber;
+
+		GUILayer guiLayer;
+		Entity menuButton;
+		Entity replayButton;
+		Entity nextLevelButton;
+		Entity starDisplay;
 	};
 }

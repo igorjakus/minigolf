@@ -30,7 +30,11 @@ namespace golf {
 		Entity frame3;
 		Entity frame4;
 		Entity pauseButton;
+
 		bool won;
+		int score;
+		bool scoreChanged;
+		int stars;
 	};
 
 	
@@ -59,6 +63,11 @@ namespace golf {
 		Entity frame3;
 		Entity frame4;
 		Entity pauseButton;
+
+		bool won;
+		int score;
+		bool scoreChanged;
+		int stars;
 	};
 
 	class LevelThreeScene : public Scene {
@@ -81,6 +90,11 @@ namespace golf {
 		Entity frame3;
 		Entity frame4;
 		Entity pauseButton;
+
+		bool won;
+		int score;
+		bool scoreChanged;
+		int stars;
 	};
 
 	class LevelFourScene : public Scene {
@@ -109,6 +123,11 @@ namespace golf {
 		Entity wall3;
 		Entity wall4;
 		Entity pauseButton;
+
+		bool won;
+		int score;
+		bool scoreChanged;
+		int stars;
 	};
 
 	class LevelFiveScene : public Scene {
@@ -147,6 +166,9 @@ namespace golf {
 		Entity q6;
 
 		bool won;
+		int score;
+		bool scoreChanged;
+		int stars;
 	};
 	
 	
