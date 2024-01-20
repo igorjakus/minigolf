@@ -96,7 +96,7 @@ namespace golf {
 		ptr = howToGolfButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new HowToGolfScene()));
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -511,6 +511,44 @@ namespace golf {
 		else { mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed"); }
 	}
 	void CreditsScene::render()
+	{
+		m_graphicsLayer.draw();
+		guiLayer.render();
+	}
+
+	HowToGolfScene::HowToGolfScene()
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
+
+		//===Tutorial Sheet:
+		tutorialSheet.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		tutorialSheet.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
+		tutorialSheet.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		tutorialSheet.getComponent<VisualComponent>()->setTexture("popcat");
+		tutorialSheet.getTransform()->setScale(2.1f, 2.1f);
+
+		//===main Menu button:
+		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		mainMenuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
+		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
+		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		glClearColor(0.0f, 0.0f, 0.0f, 255);
+	}
+	void HowToGolfScene::update([[maybe_unused]] float deltaT) {
+		auto ptr = mainMenuButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new MainMenu()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			mainMenuButton.getComponent<VisualComponent>()->setTexture("return_pressed");
+		}
+		else { mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed"); }
+	}
+	void HowToGolfScene::render()
 	{
 		m_graphicsLayer.draw();
 		guiLayer.render();

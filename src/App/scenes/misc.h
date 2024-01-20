@@ -93,5 +93,20 @@ namespace golf {
 		Entity mainMenuButton;
 	};
 
+	class HowToGolfScene : public Scene {
+	public:
+		HowToGolfScene();
 
+		void update(float deltaT) override;
+		void render() override;
+
+	private:
+		agl::Camera m_camera;
+		agl::GraphicLayer m_graphicsLayer;
+
+		GUILayer guiLayer;
+
+		Entity tutorialSheet;
+		Entity mainMenuButton;
+	};
 }
