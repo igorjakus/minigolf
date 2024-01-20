@@ -254,6 +254,7 @@ namespace golf {
 		const float tempX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 		const float tempY = static_cast<float>(AppData::getWindow().getWindowSize().y);
 		m_camera.setSize(tempX / tempY, 1.0f);
+
 	}
 
 	void ResultsScene::update([[maybe_unused]] float deltaT)
@@ -261,6 +262,8 @@ namespace golf {
 		if (isFirstUpdate) {
 			DTL_INF("results scene -- click q to quit, r to play again, c to continue (next lvl)");
 			isFirstUpdate = false;
+			AppData::getSus().Unlock(finishedLevelNumber + 1);
+			
 		}
 
 		//quit

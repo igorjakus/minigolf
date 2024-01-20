@@ -105,8 +105,9 @@ namespace golf {
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
 		
-		if (AppData::getInput().isKeyPressed("p")) {
-			
+		if (AppData::getInput().isKeyPressed("P")) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(3,1)));
+			AppData::getSceneManager().nextScene();
 		}
 	}
 
