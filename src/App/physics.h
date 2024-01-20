@@ -34,7 +34,6 @@ namespace golf {
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
 
-	private:
 		GML::Vec2f m_velocity;
 		GML::Vec2f m_acceleration;
 
@@ -57,7 +56,6 @@ namespace golf {
 		bool m_in_physics_scope;
 		void update_positions(float deltaT);   
 
-	private:
 		GML::Vec2f m_velocity;
 		GML::Vec2f m_acceleration;
 

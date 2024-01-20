@@ -32,6 +32,7 @@ PhysicsTestingScene::PhysicsTestingScene()
 	m_kot.addComponent<VisualComponent>(visual);
 	m_kot.getComponent<VisualComponent>()->setTexture("ballcat");
 	m_kot.getTransform()->setScale(0.1f);
+	m_kot.getTransform()->setPos(2.f,2.f);
 	
 	m_kot.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula,0.05f));
 
@@ -41,13 +42,15 @@ PhysicsTestingScene::PhysicsTestingScene()
 	visual = std::make_shared<VisualComponent>(&m_graphicsLayer);
 	m_kot2.addComponent<VisualComponent>(visual);
 	m_kot2.getComponent<VisualComponent>()->setTexture("popcat");
-	m_kot2.getTransform()->setScale(0.2f);
-	m_kot2.getTransform()->setPos(0.3f, 0.f);
+	m_kot2.getTransform()->setScale(0.3f,0.1f);
+	m_kot2.getTransform()->setPos(-0.5f, 0.f);
+	m_kot2.getTransform()->rot=45;
 	
 	m_kot2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box,0.f));
 
-	auto physics2 = Engine.addStaticElement();
-	m_kot2.addComponent<StaticPhysicsComponent>(physics2);
+	auto physics2 = Engine.addKinematicElement();
+	m_kot2.addComponent<KinematicPhysicsComponent>(physics2);
+	m_kot2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0,0,45.f};
 
 }
 

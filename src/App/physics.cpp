@@ -95,7 +95,9 @@ namespace golf {
 		const GML::Mat2f AntyRotBox = {std::cos(BoxRot),std::sin(BoxRot),-std::sin(BoxRot),std::cos(BoxRot)};
 		const GML::Mat2f RotBox = {std::cos(BoxRot),-std::sin(BoxRot),std::sin(BoxRot),std::cos(BoxRot)};
 		
-		GML::Vec2f newBallPos = AntyRotBox*GML::Vec2f(Ballx,Bally);
+		GML::Vec2f BoxPos = {Boxx,Boxy};
+
+		GML::Vec2f newBallPos = AntyRotBox*(GML::Vec2f(Ballx,Bally) - BoxPos) + BoxPos;
 		float closestX = util::clamp(newBallPos.x,Boxx - Boxxscale/2, Boxx + Boxxscale/2);
 		float closestY = util::clamp(newBallPos.y,Boxy - Boxyscale/2, Boxy + Boxyscale/2);
 		GML::Vec2f closest = {closestX,closestY};
@@ -106,12 +108,11 @@ namespace golf {
 
 		GML::Vec2f normalny = (closest - newBallPos).normalized();
 
-		closest = RotBox*closest;
+		closest = RotBox*(closest - BoxPos) + BoxPos;
 		normalny = RotBox*normalny;
 
 		ColideQue.emplace(A,B,closest,normalny,ruchanie);
 
-		DTL_ENT("Status siura: kolidowany");
 	}
 
 	Physics_Engine::Collision::Collision(std::shared_ptr<HitboxComponent> O1,std::shared_ptr<HitboxComponent> O2,
@@ -134,13 +135,30 @@ namespace golf {
 		
 		if(Owner1->hasComponent<DynamicPhysicsComponent>()){
 
+			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
+			Owner1->getTransform()->x += Wiemcoto.x;
+			Owner1->getTransform()->y += Wiemcoto.y;
+
 			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
-				
+				auto maciej = Owner2->getComponent<KinematicPhysicsComponent>();
+				GML::Vec2f Pos = {Owner2->getTransform()->x,Owner2->getTransform()->y};
+				float RelativeVelocity = (Owner1->getComponent<DynamicPhysicsComponent>()->m_velocity - (maciej->m_velocity + GML::Vec2f( GML::Vec3f( m_collidePoint - Pos )% maciej->m_angular_velocity ) ))*m_normalCollidePoint;
+				float odbijability = 0.5f; //0 - 1 im wyzej tym odbijablej
+				DTL_ENT("Status siura: kolidowany");
+				if(RelativeVelocity < 0) return; //to jest problem, za czesto sie uruchamia
+				Owner1->getComponent<DynamicPhysicsComponent>()->apply_impulse( GML::Vec3f(m_normalCollidePoint) * (-(1+odbijability) * RelativeVelocity * Owner1->getComponent<DynamicPhysicsComponent>()->m_mass)
+																				, GML::Vec3f(m_collidePoint) );
+
 			}
 
 			if(Owner2->hasComponent<StaticPhysicsComponent>()){
 
-				
+				float RelativeVelocity = Owner1->getComponent<DynamicPhysicsComponent>()->m_velocity*m_normalCollidePoint;
+				float odbijability = 0.5f; //0 - 1 im wyzej tym odbijablej
+				DTL_ENT("Status siura: kolidowany");
+				if(RelativeVelocity < 0) return; //to jest problem, za czesto sie uruchamia
+				Owner1->getComponent<DynamicPhysicsComponent>()->apply_impulse( GML::Vec3f(m_normalCollidePoint) * (-(1+odbijability) * RelativeVelocity * Owner1->getComponent<DynamicPhysicsComponent>()->m_mass)
+																				, GML::Vec3f(m_collidePoint) );
 
 			}
 
