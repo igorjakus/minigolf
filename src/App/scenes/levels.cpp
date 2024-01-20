@@ -104,7 +104,10 @@ namespace golf {
 		}
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
-	
+		
+		if (AppData::getInput().isKeyPressed("p")) {
+			
+		}
 	}
 
 	void LevelOneScene::render()
@@ -606,6 +609,7 @@ namespace golf {
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
+
 
 }
 

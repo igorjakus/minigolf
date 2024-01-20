@@ -19,10 +19,11 @@ namespace golf {
 
 		GUILayer guiLayer;
 		Entity playButton;
+		Entity howToGolfButton;
 		Entity creditsButton;
+		Entity exitButton;
 
 	};
-
 
 
 	class LevelSelectionScene : public Scene {

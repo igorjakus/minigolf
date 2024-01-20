@@ -36,13 +36,32 @@ namespace golf {
 		playButton.getTransform()->setScale(0.34f, 0.22f);
 		playButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		howToGolfButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		howToGolfButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.2f, ModeType::RELATIVE);
+		howToGolfButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		howToGolfButton.getComponent<VisualComponent>()->setTexture("how_to_golf_not_pressed");
+		howToGolfButton.getTransform()->setScale(0.43f, 0.11f);
+		howToGolfButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		creditsButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		creditsButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, -0.35f, ModeType::RELATIVE);
+		creditsButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		creditsButton.getComponent<VisualComponent>()->setTexture("credits_not_pressed");
+		creditsButton.getTransform()->setScale(0.28f, 0.11f);
+		creditsButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		exitButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		exitButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		exitButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		exitButton.getComponent<VisualComponent>()->setTexture("exit_not_pressed");
+		exitButton.getTransform()->setScale(0.12f, 0.12f);
+		exitButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
 	}
 	void MainMenu::update([[maybe_unused]] float deltaT) {
 
 		auto ptr = playButton.getComponent<ButtonComponent>();
 		ptr->update();
-
-
 		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
 			AppData::getSceneManager().nextScene();
@@ -51,6 +70,38 @@ namespace golf {
 			playButton.getComponent<VisualComponent>()->setTexture("play_pressed");
 		}
 		else { playButton.getComponent<VisualComponent>()->setTexture("play_not_pressed"); }
+
+		ptr = howToGolfButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			howToGolfButton.getComponent<VisualComponent>()->setTexture("how_to_golf_pressed");
+		}
+		else { howToGolfButton.getComponent<VisualComponent>()->setTexture("how_to_golf_not_pressed"); }
+
+		ptr = creditsButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			creditsButton.getComponent<VisualComponent>()->setTexture("credits_pressed");
+		}
+		else { creditsButton.getComponent<VisualComponent>()->setTexture("credits_not_pressed"); }
+
+		ptr = exitButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
+			AppData::getWindow().close();
+		}
+		if (ptr->isHovered()) {
+			exitButton.getComponent<VisualComponent>()->setTexture("exit_pressed");
+		}
+		else { exitButton.getComponent<VisualComponent>()->setTexture("exit_not_pressed"); }
 		
 	}
 	void MainMenu::render()
