@@ -2,7 +2,7 @@
 add_subdirectory(AGL-Deps/GLAD)	
 add_subdirectory(AGL-Deps/GLFW)	
 add_subdirectory(AGL-Deps/glm)	
-add_subdirectory(AGL-Deps/stb)	
+add_subdirectory(AGL-Deps/stb)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
 add_subdirectory(AGL-Deps/ImGui)	
 endif()
@@ -10,6 +10,10 @@ endif()
 include_directories(AGL-Deps)
 include_directories(AGL-Deps/GLFW/include)
 include_directories(AGL-Deps/GLAD/include)
+
+# Audio dependencies:
+add_subdirectory(Audio-Deps/miniaudio)
+include_directories(Audio-Deps/miniaudio)
 
 # Precompiled headers:
 include_directories(pch)
@@ -28,7 +32,7 @@ add_subdirectory(App)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE pch/pch.h)
 target_precompile_headers(lib_agl PRIVATE pch/pch.h)
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw glad stb lib_agl lib_dtl)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw glad stb lib_agl lib_dtl miniaudio)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE imgui)
 endif()
