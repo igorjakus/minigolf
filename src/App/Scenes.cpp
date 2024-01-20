@@ -42,15 +42,12 @@ BlankScene::BlankScene()
 	// chyba sie zrobi dwa soundEngine gdzie jeden będzie mial w tle muzyke a drugi dzwieki przy zderzeniach itp
 	// bede sie inspirowal tym https://miniaud.io/docs/examples/engine_advanced.html
 	ma_engine soundEngine;
-	initSoundEngine(&soundEngine);
+	initSoundEngine(&soundEngine, 0.2f);
 
 	ma_sound neon;
-	loadSound(&neon, "assets/audio/neon.wav", &soundEngine);
+	loadSound(&neon, "assets/audio/neon.wav", &soundEngine, 0.5f);
 
 	playSound(&neon);
-	// ma_engine_play_sound(&soundEngine, "assets/audio/neon.wav", NULL);
-
-	getchar();
 
 	uninitSoundEngine(&soundEngine);
 	
