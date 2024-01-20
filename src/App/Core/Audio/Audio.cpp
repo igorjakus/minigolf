@@ -52,7 +52,9 @@ namespace golf {
         // Failed to initialize the engine
         if (result != MA_SUCCESS)
             DTL_ERR("Failed to initialize the engine!");
-
+        else {
+            DTL_ERR("Loaded {0}", 1);
+        }
         ma_engine_set_volume(engine, volume);
     }
 
@@ -70,6 +72,7 @@ namespace golf {
         while (true); // XD
     }
 
+
     void Audio::playSoundInLoop(ma_sound* sound) {
         ma_sound_set_looping(sound, true);
         ma_sound_start(sound);
@@ -81,4 +84,9 @@ namespace golf {
             już z odpowiednimi ustawieniami
         */
     }
+
+    ma_sound* Audio::GetSound(int nr) {
+        return music[nr].get();
+    }
+    
 }

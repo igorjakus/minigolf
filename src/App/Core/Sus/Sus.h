@@ -1,6 +1,7 @@
 #pragma once
 #include"Agl.h"
 
+
 namespace golf {
 
 	class Sus {
@@ -71,9 +72,7 @@ namespace golf {
 
 		//TO DO: zapis zmieniony przy koñcu programu
 
-		//=====[Audio (Igor :3)]
-		void LoadAllAudio();
-
+		//=====[Audio (Igor -_-)]
 
 		//===========
 	private:
@@ -84,6 +83,7 @@ namespace golf {
 		std::map<std::string, agl::Animation> m_Animations;
 
 		std::map<int, Sus::LevelData> m_Levels;
+
 
 	};
 

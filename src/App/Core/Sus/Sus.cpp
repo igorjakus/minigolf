@@ -284,7 +284,8 @@ namespace golf
 	}
 
 	//=======[Audio]=============
-	void Sus::LoadAllAudio() {}
+	
+	
 }
 
 //NOLINTEND

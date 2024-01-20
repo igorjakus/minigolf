@@ -7,6 +7,7 @@
 #include<ImGui.h>
 #include<glm/glm.hpp>
 #include<vector>
+#include "miniaudio.h"
 #include<queue>
 
 #define Object Quad

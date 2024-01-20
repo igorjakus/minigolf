@@ -23,6 +23,12 @@ namespace golf {
 		// Play sound forever
 		void playSoundInLoop(ma_sound* sound);
 
+
+		//SUS:
+
+		ma_sound* GetSound(int nr);
+		void playSound2(std::shared_ptr<ma_sound> sound);
+
 	private:
 		ma_engine musicEngine;
 		ma_engine soundEventEngine;
