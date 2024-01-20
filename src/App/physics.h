@@ -1,10 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <scoped_allocator>
-#include <vector>
-#include <queue>
-
 #include "ECS/Entity.h"
 #include "ECS/Component.h"
 #include "GML/LinearAlgebra/Vec2f.h"
@@ -28,10 +23,9 @@ namespace golf {
 	class SurfaceComponent : public Component{
 	public:
 		float kineticFrict;
-		float staticFrict;
 		float rollingResitance;
 
-		SurfaceComponent(float,float,float);
+		SurfaceComponent(float,float);
 
 	};
 
@@ -41,6 +35,8 @@ namespace golf {
 		bool m_in_physics_scope;
 		void apply_force(GML::Vec3f force, GML::Vec3f apply_point);   //zmienia acceleration
 		void apply_impulse(GML::Vec3f impulse, GML::Vec3f apply_point); //zmienia velocity
+		void apply_torque(GML::Vec3f torque);
+		void apply_torque_impulse(GML::Vec3f torque);
 		void update_positions(float deltaT,std::vector<std::shared_ptr<SurfaceComponent>> &Surfaces);  
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);

@@ -60,19 +60,22 @@ PhysicsTestingScene::PhysicsTestingScene()
 void PhysicsTestingScene::update([[maybe_unused]]float deltaT) {
 	
 	if (AppData::getInput().isKeyClicked("UP")) {
-		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,0.01f,0},{0,0,0});
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,0.01f,0},{0,0,0.05f});
 	}
 	if (AppData::getInput().isKeyClicked("DOWN")) {
 		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0,-0.01f,0},{0,0,0});
-		
 	}
 	if (AppData::getInput().isKeyClicked("LEFT")) {
 		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({-0.01f,0,0},{0,0,0});
-		
 	}
 	if (AppData::getInput().isKeyClicked("RIGHT")) {
 		m_kot.getComponent<DynamicPhysicsComponent>()->apply_impulse({0.01f,0,0},{0,0,0});
-		
+	}
+	if (AppData::getInput().isKeyClicked("Q")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_torque_impulse({ 0,0,0.001f });
+	}
+	if (AppData::getInput().isKeyClicked("E")) {
+		m_kot.getComponent<DynamicPhysicsComponent>()->apply_torque_impulse({ 0,0,-0.001f });
 	}
 
 	if(AppData::getInput().isLeftMousePressed()) {

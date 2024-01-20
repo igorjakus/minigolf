@@ -1,13 +1,11 @@
-#include <memory>
 #include <pch.h>
-#include <dtl.h>
 
-#include <utility>
-#include <vector>
 #include "physics.h"
 
 #include "Util.hpp"
 #include "GML/Constants.h"
+
+#include <dtl.h>
 
 namespace golf {
 
@@ -15,8 +13,8 @@ namespace golf {
 	HitboxComponent::HitboxComponent(HitboxComponent::Typ tego_typu ,float radius = 0) 
 		: m_Typ_obiektu(tego_typu), m_radius(radius) {}
 
-	SurfaceComponent::SurfaceComponent(float a,float b,float c)
-		: kineticFrict(a), staticFrict(b), rollingResitance(c) {}
+	SurfaceComponent::SurfaceComponent(float a,float c)
+		: kineticFrict(a), rollingResitance(c) {}
 		
 	
 
@@ -153,7 +151,7 @@ namespace golf {
 			Owner1->getTransform()->y += Wiemcoto.y;
 
 			const float odbijability = 0.7f; //0 - 1 im wyzej tym odbijablej
-			const float tarcielity = 0.2f;
+			const float tarcielity = 0.1f;
 
 			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
 				auto CircleComp = Owner1->getComponent<DynamicPhysicsComponent>();
@@ -177,8 +175,10 @@ namespace golf {
 				GML::Vec3f impulse = static_cast<GML::Vec3f>(m_normalCollidePoint) * impulseStrenght;
 				CircleComp->apply_impulse(impulse, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
 
-				GML::Vec3f tarcie = (GML::Vec3f(m_normalCollidePoint.y, -m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
+				GML::Vec3f tarcie = (GML::Vec3f(-m_normalCollidePoint.y, m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
 				CircleComp->apply_impulse(tarcie, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
+
+				DTL_ERR("Boing");
 			}
 
 			if(Owner2->hasComponent<StaticPhysicsComponent>()){
@@ -213,85 +213,88 @@ namespace golf {
 		m_net_force += static_cast<GML::Vec2f>(force)  ;
 		m_net_torque += GML::Vec3f::crossProduct(apply_point,force);
 	}
-
 	void DynamicPhysicsComponent::apply_impulse(GML::Vec3f impulse, GML::Vec3f apply_point){ //zmienia velocity
 		m_velocity += static_cast<GML::Vec2f>(impulse) * (1/m_mass);
-		m_angular_velocity += GML::Vec3f::crossProduct(impulse,apply_point)*(1/m_inertia);
+		m_angular_velocity += GML::Vec3f::crossProduct(apply_point,impulse)/m_inertia;
 	}
-	void DynamicPhysicsComponent::update_positions(float deltaT,std::vector<std::shared_ptr<SurfaceComponent>> &Surfaces){                          //apply net_force and net_torque i zeruj
+	void DynamicPhysicsComponent::apply_torque(GML::Vec3f torque) {
+		m_net_torque += torque;
+	}
+	void DynamicPhysicsComponent::apply_torque_impulse(GML::Vec3f torque) {
+		m_angular_velocity += torque / m_inertia;
+	}
+
+	void DynamicPhysicsComponent::update_positions(float deltaT, std::vector<std::shared_ptr<SurfaceComponent>>& Surfaces) {                          //apply net_force and net_torque i zeruj
 		//float& x = getTransform()->x;
 		//float& y = getTransform()->y;
-		auto[x, y] = getTransform()->getPos();
-		
+		auto [x, y] = getTransform()->getPos();
+		m_position.set(x, y);
+
 		//get rotation
 		float rotation = getTransform()->rot * GML::F_DEG_TO_RAD;
-
-		auto Hitbox = getOwner()->getComponent<HitboxComponent>();
-		float radius = 0;
-		if(Hitbox){
-			radius = Hitbox->m_radius;
-		}
-
-		m_position.set(x,y);
-
-		[[maybe_unused]]float kineticFrict = 0.1f;
-		[[maybe_unused]]float staticFrict = 0.15f;
-		[[maybe_unused]]float rollingResitance = 0.05f;
-
-		for(auto &ref : Surfaces){
-
-			float xScale = ref->getOwner()->getTransform()->xScale/2, yScale=ref->getOwner()->getTransform()->yScale/2;
-			float xSurf = ref->getOwner()->getTransform()->x, ySurf = ref->getOwner()->getTransform()->y;
-			float rotSurf = ref->getOwner()->getTransform()->rot;
-
-			GML::Mat2f AntyRotSurf = {std::cos(rotSurf),std::sin(rotSurf),-std::sin(rotSurf),std::cos(rotSurf)};
-
-			GML::Vec2f newPoint = AntyRotSurf*(m_position - GML::Vec2f(xSurf,ySurf)) + GML::Vec2f(xSurf,ySurf);
-
-			if( xSurf - xScale < newPoint.x && newPoint.x < xSurf + xScale && ySurf - yScale < newPoint.y && newPoint.y < ySurf + yScale ){
-				//koliduje z powierzchnia
-				kineticFrict = ref->kineticFrict;
-				staticFrict = ref->staticFrict;
-				rollingResitance = ref->rollingResitance;
-				break;
-			}
-
-		}
-
-		const float Gravity = 9.81f;
-		GML::Vec3f rollingResForce = {0,0,0};
-
-		if(m_velocity.getLength() > 0){
-			rollingResForce  = -1*(static_cast<GML::Vec3f>(m_velocity.normalized())) * m_mass * Gravity * rollingResitance * radius;
-		}
-
-		GML::Vec2f contactPointVel = m_velocity + static_cast<GML::Vec2f>( GML::Vec3f(0,0,-radius) % m_angular_velocity);
-		GML::Vec3f friction;
-		if(contactPointVel.getLength() < 0.001f){ //mało
-			friction = -1*(static_cast<GML::Vec3f>(m_net_force) + rollingResForce);
-			if(friction.getLength() > m_mass*Gravity*staticFrict ){
-				friction = {0,0,0};
-			}
-		}
-		else{
-			friction = (static_cast<GML::Vec3f>(contactPointVel.normalized())) * m_mass * Gravity * kineticFrict;
-		}
-		
-		apply_force(rollingResForce, {0,0,0});
-		apply_force(friction, {0,0,-radius});
-
-
 		//aktualnie rotacja skosna nie jest przechowywana w transformie, trzeba to zmienic //rotacja skośna nie będzie przechowywana w transformie xD
 		m_rotation.z = rotation; //to be changed
 
-		m_acceleration = m_net_force / m_mass; //!Czm tu jest += a nie = ?
-		m_velocity += m_acceleration * deltaT; //!Wzór na przyspieszenie chwilowe
+		auto Hitbox = getOwner()->getComponent<HitboxComponent>();
+		float radius = 0;
+		if (Hitbox) {
+			radius = Hitbox->m_radius;
+		}
+
+		[[maybe_unused]] float kineticFrict = 0.1f;
+		[[maybe_unused]] float rollingResitance = 0.01f;
+
+		for (auto& ref : Surfaces) {
+			float xScale = ref->getOwner()->getTransform()->xScale / 2, yScale = ref->getOwner()->getTransform()->yScale / 2;
+			float xSurf = ref->getOwner()->getTransform()->x, ySurf = ref->getOwner()->getTransform()->y;
+			float rotSurf = ref->getOwner()->getTransform()->rot;
+
+			GML::Mat2f AntyRotSurf = { std::cos(rotSurf),std::sin(rotSurf),-std::sin(rotSurf),std::cos(rotSurf) };
+
+			GML::Vec2f newPoint = AntyRotSurf * (m_position - GML::Vec2f(xSurf, ySurf)) + GML::Vec2f(xSurf, ySurf);
+
+			if (xSurf - xScale < newPoint.x && newPoint.x < xSurf + xScale && ySurf - yScale < newPoint.y && newPoint.y < ySurf + yScale) {
+				//koliduje z powierzchnia
+				kineticFrict = ref->kineticFrict;
+				rollingResitance = ref->rollingResitance;
+				break;
+			}
+		}
+
+		//GML::Vec3f rollingResForce = {0,0,0};
+
+		//if(m_velocity.getLength() > 0){
+		//	rollingResForce  = -1*(static_cast<GML::Vec3f>(m_velocity.normalized())) * m_mass * Gravity * rollingResitance * radius;
+		//}
+
+		//GML::Vec2f contactPointVel = (m_velocity + static_cast<GML::Vec2f>( GML::Vec3f(0,0,-radius) % m_angular_velocity)) * -1;
+		//GML::Vec3f friction;
+		//if(contactPointVel.getLength() < 0.001f){ //mało
+		//	friction = (static_cast<GML::Vec3f>(m_net_force) + rollingResForce);
+		//	if(friction.getLength() > m_mass*Gravity*staticFrict ){
+		//		friction = {0,0,0};
+		//	}
+		//}
+		//else{
+		//	friction = (static_cast<GML::Vec3f>(contactPointVel.normalized())) * m_mass * Gravity * kineticFrict * -1;
+		//}
+		//DTL_WAR("{0} {0} {0}", friction.x, friction.y, friction.z);
+		//
+		//DTL_WAR("{0}", static_cast<GML::Vec2f>(GML::Vec3f(0, 0, -radius) % m_angular_velocity));
+		//
+		//apply_force(rollingResForce, {0,0,0});
+		//apply_force(friction, {0,0,-radius});
+
+
+
+		m_acceleration = m_net_force / m_mass;
+		m_velocity += m_acceleration * deltaT;
 		m_position += m_velocity * deltaT;
 
-		m_angular_acceleration = m_net_torque *(1/ m_inertia);
+		m_angular_acceleration = m_net_torque / m_inertia;
 		m_angular_velocity += m_angular_acceleration * deltaT;
 		m_rotation += m_angular_velocity * deltaT;
-		
+
 		m_rotation.x = (m_rotation.x > GML::F_2_PI) ? m_rotation.x - GML::F_2_PI : m_rotation.x;
 		m_rotation.y = (m_rotation.x > GML::F_2_PI) ? m_rotation.y - GML::F_2_PI : m_rotation.y;
 		m_rotation.z = (m_rotation.x > GML::F_2_PI) ? m_rotation.z - GML::F_2_PI : m_rotation.z;
@@ -302,11 +305,60 @@ namespace golf {
 
 		x = m_position.x;
 		y = m_position.y;
-		//set rotation
-		
-		rotation = m_rotation.z; //to be changed!!!
 
-		getTransform()->rot = rotation*GML::F_RAD_TO_DEG;
+		//set rotation
+		rotation = m_rotation.z; //to be changed!!!
+		getTransform()->rot = rotation * GML::F_RAD_TO_DEG;
+
+		////////////////////
+		// Frictions here:
+		////////////////////
+
+		const float gravity = 9.81f;
+
+		// Spinning in Z-axis
+		if (m_angular_velocity.z != 0) {
+			float direction = m_angular_velocity.z / abs(m_angular_velocity.z);
+			float spinningDamping = 2.5f * rollingResitance * gravity / radius * deltaT * direction;
+			if (abs(spinningDamping) >= abs(m_angular_velocity.z)) {
+				m_angular_velocity.z = 0;
+			} else {
+				m_angular_velocity.z -= spinningDamping;
+			}
+		}
+
+		GML::Vec2f contactPointVel = (m_velocity + static_cast<GML::Vec2f>(GML::Vec3f(0, 0, -radius) % m_angular_velocity));
+
+		if(contactPointVel.getLengthSquared() > 0) {
+			float linearDamping = kineticFrict * gravity * deltaT;
+			m_velocity -= linearDamping * contactPointVel / contactPointVel.getLength();
+			float rollDamping = 2.5f * linearDamping / radius;
+			GML::Vec2f delta = contactPointVel.normalized() * rollDamping;
+			float tanDelta = -1 * delta * static_cast<GML::Vec2f>(m_angular_velocity).normalized();
+			GML::Vec2f perp = delta + tanDelta * static_cast<GML::Vec2f>(m_angular_velocity).normalized();
+			
+			if (tanDelta > static_cast<GML::Vec2f>(m_angular_velocity).getLength()) {
+				tanDelta = static_cast<GML::Vec2f>(m_angular_velocity).getLength();
+			}
+			GML::Vec2f tan = static_cast<GML::Vec2f>(m_angular_velocity).normalized() * tanDelta * -1;
+
+			m_angular_velocity += static_cast<GML::Vec3f>(tan + perp);
+
+		} else if (m_velocity.getLengthSquared() > 0) {
+			float linearDamping = rollingResitance * gravity * deltaT;
+			if (linearDamping >= m_velocity.getLength()) {
+				m_velocity = { 0, 0 };
+				m_angular_velocity.x = 0;
+				m_angular_velocity.y = 0;
+			} else {
+				m_velocity -= linearDamping * m_velocity / m_velocity.getLength();
+				m_angular_velocity.x = (GML::Vec3f(0,0,-1) % static_cast<GML::Vec3f>(m_velocity)).x;
+				m_angular_velocity.y = (GML::Vec3f(0,0,-1) % static_cast<GML::Vec3f>(m_velocity)).y;
+			}
+		}
+
+		DTL_WAR("{0}", contactPointVel);
+
 
 		DTL_ENT("{0} {0} {0}",m_angular_velocity.x,m_angular_velocity.y,m_angular_velocity.z);
 
