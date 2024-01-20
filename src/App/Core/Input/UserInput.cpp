@@ -201,13 +201,13 @@ float Input::getMouseWorldOffsetY(agl::Camera& camera) const {
 //NOLINTBEGIN
 //TODO: Custom cursor support
 void Input::setCustomCursor() {
-	unsigned char pixels[16 * 16 * 4];
-	memset(pixels, 0xff, sizeof(pixels));
-
+	std::string temp_str = "assets/textures/cursor.png";
+	int x = 64; int y = 64; int b = 0;
+	uint8_t* data = stbi_load(temp_str.c_str(), &x,&y,&b,4);
 	GLFWimage image;
-	image.width = 16;
-	image.height = 16;
-	image.pixels = pixels;
+	image.width = x;
+	image.height = y;
+	image.pixels = data;
 
 	m_customCursor = glfwCreateCursor(&image, 0, 0);
 	glfwSetCursor(m_window, m_customCursor);
