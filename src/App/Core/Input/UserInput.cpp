@@ -1,4 +1,6 @@
 #include <pch.h>
+
+#include <utility>
 #include "UserInput.h"
 #include "../AppData.h"
 
@@ -226,24 +228,26 @@ bool Input::isFocused() const {
 ///				Camera resize control
 //////////////////////////////////////////////
 
+Input::CameraSet::CameraSet(std::shared_ptr<Scene> scene) : owner(std::move(scene)) {}
+
 void Input::attachCamera(agl::Camera* camera, float constvalue, bool dynamic) {
-	m_cameras.push_front({camera, constvalue, dynamic});
-	m_camerasCounts.front() += 1;
+	m_cameraSets.back().cameras.push_back({camera, constvalue, dynamic});
 	const float screenX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float screenY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	m_cameras.front().updateSize(screenX, screenY);
+	m_cameraSets.back().cameras.front().updateSize(screenX, screenY);
 }
 
-void Input::resetCameras() {
-	size_t toErase = m_camerasCounts.back();
-	for (size_t index = toErase; index > 0; index--) {
-		m_cameras.pop_back();
+void Input::changeCameraSet(const std::shared_ptr<Scene>& scene) {
+	m_cameraSets.erase(m_currentCameraSet);
+	for(m_currentCameraSet = m_cameraSets.begin(); m_currentCameraSet != m_cameraSets.end(); m_currentCameraSet++) {
+		if(scene.get() == m_currentCameraSet->owner.get()) {
+			break;
+		}
 	}
-	m_camerasCounts.pop_back();
 }
 
-void Input::newScene() {
-	m_camerasCounts.push_front(0);
+void Input::newScene(std::shared_ptr<Scene> scene) {
+	m_cameraSets.emplace_back(scene);
 }
 
 //////////////////////////////////////////////
@@ -297,7 +301,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 //
 // }
 void Input::s_resizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height) { //NOLINT
-	for(auto& cam : s_instance->m_cameras) {
+	for(auto& cam : s_instance->m_currentCameraSet->cameras) {
 		cam.updateSize(static_cast<float>(width), static_cast<float>(height));
 	}
 }
@@ -314,8 +318,7 @@ Input::Input()
 :m_window(nullptr), m_customCursor(nullptr) {
 	s_instance = this;
 	setKeys();
-	m_camerasCounts.push_front(0);
-	m_camerasCounts.push_front(0);
+	m_cameraSets.emplace_back(nullptr);
 }
 
 Input::~Input() {
