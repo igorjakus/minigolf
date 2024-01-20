@@ -1,7 +1,6 @@
 #include "Audio.h"
 #include "dtl.h" // for printing errors
 #include <string> // std::string
-// #include <thread> // playing audio is gonna be on another thread
 
 
 namespace golf {
@@ -27,6 +26,13 @@ namespace golf {
             std::string filePath = "assets/audio/" + soundFile + ".mp3";
             loadSound(sounds.back().get(), filePath, &soundEventEngine);
         }
+
+        // ZAPEWNE SIE WYKRZACZY POTEM TO
+        std::thread musicThread([&]() {
+            playMusic();
+            });
+        // UWAGA UWAGA
+        musicThread.detach();
     }
 
     Audio::~Audio() {
@@ -39,6 +45,8 @@ namespace golf {
             ma_sound_uninit(m.get());
         for (auto s : sounds)
             ma_sound_uninit(s.get());
+
+        // pewnie trzeba isMusicPlaying dac na false ale jakimis lockami pilnowac zeby sie nie wykrzaczylo
         
         // console info
         DTL_INF("Audio engine and sounds objects terminated successfully");
@@ -65,14 +73,14 @@ namespace golf {
         // ma_sound_set_volume(sound, volume); MOŻEMY TO ZMIENIĆ GDYBY PEWNE DŹWIĘKI BYŁY ROZJECHANE W GŁOŚNOŚCI
     }
 
-    void Audio::playSound(ma_sound* sound) {
-        ma_sound_start(sound);
+    void Audio::playSound(int number) {
+        ma_sound_start(music[number].get());
         while (true); // XD
     }
 
-    void Audio::playSoundInLoop(ma_sound* sound) {
-        ma_sound_set_looping(sound, true);
-        ma_sound_start(sound);
+    void Audio::playSoundInLoop(int number) {
+        ma_sound_set_looping(music[number].get(), true);
+        ma_sound_start(music[number].get());
         while (true); // XD
         /* cały dźwięk będzie na osobnym wątku ale nie wiem jeszcze
             jak rozwiązać problem ze zmianą głośności w czasie trwania programu
@@ -80,5 +88,17 @@ namespace golf {
             a następnie wznawiany przy wyjściu z ustawień,
             już z odpowiednimi ustawieniami
         */
+    }
+
+    void Audio::playMusic() {
+        int nr = 1;
+        while (isMusicPlaying) {
+            if((!ma_sound_is_playing(getSound(nr))))
+                ma_sound_start(getSound(nr));
+        }
+    }
+
+    ma_sound* Audio::getSound(int number) {
+        return music[number].get();
     }
 }

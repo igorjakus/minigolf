@@ -3,6 +3,7 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include <vector>
+#include <thread> // playing audio is gonna be on another thread
 
 namespace golf {
 
@@ -18,12 +19,18 @@ namespace golf {
 		void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine);
 
 		// Play sound once
-		void playSound(ma_sound* sound);
+		void playSound(int number);
 
 		// Play sound forever
-		void playSoundInLoop(ma_sound* sound);
+		void playSoundInLoop(int number);
+
+		void playMusic();
+
+		ma_sound* getSound(int number);
 
 	private:
+		bool isMusicPlaying;
+
 		ma_engine musicEngine;
 		ma_engine soundEventEngine;
 

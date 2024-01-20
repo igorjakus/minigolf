@@ -31,7 +31,7 @@ BlankScene::BlankScene()
 	m_kot.getTransform()->setScale(0.5f);
 	// m_kot.getTransform()->xScale = 0.8f;
 	// m_kot.getTransform()->yScale = 0.3f;
-
+	//AppData::getAudio().playSound(1);
 }
 
 void BlankScene::update(float deltaT) {
