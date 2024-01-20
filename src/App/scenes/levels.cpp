@@ -4,6 +4,9 @@
 #include "../Core/AppData.h"
 #include "misc.h"
 
+#include "Util/GML/LinearAlgebra/Vec3f.h"
+#include "Util/GML/LinearAlgebra/Vec2f.h"
+#include "Util/Util.hpp"
 
 namespace golf {
 
@@ -84,6 +87,11 @@ namespace golf {
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
+		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		hole.getComponent<VisualComponent>()->setTexture("sponge");
+		hole.getTransform()->setPos(7.0f, 5.0f);
+		hole.getTransform()->setScale(0.5f);
+
 		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ball.getComponent<VisualComponent>()->setTexture("ballcat");
 		ball.getTransform()->setPos(1.0f, 1.0f);
@@ -93,16 +101,6 @@ namespace golf {
 		ball.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.005f;
 		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.15f));
 		ball.addComponent<ButtonComponent>(ButtonComponent::create(m_camera));
-
-		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		ball.getComponent<VisualComponent>()->setTexture("sponge");
-		ball.getTransform()->setPos(7.0f, 5.0f);
-		ball.getTransform()->setScale(0.5f);
-
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
 
 	}
 
@@ -140,11 +138,29 @@ namespace golf {
 			auto [x, y] = AppData::getInput().getMouseWorldOffset(m_camera);
 			ball.getComponent<DynamicPhysicsComponent>()->apply_impulse({ -x,-y,0 }, {0, 0, 0});
 			ball.getComponent<ButtonComponent>()->update();
+			score++;
 		} else {
 			AppData::getInput().setMousePosLock(false);
 		}
 
-		
+		{
+			float ballX = ball.getTransform()->x;
+			float ballY = ball.getTransform()->y;
+			float holeX = hole.getTransform()->x;
+			float holeY = hole.getTransform()->y;
+			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
+			uchar color = 255;
+			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, {0, 0, 0});
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
+				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
+				color = static_cast<uchar>(util::clamp(col, 0, 255));
+				if (col < 0 && ball.getComponent<DynamicPhysicsComponent>()->m_velocity.getLength() < 0.03f) {
+					won = true;
+				}
+			}
+			ball.getComponent<VisualComponent>()->setColor(255, 255, 255, color);
+		}
 
 		physics.update(deltaT);
 
@@ -159,23 +175,17 @@ namespace golf {
 		}
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
-		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
-			//mozna uzaleznic gwiazdki od dowolnych tresholdów
+		// Logika zakonczenia poziomu
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			if (score > 11) {
 				stars = 0;
 			}
-			if (score > 6) {
+			else if (score > 6) {
 				stars = 1;
 			}
-			if (score > 3) {
+			else if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score,stars,1)));
 			AppData::getSceneManager().nextScene();
 		}

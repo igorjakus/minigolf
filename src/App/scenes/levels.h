@@ -38,10 +38,9 @@ namespace golf {
 
 		Entity pauseButton;
 
-		bool won;
-		int score;
-		bool scoreChanged;
-		int stars;
+		bool won = false;
+		int score = 0;
+		int stars = 3;
 	};
 
 	
