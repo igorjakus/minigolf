@@ -97,7 +97,7 @@ namespace golf {
 		ptr = creditsButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new CreditsScene()));
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -257,14 +257,18 @@ namespace golf {
 		}
 		lvlFiveStars.getTransform()->setScale(0.295f, 0.095f);
 
+		//===main Menu button:
+		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		mainMenuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
+		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
+		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
 	}
 
 	void LevelSelectionScene::update([[maybe_unused]] float deltaT)
 	{
-
-
-
-
 		auto ptr = lvlOneButton.getComponent<ButtonComponent>();
 		ptr->update();
 		
@@ -339,6 +343,20 @@ namespace golf {
 			}
 		}
 		else { lvlFiveButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
+
+		ptr = mainMenuButton.getComponent<ButtonComponent>();
+		ptr->update();
+
+		if (ptr->isHovered()) {
+			mainMenuButton.getComponent<VisualComponent>()->setTexture("return_pressed");
+		}
+		else { mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed"); }
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new MainMenu()));
+			AppData::getSceneManager().nextScene();
+			return;
+		}
+		
 
 	}
 
@@ -449,5 +467,39 @@ namespace golf {
 		guiLayer.render();
 	}
 
+	CreditsScene::CreditsScene() 
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 
+		//===Credits Sheet:
+		creditsSheet.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		creditsSheet.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
+		creditsSheet.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		creditsSheet.getComponent<VisualComponent>()->setTexture("credits");
+		creditsSheet.getTransform()->setScale(0.9f, 0.9f);
+
+		//===main Menu button:
+		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		mainMenuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
+		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
+		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+	}
+	void CreditsScene::update([[maybe_unused]] float deltaT) {
+		auto ptr = mainMenuButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
+			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new MainMenu()));
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			mainMenuButton.getComponent<VisualComponent>()->setTexture("return_pressed");
+		}
+		else { mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed"); }
+	}
+	void CreditsScene::render()
+	{
+		m_graphicsLayer.draw();
+		guiLayer.render();
+	}
 }

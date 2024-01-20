@@ -50,9 +50,8 @@ namespace golf {
 		Entity lvlFourStars;
 		Entity lvlFiveStars;
 
+		Entity mainMenuButton;
 	};
-
-
 
 	class ResultsScene : public Scene {
 	public:
@@ -75,4 +74,23 @@ namespace golf {
 		Entity nextLevelButton;
 		Entity starDisplay;
 	};
+
+	class CreditsScene : public Scene {
+	public:
+		CreditsScene();
+
+		void update(float deltaT) override;
+		void render() override;
+
+	private:
+		agl::Camera m_camera;
+		agl::GraphicLayer m_graphicsLayer;
+
+		GUILayer guiLayer;
+
+		Entity creditsSheet;
+		Entity mainMenuButton;
+	};
+
+
 }
