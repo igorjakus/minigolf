@@ -12,6 +12,9 @@ public:
 	void update(float deltaT);
 	void follow(float xPos, float yPos);
 
+	void lock(float x, float y, float zoom);
+	void unlock();
+
 private:
 	GUILayer m_gui;
 	agl::Camera* m_camera;
@@ -35,6 +38,11 @@ private:
 	float xFollow = 0;
 	float yFollow = 0;
 	bool m_follow = false;
+
+	float m_lockedX = 0.f;
+	float m_lockedY = 0.f;
+	float m_lockedZoom = 1.f;
+	bool m_locked = false;
 
 };
 

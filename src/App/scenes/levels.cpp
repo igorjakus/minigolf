@@ -136,15 +136,13 @@ namespace golf {
 	{
 		// camera
 		if (!camLocked) {
-			cameraControls.update(deltaT);
 			if(ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
 				cameraControls.follow(ball.getTransform()->x, ball.getTransform()->y);
 			}
+		} else {
+			cameraControls.lock(4.f, 3.f, 0.65f);
 		}
-		else {
-			m_camera.setFocalLength(0.65f);
-			m_camera.setPosition(4, 3);
-		}
+		cameraControls.update(deltaT);
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
