@@ -18,6 +18,8 @@ set(SOURCES
 	Graphics.cpp
 	GUI.h 
 	GUI.cpp
+	Slingshot.h
+	Slingshot.cpp
 
 	# Core
 	Core/AppData.h

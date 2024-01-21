@@ -35,31 +35,16 @@ namespace golf {
 		Entity frame3;
 		Entity frame4;
 
-		float showBallButton = 0.f;
-		Entity ballButton;
 		Entity ball;
 
 		Entity hole;
 
-		Entity arrowTip;
-		Entity arrowBody;
-		Entity trail1;
-		Entity trail2;
-		Entity trail3;
-		Entity trail4;
-		Entity trail5;
-
 		Entity pauseButton;
-
-		bool aiming = false;
 
 		bool won = false;
 		int score = 0;
 		int stars = 3;
 	};
-
-	
-
 
 	class LevelTwoScene : public Scene {
 	public:
