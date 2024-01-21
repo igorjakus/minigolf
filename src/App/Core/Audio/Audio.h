@@ -11,12 +11,6 @@ namespace golf {
 		Audio();
 		~Audio();
 
-		// Init engine and check if everything went ok
-		void initSoundEngine(ma_engine* engine, float volume);
-
-		// Init and load sound and check if everything went ok
-		void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine);
-
 		// Play sound once
 		void playSound(int number);
 
@@ -37,6 +31,10 @@ namespace golf {
 		bool isMusicPaused = false; // change it via pauseMusicON/OFF/SWITCH
 		bool exitMusic = false; // only destructor change it, stops playMusic thread
 
-		void playMusic(); // runs on different thread
+		// Runs on a different thread, plays music
+		void playMusic();
+
+		// Init and load sound and check if everything went ok
+		void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine);
 	};
 }
