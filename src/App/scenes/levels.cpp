@@ -525,13 +525,13 @@ namespace golf {
 		//logika poziomu:
 		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
-			if (score > 11) {
+			if (score > 7) {
 				stars = 0;
 			}
-			if (score > 6) {
+			if (score > 4) {
 				stars = 1;
 			}
-			if (score > 3) {
+			if (score > 2) {
 				stars = 2;
 			}
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 2));
@@ -756,13 +756,13 @@ namespace golf {
 
 		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
-			if (score > 11) {
+			if (score > 8) {
 				stars = 0;
 			}
-			if (score > 6) {
+			if (score > 5) {
 				stars = 1;
 			}
-			if (score > 3) {
+			if (score > 2) {
 				stars = 2;
 			}
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 3));
@@ -784,85 +784,199 @@ namespace golf {
 	// ===============================
 
 	LevelFourScene::LevelFourScene()
-		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
+		cameraControls(m_camera, -5.f, 5.f, 2.f, -10.f) {
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
+		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		grass.getComponent<VisualComponent>()->setTexture("Grass");
+		grass.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		grass.getTransform()->setScale(7.6f, 7);
+		grass.getTransform()->setPos(3.85f, -4.5);
 
-		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.01f, -0.01f, ModeType::RELATIVE);
-		pauseButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		pauseButton.getComponent<VisualComponent>()->setTexture("popcat");
-		pauseButton.getTransform()->setScale(0.1f, 0.1f);
-		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+		grass2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		grass2.getComponent<VisualComponent>()->setTexture("Grass");
+		grass2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		grass2.getTransform()->setScale(5.f, 3.f);
+		grass2.getTransform()->setPos(2.5f, 0.5f);
+
+		ramp.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ramp.getComponent<VisualComponent>()->setTexture("carp");
+		ramp.getTransform()->setScale(2.7f, 4);
+		ramp.getTransform()->setPos(5.4f, -0.3f);
+		ramp.getTransform()->rot =45.0f;
+
+		
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame1.getTransform()->setPos(0.0f, -2.9f);
 		frame1.getTransform()->setScale(0.2f, 10.0f);
+		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame2.getTransform()->setPos(2.5f, 2.0f);
 		frame2.getTransform()->setScale(5.0f, 0.2f);
+		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame3.getTransform()->setPos(6.35f, 0.6f);
 		frame3.getTransform()->setScale(0.2f, 4.0f);
 		frame3.getTransform()->rot = 45.0f;
+		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame4.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame4.getTransform()->setPos(1.5f, 0.0f);
 		frame4.getTransform()->setScale(3.0f, 0.2f);
+		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame5.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame5.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame5.getTransform()->setPos(7.75f, -4.35f);
 		frame5.getTransform()->setScale( 0.2f, 7.2f);
+		frame5.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame5.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame6.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame6.getComponent<VisualComponent>()->setColor(255, 0, 0, 255);
 		frame6.getTransform()->setPos(3.875f, -7.9f);
 		frame6.getTransform()->setScale(7.95f,0.2f);
+		frame6.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame6.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		wall1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-		wall1.getComponent<VisualComponent>()->setTexture("popcat");
+		wall1.getComponent<VisualComponent>()->setTexture("Wood");
 		wall1.getTransform()->setPos(2.5f, -2.0f);
 		wall1.getTransform()->setScale(2.5f, 0.2f);
+		wall1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		wall2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-		wall2.getComponent<VisualComponent>()->setTexture("popcat");
+		wall2.getComponent<VisualComponent>()->setTexture("Wood");
 		wall2.getTransform()->setPos(5.5f, -3.5f);
 		wall2.getTransform()->setScale(2.5f, 0.2f);
 		wall2.getTransform()->rot = 20.0f;
+		wall2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 
 		wall3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-		wall3.getComponent<VisualComponent>()->setTexture("popcat");
+		wall3.getComponent<VisualComponent>()->setTexture("Wood");
 		wall3.getTransform()->setPos(2.5f, -5.5f);
 		wall3.getTransform()->setScale(2.5f, 0.2f);
 		wall3.getTransform()->rot = 100.0f;
+		wall3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		//=========
+		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		hole.getComponent<VisualComponent>()->setTexture("hole");
+		hole.getTransform()->setPos(1.0f, 1.0f);
+		hole.getTransform()->setScale(0.5f);
+
+		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ball.getComponent<VisualComponent>()->setTexture("Ball");
+		ball.getTransform()->setPos(1.0f, -7.0f);
+		ball.getTransform()->setScale(0.2f);
+		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
+		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
+		ball.addComponent<SlingshotComponent>(std::make_shared<SlingshotComponent>(m_camera, m_graphicsLayer));
+
+		/////////////////
+		// GUI
+		/////////////////
+
+		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.05f, ModeType::RELATIVE);
+		pauseButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		pauseButton.getTransform()->setScale(0.1f, 0.1f);
+		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		replayButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		replayButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.16f, ModeType::RELATIVE);
+		replayButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		replayButton.getTransform()->setScale(0.1f, 0.1f);
+		replayButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		camLockButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camLockButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.27f, ModeType::RELATIVE);
+		camLockButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		camLockButton.getTransform()->setScale(0.1f, 0.1f);
+		camLockButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		firstDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		firstDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.105f, -0.05f, ModeType::RELATIVE);
+		firstDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		firstDigit.getTransform()->setScale(0.1f, 0.1f);
+		firstDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		secondDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		secondDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.05f, -0.05f, ModeType::RELATIVE);
+		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		secondDigit.getTransform()->setScale(0.1f, 0.1f);
+		secondDigit.getComponent<VisualComponent>()->setTexture("0");
 	}
 
 	void LevelFourScene::update(float deltaT)
 	{
 
-		if (AppData::getInput().isKeyPressed("UP")) {
-			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y + deltaT * 5);
+		float rotateSpeed1 = 80.0f; 
+		
+		wall1.getTransform()->rot -= deltaT * rotateSpeed1;
+		wall2.getTransform()->rot += deltaT * rotateSpeed1;
+		wall3.getTransform()->rot -= deltaT * rotateSpeed1;
+
+
+		// camera
+		if (!camLocked) {
+			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
+				cameraControls.follow(ball.getTransform()->x, ball.getTransform()->y);
+			}
+		}
+		else {
+			cameraControls.lock(4.f, -3.0f, 1.0f);
+		}
+		cameraControls.update(deltaT);
+
+		// ball
+		ball.getComponent<SlingshotComponent>()->update(deltaT);
+		if (ball.getComponent<SlingshotComponent>()->didShoot()) {
+			score++;
 		}
 
-		if (AppData::getInput().isKeyPressed("LEFT")) {
-			m_camera.setPosition(m_camera.getPosition().x - deltaT * 5, m_camera.getPosition().y);
+		// hole logic
+		{
+			float ballX = ball.getTransform()->x;
+			float ballY = ball.getTransform()->y;
+			float holeX = hole.getTransform()->x;
+			float holeY = hole.getTransform()->y;
+			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
+			uchar color = 255;
+			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, { 0, 0, 0 });
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
+				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
+				color = static_cast<uchar>(util::clamp(col, 0, 255));
+				if (col < 0 && ball.getComponent<DynamicPhysicsComponent>()->m_velocity.getLength() < 0.03f) {
+					won = true;
+				}
+			}
+			ball.getComponent<VisualComponent>()->setColor(255, 255, 255, color);
 		}
 
-		if (AppData::getInput().isKeyPressed("RIGHT")) {
-			m_camera.setPosition(m_camera.getPosition().x + deltaT * 5, m_camera.getPosition().y);
-		}
-		if (AppData::getInput().isKeyPressed("DOWN")) {
-			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y - deltaT * 5);
-		}
+		physics.update(deltaT);
+
+
+		// GUI
+
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
-		ptr->update();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
 		if (ptr->isClicked()) {
 			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
@@ -875,17 +989,43 @@ namespace golf {
 		}
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
-		float rotateSpeed1 = 80.0f; 
-		
-		wall1.getTransform()->rot -= deltaT * rotateSpeed1;
-		wall2.getTransform()->rot += deltaT * rotateSpeed1;
-		wall3.getTransform()->rot -= deltaT * rotateSpeed1;
+		ptr = replayButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked() || ball.getComponent<DynamicPhysicsComponent>()->exploded()) {
+			auto next = std::shared_ptr<Scene>(new LevelFourScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			replayButton.getComponent<VisualComponent>()->setTexture("replay_pressed");
+		}
+		else { replayButton.getComponent<VisualComponent>()->setTexture("replay_not_pressed"); }
+
+		ptr = camLockButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked()) {
+			camLocked = !camLocked;
+		}
+		if (ptr->isHovered()) {
+			if (camLocked) { camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_pressed"); }
+		}
+		else {
+			if (camLocked) { camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_not_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_not_pressed"); }
+		}
+
+
+		firstDigit.getComponent<VisualComponent>()->setTexture(std::to_string(score % 10));
+		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
 
 		//logika poziomu:
 		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
-			if (score > 11) {
+			if (score > 9) {
 				stars = 0;
 			}
 			if (score > 6) {
