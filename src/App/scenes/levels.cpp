@@ -54,7 +54,6 @@ namespace golf {
 
 		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame1.getTransform()->setPos(0.0f, 3.0f);
 		frame1.getTransform()->setScale(0.2f, 6.19f);
 		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -62,7 +61,6 @@ namespace golf {
 
 		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame2.getTransform()->setPos(4.0f, 6.0f);
 		frame2.getTransform()->setScale(8.15f, 0.2f);
 		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -70,7 +68,6 @@ namespace golf {
 
 		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame3.getTransform()->setPos(8.1f, 3.0f);
 		frame3.getTransform()->setScale(0.2f, 6.19f);
 		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -78,7 +75,6 @@ namespace golf {
 
 		frame4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame4.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame4.getTransform()->setPos(4.0f, 0.0f);
 		frame4.getTransform()->setScale(8.15f, 0.2f);
 		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -296,6 +292,7 @@ namespace golf {
 
 		wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
+		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallA.getTransform()->setPos(2.5f, 3.0f);
 		wallA.getTransform()->setScale( 0.2f, 2.0f);
 		wallA.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -303,6 +300,7 @@ namespace golf {
 
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
+		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallB.getTransform()->setPos(5.5f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 2.0f);
 		wallB.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -540,6 +538,7 @@ namespace golf {
 		const float rotateSpeed = 0.7f;
 		wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
+		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallA.getTransform()->setPos(4.0f, 3.0f);
 		wallA.getTransform()->setScale(6.0f, 0.2f);
 		wallA.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -548,6 +547,7 @@ namespace golf {
 
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
+		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallB.getTransform()->setPos(4.0f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 6.0f);
 		wallB.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -796,6 +796,7 @@ namespace golf {
 		const float rotateSpeed = 2.f;
 		wall1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall1.getComponent<VisualComponent>()->setTexture("Wood");
+		wall1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wall1.getTransform()->setPos(2.5f, -2.0f);
 		wall1.getTransform()->setScale(2.5f, 0.2f);
 		wall1.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -804,6 +805,7 @@ namespace golf {
 
 		wall2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall2.getComponent<VisualComponent>()->setTexture("Wood");
+		wall2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wall2.getTransform()->setPos(5.5f, -3.5f);
 		wall2.getTransform()->setScale(2.5f, 0.2f);
 		wall2.getTransform()->rot = 20.0f;
@@ -814,6 +816,7 @@ namespace golf {
 
 		wall3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall3.getComponent<VisualComponent>()->setTexture("Wood");
+		wall3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wall3.getTransform()->setPos(2.5f, -5.5f);
 		wall3.getTransform()->setScale(2.5f, 0.2f);
 		wall3.getTransform()->rot = 100.0f;
@@ -1004,6 +1007,7 @@ namespace golf {
 
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
+		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallB.getTransform()->setPos(6.0f, 6.0f);
 		wallB.getTransform()->setScale(12.0f, 1.f);
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -1012,6 +1016,7 @@ namespace golf {
 		const float rotateSpeed = 1.5f;
 		w1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		w1.getComponent<VisualComponent>()->setTexture("Wood");
+		w1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w1.getTransform()->setPos(5.0f, 9.2f);
 		w1.getTransform()->setScale(4.0f, 0.2f);
 		w1.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -1020,6 +1025,7 @@ namespace golf {
 
 		w2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		w2.getComponent<VisualComponent>()->setTexture("Wood");
+		w2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w2.getTransform()->setPos(5.0f, 9.2f);
 		w2.getTransform()->setScale(0.2f, 4.0f);
 		w2.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -1028,6 +1034,7 @@ namespace golf {
 
 		w3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		w3.getComponent<VisualComponent>()->setTexture("Wood");
+		w3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w3.getTransform()->setPos(11.0f, 9.2f);
 		w3.getTransform()->setScale(4.0f, 0.2f);
 		w3.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
@@ -1036,6 +1043,7 @@ namespace golf {
 
 		w4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		w4.getComponent<VisualComponent>()->setTexture("Wood");
+		w4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w4.getTransform()->setPos(11.0f, 9.2f);
 		w4.getTransform()->setScale( 0.2f, 4.0f);
 		w4.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
