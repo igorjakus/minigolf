@@ -594,7 +594,7 @@ namespace golf {
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 	}
 	void BlackScene::update([[maybe_unused]] float deltaT) {
-		m_timer -= deltaT;
+		m_timer -= deltaT * 10.f;
 		if(m_timer < 0) {
 			auto next = std::shared_ptr<Scene>(new MainMenu());
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneFade(shared_from_this(), next));
