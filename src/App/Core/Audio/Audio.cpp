@@ -1,11 +1,8 @@
 #include "Audio.h"
-#include "dtl.h" // for printing errors
-#include <string> // std::string
-#include <thread> // std::vector
-#include <filesystem> // std::filesystem
+#include "dtl.h"
 #define SOUNDTRACK_PATH "assets/audio/soundtrack/"
 #define SOUNDEFFECTS_PATH "assets/audio/effects/"
-#define MUSIC_VOLUME 0.5f
+#define MUSIC_VOLUME 0.25f
 #define SOUND_EFFECTS_VOLUME 0.75f
 
 namespace golf {
@@ -15,14 +12,14 @@ namespace golf {
             ma_engine_set_volume(&musicEngine, MUSIC_VOLUME);
             DTL_INF("AUDIO: Music engine initalized successfully");
         }
-        else DTL_ERR("AUDIO: Failed to initialize music engine!");
+        else { DTL_ERR("AUDIO: Failed to initialize music engine!"); }
 
         // init sound effects engine
         if (ma_engine_init(nullptr, &soundEffectsEngine) == MA_SUCCESS) {
             ma_engine_set_volume(&soundEffectsEngine, SOUND_EFFECTS_VOLUME);
             DTL_INF("AUDIO: Sound effects engine initalized successfully");
         }
-        else DTL_ERR("AUDIO: Failed to initialize sound effects engine!");
+        else { DTL_ERR("AUDIO: Failed to initialize sound effects engine!"); }
         
         // load soundtrack
         for (const auto& entry : std::filesystem::directory_iterator(SOUNDTRACK_PATH)) {
@@ -75,16 +72,12 @@ namespace golf {
     }
 
     void Audio::playSound(int number) {
-        // to nie jest bezpieczne raczej
-        // może trzeba gdzieś przechowywać, że mamy jeszcze jakieś wątki i zanim zamkniemy poczekać aż się skończą
-        // i wtedy uninitować dźwięki i engine
-        std::thread tmp(ma_sound_start, soundEffects[static_cast<std::vector<std::shared_ptr<ma_sound> >::size_type>(number)].get());
-        tmp.detach();  
+        /* to może nie być bezpieczne, być może trzeba będzie przechowywać czy mamy jeszcze jakieś wątki otwarte
+        i dopiero jak się skończą to wtedy uninitować dźwięki i engine*/
+        ma_sound_start(soundEffects[static_cast<std::vector<std::shared_ptr<ma_sound> >::size_type>(number)].get());
     }
 
-    void Audio::playSound(std::string songName) {
-        playSound(soundsMap[songName]);
-    }
+    void Audio::playSound(std::string songName) { playSound(soundsMap[songName]); }
 
     void Audio::playMusic() {
         size_t songCount = music.size();
