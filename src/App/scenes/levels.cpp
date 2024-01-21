@@ -1060,6 +1060,7 @@ namespace golf {
 
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
+		wallB.addComponent<VisualComponent>()->setTexRepeat();
 		wallB.getTransform()->setPos(6.0f, 6.0f);
 		wallB.getTransform()->setScale(12.0f, 1.f);
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
