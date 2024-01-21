@@ -268,6 +268,7 @@ namespace golf {
 
 		Entity wallA;
 		Entity wallB;
+		Entity wallC;
 
 		Entity frame1;
 		Entity frame2;

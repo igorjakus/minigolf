@@ -1334,18 +1334,30 @@ namespace golf {
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallA.getTransform()->setPos(3.0f, 2.0f);
-		wallA.getTransform()->setScale(6.0f, 0.2f);
+		wallA.getTransform()->setPos(2.0f, 2.0f);
+		wallA.getTransform()->setScale(3.0f, 0.2f);
 		wallA.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		wallA.getTransform()->rot = 50;
 
 		wallB.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
 		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallB.getTransform()->setPos(5.0f, 4.0f);
-		wallB.getTransform()->setScale(6.0f, 0.2f);
+		wallB.getTransform()->setScale(2.0f, 0.2f);
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		wallB.getTransform()->rot = 130;
+
+		wallC.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		wallC.getComponent<VisualComponent>()->setTexture("Wood");
+		wallC.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallC.getTransform()->setPos(4.0f, 1.0f);
+		wallC.getTransform()->setScale(2.0f, 0.2f);
+		wallC.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallC.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		wallC.getTransform()->rot = 130;
+
 
 		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
