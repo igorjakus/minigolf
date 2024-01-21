@@ -12,7 +12,7 @@ namespace agl
 		Window(uint32_t width, uint32_t height, std::string title);
 		~Window();
 		void create();
-		[[nodiscard]] bool closeCallBack() const;
+		bool closeCallBack() const;
 		void close() const;
 		void setFullscreen(bool fullscreen);
 		//Not fully working as indended WIP
@@ -29,23 +29,22 @@ namespace agl
 		void setIcon() const;
 		void maximizeWindow(bool maximize) const;
 		void setResizable(bool resizable) const;
-		[[nodiscard]] bool isBorderless() const;
-		[[nodiscard]] bool isFullscreen() const;
-		[[nodiscard]] std::string getTitle() const;
-		[[nodiscard]] glm::uvec2 getWindowSize() const;
-		[[nodiscard]] glm::ivec2 getWindowPos() const;
-		[[nodiscard]] glm::uvec2 getScreenResolution() const;
-		[[nodiscard]] bool getVSync() const;
-		[[nodiscard]] glm::ivec2 getAspectRatio() const;
+		bool isBorderless() const;
+		bool isFullscreen() const;
+		std::string getTitle();
+		glm::uvec2 getWindowSize();
+		glm::ivec2 getWindowPos();
+		glm::uvec2 getScreenResolution();
+		bool getVSync() const;
 		void FEP() const;
-		[[nodiscard]] GLFWwindow* passPointer() const;
+		GLFWwindow* passPointer() const;
 	private:
 		bool m_isVSync;
 		bool m_isBorderless;
 		GLFWwindow* m_ID;
 		std::string m_title;
 		GLFWmonitor* m_monitor;
-		GLFWimage m_icon[2]; //NOLINT
+		GLFWimage m_icon[2];
 		int m_winPosX, m_winPosY;
 		int m_winSizeW, m_winSizeH;
 

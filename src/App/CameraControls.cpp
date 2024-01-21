@@ -3,7 +3,6 @@
 #include "Core/AppData.h"
 
 #include "Util.hpp"
-#include <X11/X.h>
 
 namespace golf {
 
