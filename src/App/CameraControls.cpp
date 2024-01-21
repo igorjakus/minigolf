@@ -43,26 +43,22 @@ void CameraControls::update(float deltaT) {
 	const float cameraSpeed = 10 * m_camera->getFocalLength();
 	const float cameraResponse = 30;
 	if (AppData::getInput().isKeyPressed("UP") || AppData::getInput().isKeyPressed("W") || (m_camUp.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
-		m_camUpSpeed += deltaT * cameraResponse;
-	} else {
-		m_camUpSpeed -= deltaT * cameraResponse;
+		m_camUpSpeed += 2 * deltaT * cameraResponse;
 	}
 	if (AppData::getInput().isKeyPressed("LEFT") || AppData::getInput().isKeyPressed("A") || (m_camLeft.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
-		m_camLeftSpeed += deltaT * cameraResponse;
-	} else {
-		m_camLeftSpeed -= deltaT * cameraResponse;
+		m_camLeftSpeed += 2 * deltaT * cameraResponse;
 	}
 	if (AppData::getInput().isKeyPressed("RIGHT") || AppData::getInput().isKeyPressed("D") || (m_camRight.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
-		m_camRightSpeed += deltaT * cameraResponse;
-	} else {
-		m_camRightSpeed -= deltaT * cameraResponse;
+		m_camRightSpeed += 2 * deltaT * cameraResponse;
 	}
 	if (AppData::getInput().isKeyPressed("DOWN") || AppData::getInput().isKeyPressed("S") || (m_camDown.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
-		m_camRightSpeed += deltaT * cameraResponse;
-		m_camDownSpeed += deltaT * cameraResponse;
-	} else {
-		m_camDownSpeed -= deltaT * cameraResponse;
+		m_camDownSpeed += 2 * deltaT * cameraResponse;
 	}
+
+	m_camUpSpeed -= deltaT * cameraResponse;
+	m_camLeftSpeed -= deltaT * cameraResponse;
+	m_camRightSpeed -= deltaT * cameraResponse;
+	m_camDownSpeed -= deltaT * cameraResponse;
 
 	m_camUpSpeed = util::clamp(m_camUpSpeed, 0, cameraSpeed);
 	m_camRightSpeed = util::clamp(m_camRightSpeed, 0, cameraSpeed);
