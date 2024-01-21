@@ -29,7 +29,7 @@ namespace golf {
 
 	private:
 		ma_engine musicEngine;
-		ma_engine soundEventEngine;
+		ma_engine soundEffectsEngine;
 
 		std::vector<std::shared_ptr<ma_sound>> music;
 		std::vector<std::shared_ptr<ma_sound>> sounds;

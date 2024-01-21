@@ -2,34 +2,37 @@
 #include "dtl.h" // for printing errors
 #include <string> // std::string
 #include <thread> // std::vector
-
+#include <filesystem> // std::filesystem
 #define SOUNDTRACK_PATH "assets/audio/soundtrack/"
-#define SOUNDEFFECTS_PATH
+#define SOUNDEFFECTS_PATH "assets/audio/effects/"
 
 namespace golf {
     Audio::Audio() {
-        const float MUSIC_ENGINE_VOLUME = 0.5, SOUND_EVENT_ENGINE_VOLUME = 0.75;
+        const float MUSIC_VOLUME = 0.5, SOUND_EFFECTS_VOLUME = 0.75;
 
         // init sound engines
-        initSoundEngine(&musicEngine, MUSIC_ENGINE_VOLUME);
-        initSoundEngine(&soundEventEngine, SOUND_EVENT_ENGINE_VOLUME);
+        initSoundEngine(&musicEngine, MUSIC_VOLUME);
+        initSoundEngine(&soundEffectsEngine, SOUND_EFFECTS_VOLUME);
         
-        // load background music files
-        std::vector<std::string> musicFiles{ "breakbeat", "house-progresywny", "neon", "ognisko", "spacer_nad_rzeka", "tajny_agent", "zawrot-glowy"};
-        for (auto &musicFile: musicFiles) {
-            music.emplace_back(std::make_shared<ma_sound>());
-            std::string filePath = SOUNDTRACK_PATH + musicFile + ".mp3";
-            loadSound(music.back().get(), filePath, &musicEngine);
+        // load soundtrack
+        for (const auto& entry : std::filesystem::directory_iterator(SOUNDTRACK_PATH)) {
+            if (std::filesystem::is_regular_file(entry)) {
+                music.emplace_back(std::make_shared<ma_sound>());
+                loadSound(music.back().get(), entry.path().string(), &musicEngine);
+                std::cout << entry.path() << std::endl;
+            }
         }
 
-        // load sound effects files
-        std::vector<std::string> soundFiles{}; // empty for now
-        for (auto &soundFile : soundFiles) {
-            sounds.emplace_back();
-            std::string filePath = "assets/audio/" + soundFile + ".mp3";
-            loadSound(sounds.back().get(), filePath, &soundEventEngine);
+        // load sound effects
+        for (const auto& entry : std::filesystem::directory_iterator(SOUNDEFFECTS_PATH)) {
+            if (std::filesystem::is_regular_file(entry)) {
+                sounds.emplace_back(std::make_shared<ma_sound>());
+                loadSound(sounds.back().get(), entry.path().string(), &soundEffectsEngine);
+                std::cout << entry.path() << std::endl;
+            }
         }
 
+        // play music on a different thead
         std::thread musicThread([&]() { playMusic(); });
         musicThread.detach(); // ZAPEWNE SIE WYKRZACZY POTEM TO
     }
@@ -39,7 +42,7 @@ namespace golf {
         exitMusic = true; 
 
         // uninit sound effect engine and sound objects
-        ma_engine_uninit(&soundEventEngine);
+        ma_engine_uninit(&soundEffectsEngine);
         for (auto s : sounds)
             ma_sound_uninit(s.get());
 
