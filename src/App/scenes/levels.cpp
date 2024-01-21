@@ -36,38 +36,6 @@ namespace golf {
 		grass.getTransform()->setScale(8.0f, 6.0f);
 		grass.getTransform()->setPos(4, 3);
 
-		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		frame1.getComponent<VisualComponent>()->setTexture("Wood");
-		frame1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		frame1.getTransform()->setPos(0.0f, 3.0f);
-		frame1.getTransform()->setScale(0.2f, 6.19f);
-		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
-		frame1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-
-		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		frame2.getComponent<VisualComponent>()->setTexture("Wood");
-		frame2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		frame2.getTransform()->setPos(4.0f, 6.0f);
-		frame2.getTransform()->setScale(8.15f, 0.2f);
-		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
-		frame2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-
-		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		frame3.getComponent<VisualComponent>()->setTexture("Wood");
-		frame3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		frame3.getTransform()->setPos(8.1f, 3.0f);
-		frame3.getTransform()->setScale(0.2f, 6.19f);
-		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
-		frame3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-
-		frame4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		frame4.getComponent<VisualComponent>()->setTexture("Wood");
-		frame4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		frame4.getTransform()->setPos(4.0f, 0.0f);
-		frame4.getTransform()->setScale(8.15f, 0.2f);
-		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
-		frame4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
@@ -83,6 +51,41 @@ namespace golf {
 		wallB.getTransform()->setScale(6.0f, 0.2f);
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		frame1.getTransform()->setPos(0.0f, 3.0f);
+		frame1.getTransform()->setScale(0.2f, 6.19f);
+		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame2.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		frame2.getTransform()->setPos(4.0f, 6.0f);
+		frame2.getTransform()->setScale(8.15f, 0.2f);
+		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame3.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		frame3.getTransform()->setPos(8.1f, 3.0f);
+		frame3.getTransform()->setScale(0.2f, 6.19f);
+		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame4.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		frame4.getTransform()->setPos(4.0f, 0.0f);
+		frame4.getTransform()->setScale(8.15f, 0.2f);
+		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+
+
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		hole.getComponent<VisualComponent>()->setTexture("hole");
