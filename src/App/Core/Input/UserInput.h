@@ -51,7 +51,7 @@ Input();
 	[[nodiscard]] float getMouseWorldOffsetX(agl::Camera&) const;
 	[[nodiscard]] float getMouseWorldOffsetY(agl::Camera&) const;
 
-	void attachCamera(agl::Camera* camera, float constvalue, bool dynamic = false);
+	void attachCamera(agl::Camera* camera, float constvalue, bool dynamic = false, bool fill = false);
 	void changeCameraSet(uint64_t setID);
 	uint64_t newScene();
 
@@ -96,6 +96,7 @@ private:
 		agl::Camera* camera;
 		float constvalue;
 		bool dynamic;
+		bool fill;
 
 		void updateSize(float width, float height);
 	};
