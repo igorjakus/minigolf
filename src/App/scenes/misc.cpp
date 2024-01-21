@@ -553,8 +553,8 @@ namespace golf {
 		tutorialSheet.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		tutorialSheet.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
 		tutorialSheet.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		tutorialSheet.getComponent<VisualComponent>()->setTexture("popcat");
-		tutorialSheet.getTransform()->setScale(2.1f, 2.1f);
+		tutorialSheet.getComponent<VisualComponent>()->setTexture("HowToGolf");
+		tutorialSheet.getTransform()->setScale(1.08f*1.4f, 0.72f * 1.4f);
 
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
