@@ -133,6 +133,11 @@ namespace golf {
 		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		secondDigit.getTransform()->setScale(0.1f, 0.1f);
 		secondDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.045f, -0.11f, ModeType::RELATIVE);
+		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		starDisplay.getTransform()->setScale(0.17f, 0.0633f);
 	}
 
 	void LevelOneScene::update(float deltaT)
@@ -224,16 +229,43 @@ namespace golf {
 		firstDigit.getComponent<VisualComponent>()->setTexture(std::to_string(score % 10));
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score%100)/10));
 
+		if (score > 9) {
+			stars = 0;
+		}
+		else if (score > 5) {
+			stars = 1;
+		}
+		else if (score > 2) {
+			stars = 2;
+		}
+
+		if (stars == 3) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (stars == 2) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (stars == 1) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (stars == 0) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+
 		// Logika zakonczenia poziomu
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			if (score > 2) {
-				stars = 2;
-			}
-			if (score > 5) {
-				stars = 1;
-			}
+			score--;
 			if (score > 9) {
 				stars = 0;
+			}
+			else if (score > 5) {
+				stars = 1;
+			}
+			else if (score > 2) {
+				stars = 2;
+			}
+			else {
+				stars = 3;
 			}
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
@@ -363,7 +395,10 @@ namespace golf {
 		secondDigit.getTransform()->setScale(0.1f, 0.1f);
 		secondDigit.getComponent<VisualComponent>()->setTexture("0");
 
-
+		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.045f, -0.11f, ModeType::RELATIVE);
+		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		starDisplay.getTransform()->setScale(0.17f, 0.0633f);
 	}
 
 	void LevelTwoScene::update(float deltaT)
@@ -455,16 +490,6 @@ namespace golf {
 
 
 
-
-
-
-
-
-
-
-
-
-
 		// GUI
 		ptr = pauseButton.getComponent<ButtonComponent>();
 		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
@@ -513,24 +538,52 @@ namespace golf {
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
 
-		//logika poziomu:
+		if (score > 9) {
+			stars = 0;
+		}
+		else if (score > 5) {
+			stars = 1;
+		}
+		else if (score > 2) {
+			stars = 2;
+		}
+
+		if (stars == 3) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (stars == 2) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (stars == 1) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (stars == 0) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+
+		// Logika zakonczenia poziomu
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			//mozna uzaleznic gwiazdki od dowolnych tresholdów
-			if (score > 2) {
-				stars = 2;
-			}
-			if (score > 4) {
-				stars = 1;
-			}
-			if (score > 7) {
+			score--;
+			if (score > 9) {
 				stars = 0;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 2));
+			else if (score > 5) {
+				stars = 1;
+			}
+			else if (score > 2) {
+				stars = 2;
+			}
+			else {
+				stars = 3;
+			}
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
+
+		
 	}
 
 	void LevelTwoScene::render() {
@@ -647,6 +700,11 @@ namespace golf {
 		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		secondDigit.getTransform()->setScale(0.1f, 0.1f);
 		secondDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.045f, -0.11f, ModeType::RELATIVE);
+		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		starDisplay.getTransform()->setScale(0.17f, 0.0633f);
 	}
 
 	void LevelThreeScene::update(float deltaT)
@@ -747,20 +805,45 @@ namespace golf {
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
 
-		//logika poziomu:
+		if (score > 9) {
+			stars = 0;
+		}
+		else if (score > 5) {
+			stars = 1;
+		}
+		else if (score > 2) {
+			stars = 2;
+		}
 
+		if (stars == 3) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (stars == 2) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (stars == 1) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (stars == 0) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+
+		// Logika zakonczenia poziomu
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			//mozna uzaleznic gwiazdki od dowolnych tresholdów
-			if (score > 2) {
-				stars = 2;
-			}
-			if (score > 5) {
-				stars = 1;
-			}
-			if (score > 8) {
+			score--;
+			if (score > 9) {
 				stars = 0;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 3));
+			else if (score > 5) {
+				stars = 1;
+			}
+			else if (score > 2) {
+				stars = 2;
+			}
+			else {
+				stars = 3;
+			}
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
@@ -921,13 +1004,18 @@ namespace golf {
 		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		secondDigit.getTransform()->setScale(0.1f, 0.1f);
 		secondDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.045f, -0.11f, ModeType::RELATIVE);
+		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		starDisplay.getTransform()->setScale(0.17f, 0.0633f);
 	}
 
 	void LevelFourScene::update(float deltaT)
 	{
 
-		float rotateSpeed1 = 80.0f; 
-		
+		float rotateSpeed1 = 80.0f;
+
 		wall1.getTransform()->rot -= deltaT * rotateSpeed1;
 		wall2.getTransform()->rot += deltaT * rotateSpeed1;
 		wall3.getTransform()->rot -= deltaT * rotateSpeed1;
@@ -1023,26 +1111,51 @@ namespace golf {
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
 
-		//logika poziomu:
+		if (score > 9) {
+			stars = 0;
+		}
+		else if (score > 5) {
+			stars = 1;
+		}
+		else if (score > 2) {
+			stars = 2;
+		}
+
+		if (stars == 3) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (stars == 2) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (stars == 1) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (stars == 0) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+
+		// Logika zakonczenia poziomu
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			//mozna uzaleznic gwiazdki od dowolnych tresholdów
-			if (score > 3) {
-				stars = 2;
-			}
-			if (score > 6) {
-				stars = 1;
-			}
+			score--;
 			if (score > 9) {
 				stars = 0;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 4));
+			else if (score > 5) {
+				stars = 1;
+			}
+			else if (score > 2) {
+				stars = 2;
+			}
+			else {
+				stars = 3;
+			}
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}
-
 	void LevelFourScene::render() {
 		m_graphicsLayer.draw();
 		guiLayer.render();
@@ -1204,6 +1317,11 @@ namespace golf {
 		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		secondDigit.getTransform()->setScale(0.1f, 0.1f);
 		secondDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.045f, -0.11f, ModeType::RELATIVE);
+		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		starDisplay.getTransform()->setScale(0.17f, 0.0633f);
 	}
 
 	void LevelFiveScene::update([[maybe_unused]] float deltaT)
@@ -1360,20 +1478,45 @@ namespace golf {
 
 
 
-		//logika poziomu:
+		if (score > 9) {
+			stars = 0;
+		}
+		else if (score > 5) {
+			stars = 1;
+		}
+		else if (score > 2) {
+			stars = 2;
+		}
+
+		if (stars == 3) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (stars == 2) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (stars == 1) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (stars == 0) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+
+		// Logika zakonczenia poziomu
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			//mozna uzaleznic gwiazdki od dowolnych tresholdów
-			if (score > 4) {
-				stars = 2;
-			}
-			if (score > 7) {
-				stars = 1;
-			}
-			if (score > 12) {
+			score--;
+			if (score > 9) {
 				stars = 0;
 			}
-			
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 5));
+			else if (score > 5) {
+				stars = 1;
+			}
+			else if (score > 2) {
+				stars = 2;
+			}
+			else {
+				stars = 3;
+			}
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
