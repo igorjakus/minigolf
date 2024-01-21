@@ -10,6 +10,8 @@
 #include "Util/GML/Constants.h"
 #include "Util/Util.hpp"
 
+//NOLINTBEGIN(readability-function-cognitive-complexity)
+
 namespace golf {
 
 
@@ -119,9 +121,7 @@ namespace golf {
 		ball.getComponent<VisualComponent>()->setTexture("Ball");
 		ball.getTransform()->setPos(1.0f, 1.0f);
 		ball.getTransform()->setScale(0.2f);
-		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement());
-		ball.getComponent<DynamicPhysicsComponent>()->m_mass = 0.1f;
-		ball.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.005f;
+		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
 		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
 		ballButton.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ballButton.getComponent<VisualComponent>()->setTexture("BallButton");
@@ -208,7 +208,7 @@ namespace golf {
 		float cameraY = m_camera.getPosition().y + deltaT * (camUpSpeed - camDownSpeed);
 		if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
 			float c = 0.1f;
-			c = 1.f - pow(c, deltaT);
+			c = 1.f - powf(c, deltaT);
 			cameraX = util::lerp(cameraX, ball.getTransform()->x, c);
 			cameraY = util::lerp(cameraY, ball.getTransform()->y, c);
 			targetZoom = 0.5f;
@@ -418,11 +418,6 @@ namespace golf {
 		wallB.getTransform()->setPos(5.5f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 2.0f);
 
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
-
 	}
 
 	void LevelTwoScene::update(float deltaT)
@@ -488,9 +483,7 @@ namespace golf {
 
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -501,9 +494,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 2));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -563,12 +553,6 @@ namespace golf {
 		wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 		wallB.getTransform()->setPos(4.0f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 6.0f);
-
-
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
 	}
 
 	void LevelThreeScene::update(float deltaT)
@@ -608,9 +592,8 @@ namespace golf {
 
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -621,9 +604,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 3));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -701,14 +681,6 @@ namespace golf {
 		wall3.getTransform()->setPos(2.5f, -5.5f);
 		wall3.getTransform()->setScale(2.5f, 0.2f);
 		wall3.getTransform()->rot = 100.0f;
-
-		
-
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
-
 	}
 
 	void LevelFourScene::update(float deltaT)
@@ -750,9 +722,7 @@ namespace golf {
 
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -763,9 +733,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 4));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -857,13 +824,6 @@ namespace golf {
 		q3.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 		q3.getTransform()->setPos(11.0f, 3.3f);
 		q3.getTransform()->setScale(1.0f, 2.0f);
-
-
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
-
 	}
 
 	void LevelFiveScene::update([[maybe_unused]] float deltaT)
@@ -958,9 +918,7 @@ namespace golf {
 		}
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -971,9 +929,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 5));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -991,3 +946,4 @@ namespace golf {
 }
 
 
+//NOLINTEND(readability-function-cognitive-complexity)

@@ -2,6 +2,7 @@
 
 #include "physics.h"
 
+#include "ECS/Entity.h"
 #include "Util.hpp"
 #include "GML/Constants.h"
 
@@ -61,8 +62,8 @@ namespace golf {
 		}
 	}
 
-	std::shared_ptr<DynamicPhysicsComponent> PhysicsEngine::addDynamicElement(){
-		std::shared_ptr<DynamicPhysicsComponent> Obj = std::make_shared<DynamicPhysicsComponent>();
+	std::shared_ptr<DynamicPhysicsComponent> PhysicsEngine::addDynamicElement(float mass, float inertia){
+		std::shared_ptr<DynamicPhysicsComponent> Obj = std::make_shared<DynamicPhysicsComponent>(mass, inertia);
 		m_Dynamic_Objects.push_back(Obj);
 		return Obj;
 	}
@@ -74,6 +75,12 @@ namespace golf {
 	std::shared_ptr<StaticPhysicsComponent> PhysicsEngine::addStaticElement(){
 		std::shared_ptr<StaticPhysicsComponent> Obj = std::make_shared<StaticPhysicsComponent>();
 		m_Static_Objects.push_back(Obj);
+		return Obj;
+	}
+
+	std::shared_ptr<SurfaceComponent> PhysicsEngine::addSurfaceElement(float rollingResistance, float spinningResistance){
+		std::shared_ptr<SurfaceComponent> Obj = std::make_shared<SurfaceComponent>(rollingResistance, spinningResistance);
+		m_Surfaces.push_back(Obj);
 		return Obj;
 	}
 
@@ -242,8 +249,10 @@ namespace golf {
 		float spinningResistance = 0.05f;
 
 		for (auto& ref : Surfaces) {
-			float xScale = ref->getOwner()->getTransform()->xScale / 2, yScale = ref->getOwner()->getTransform()->yScale / 2;
-			float xSurf = ref->getOwner()->getTransform()->x, ySurf = ref->getOwner()->getTransform()->y;
+			float xScale = ref->getOwner()->getTransform()->xScale / 2;
+			float yScale = ref->getOwner()->getTransform()->yScale / 2;
+			float xSurf = ref->getOwner()->getTransform()->x;
+			float ySurf = ref->getOwner()->getTransform()->y;
 			float rotSurf = ref->getOwner()->getTransform()->rot;
 
 			GML::Mat2f AntyRotSurf = { std::cos(rotSurf),std::sin(rotSurf),-std::sin(rotSurf),std::cos(rotSurf) };
@@ -290,9 +299,9 @@ namespace golf {
 
 		// Spinning in Z-axis
 		if (m_angular_velocity.z != 0) {
-			float direction = m_angular_velocity.z / abs(m_angular_velocity.z);
+			float direction = m_angular_velocity.z / fabsf(m_angular_velocity.z);
 			float spinningDamping = 2.5f * spinningResistance * gravity / radius * deltaT * direction;
-			if (abs(spinningDamping) >= abs(m_angular_velocity.z)) {
+			if (fabsf(spinningDamping) >= fabsf(m_angular_velocity.z)) {
 				m_angular_velocity.z = 0;
 			} else {
 				m_angular_velocity.z -= spinningDamping;
@@ -317,7 +326,7 @@ namespace golf {
 	DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia)
 		: m_in_physics_scope(true), m_mass(mass), m_inertia(inertia) {}
 
-	bool DynamicPhysicsComponent::isMoving() {
+	bool DynamicPhysicsComponent::isMoving() const {
 		return m_velocity.getLengthSquared() > 0 || m_angular_acceleration.z > 0;
 	}
 		

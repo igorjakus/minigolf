@@ -21,7 +21,7 @@ public:
 	virtual void update(float deltaT) = 0;
 	virtual void render() = 0;
 
-	uint64_t getCameraSetID();
+	[[nodiscard]] uint64_t getCameraSetID() const;
 
 private:
 	uint64_t m_cameraSetID;
