@@ -51,62 +51,68 @@ namespace golf {
 
         // uninit sound effect engine and sound objects
         ma_engine_uninit(&soundEffectsEngine);
-        for (auto s : soundEffects)
+        for (auto s : soundEffects) {
             ma_sound_uninit(s.get());
+        }
 
         // uninit music engine and sound objects
         ma_engine_uninit(&musicEngine);
-        for (auto m: music)
+        for (auto m : music) {
             ma_sound_uninit(m.get());
-        
+        }
+
         // console info
         DTL_INF("Audio engine and sounds objects terminated successfully");
     }
 
     // Init and load sound and check if everything went ok
     void Audio::loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine) {
-        ma_result result;
-        result = ma_sound_init_from_file(engine, soundFilePath.c_str(), 0, nullptr, nullptr, sound);
-        if (result != MA_SUCCESS)
-            DTL_ERR("AUDIO: Failed to initialize the sound! Path: " + soundFilePath);            
+        const ma_result result = ma_sound_init_from_file(engine, soundFilePath.c_str(), 0, nullptr, nullptr, sound);
+        if (result != MA_SUCCESS) {
+            DTL_ERR("AUDIO: Failed to initialize the sound! Path: " + soundFilePath);
+        }
     }
 
     void Audio::playSound(int number) {
         /* to może nie być bezpieczne, być może trzeba będzie przechowywać czy mamy jeszcze jakieś wątki otwarte
         i dopiero jak się skończą to wtedy uninitować dźwięki i engine*/
-        ma_sound_start(soundEffects[static_cast<std::vector<std::shared_ptr<ma_sound> >::size_type>(number)].get());
+        ma_sound_start(soundEffects.at(static_cast<std::vector<std::shared_ptr<ma_sound> >::size_type>(number)).get());
     }
 
-    void Audio::playSound(std::string songName) { playSound(soundsMap[songName]); }
+    void Audio::playSound(std::string songName) { 
+        playSound(soundsMap[songName]); 
+    }
 
     void Audio::playMusic() {
-        size_t songCount = music.size();
-        int songToPlay = 0;
         const int playNTimes = 2;
+        const size_t songCount = music.size();
+
+        int numberOfPlayingSong = 0;
         int timesPlayedInRow = 1;
         bool isSongPlaying = true;
 
         while (!exitMusic) {
-            isSongPlaying = ma_sound_is_playing(getSong(songToPlay));
+            isSongPlaying = static_cast<bool>(ma_sound_is_playing(getSong(numberOfPlayingSong)));
 
             // paused but playing
-            if (isMusicPaused && isSongPlaying)
-                ma_sound_stop(getSong(songToPlay));
+            if (isMusicPaused && isSongPlaying) {
+                ma_sound_stop(getSong(numberOfPlayingSong));
+            }
 
             // not paused and not playing
             else if (!isMusicPaused && !isSongPlaying) {
                 if (timesPlayedInRow == playNTimes) {
-                    songToPlay = (songToPlay + 1) % static_cast<int>(songCount);
+                    numberOfPlayingSong = (numberOfPlayingSong + 1) % static_cast<int>(songCount);
                     timesPlayedInRow = 0;
                 }
                 timesPlayedInRow++;
-                ma_sound_start(getSong(songToPlay));
+                ma_sound_start(getSong(numberOfPlayingSong));
             }
 
             // paused but not playing: good
             // not paused but playing: good
         }
-        ma_sound_stop(getSong(songToPlay));
+        ma_sound_stop(getSong(numberOfPlayingSong));
     }
 
     void Audio::pauseMusicON() { isMusicPaused = true; }

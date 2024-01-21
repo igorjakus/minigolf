@@ -30,14 +30,14 @@ namespace golf {
 		// create map that for every name holds index of sound effect in vector
 		std::map<std::string, int> soundsMap;
 
-		// Init and load sound and check if everything went ok
-		void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine);
-
 		bool isMusicPaused = false; // change it via pauseMusicON/OFF/SWITCH
 		bool exitMusic = false; // only destructor change it, stops playMusic thread
 
 		// Runs on a different thread, plays music
 		void playMusic();
+
+		// Init and load sound and check if everything went ok
+		void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine);
 
 		// Give ptr to song of particular index
 		ma_sound* getSong(int number);
