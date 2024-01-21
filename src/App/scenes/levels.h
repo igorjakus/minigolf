@@ -36,10 +36,16 @@ namespace golf {
 		float showBallButton = 0.f;
 		Entity ballButton;
 		Entity ball;
+
 		Entity hole;
 
 		Entity arrowTip;
 		Entity arrowBody;
+		Entity trail1;
+		Entity trail2;
+		Entity trail3;
+		Entity trail4;
+		Entity trail5;
 
 		float camUpSpeed = 0;
 		float camDownSpeed = 0;

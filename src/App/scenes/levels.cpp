@@ -83,6 +83,37 @@ namespace golf {
 		hole.getTransform()->setPos(7.0f, 5.0f);
 		hole.getTransform()->setScale(0.5f);
 
+		arrowTip.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		arrowTip.getComponent<VisualComponent>()->setTexture("arrow_tip");
+		arrowTip.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+		arrowTip.getTransform()->setScale(0.5f);
+
+		arrowBody.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		arrowBody.getComponent<VisualComponent>()->setTexture("arrow_body");
+		arrowBody.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+		arrowBody.getTransform()->setScale(0.4f);
+
+
+		trail5.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		trail5.getComponent<VisualComponent>()->setTexture("Ball");
+		trail5.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+
+		trail4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		trail4.getComponent<VisualComponent>()->setTexture("Ball");
+		trail4.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+
+		trail3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		trail3.getComponent<VisualComponent>()->setTexture("Ball");
+		trail3.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+
+		trail2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		trail2.getComponent<VisualComponent>()->setTexture("Ball");
+		trail2.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+
+		trail1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		trail1.getComponent<VisualComponent>()->setTexture("Ball");
+		trail1.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+
 		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ball.getComponent<VisualComponent>()->setTexture("Ball");
 		ball.getTransform()->setPos(1.0f, 1.0f);
@@ -97,15 +128,11 @@ namespace golf {
 		ballButton.getTransform()->setScale(0.5f);
 		ballButton.addComponent<ButtonComponent>(ButtonComponent::create(m_camera));
 
-		arrowTip.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		arrowTip.getComponent<VisualComponent>()->setTexture("arrow_tip");
-		arrowTip.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
-		arrowTip.getTransform()->setScale(0.5f);
-
-		arrowBody.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		arrowBody.getComponent<VisualComponent>()->setTexture("arrow_body");
-		arrowBody.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
-		arrowBody.getTransform()->setScale(0.4f);
+		trail1.getTransform()->setScale(ball.getTransform()->xScale * 0.8f);
+		trail2.getTransform()->setScale(trail1.getTransform()->xScale * 0.8f);
+		trail3.getTransform()->setScale(trail2.getTransform()->xScale * 0.8f);
+		trail4.getTransform()->setScale(trail3.getTransform()->xScale * 0.8f);
+		trail5.getTransform()->setScale(trail4.getTransform()->xScale * 0.8f);
 
 		/////////////////
 		// GUI
@@ -223,7 +250,7 @@ namespace golf {
 			aiming = true;
 			AppData::getInput().setMousePosLock(true);
 		}
-		const float maxShotStrength = 3.f;
+		const float maxShotStrength = 2.f;
 		if (aiming) {
 			auto [x, y] = AppData::getInput().getMouseWorldOffset(m_camera);
 			GML::Vec2f pos = { x, y };
@@ -247,6 +274,18 @@ namespace golf {
 			arrowBody.getTransform()->setPos(ball.getTransform()->x + norm.x * (arrowBody.getTransform()->yScale / 2 + arrowTip.getTransform()->xScale + 0.11f),
 				ball.getTransform()->y + norm.y * (arrowBody.getTransform()->yScale / 2 + arrowTip.getTransform()->xScale + 0.11f));
 
+			trail1.getTransform()->setPos(ball.getTransform()->x - 1 * val.x * 0.3f, ball.getTransform()->y - 1 * val.y * 0.3f);
+			trail2.getTransform()->setPos(ball.getTransform()->x - 2 * val.x * 0.3f, ball.getTransform()->y - 2 * val.y * 0.3f);
+			trail3.getTransform()->setPos(ball.getTransform()->x - 3 * val.x * 0.3f, ball.getTransform()->y - 3 * val.y * 0.3f);
+			trail4.getTransform()->setPos(ball.getTransform()->x - 4 * val.x * 0.3f, ball.getTransform()->y - 4 * val.y * 0.3f);
+			trail5.getTransform()->setPos(ball.getTransform()->x - 5 * val.x * 0.3f, ball.getTransform()->y - 5 * val.y * 0.3f);
+
+			trail1.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f));
+			trail2.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f * 0.8f));
+			trail3.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f * 0.8f * 0.8f));
+			trail4.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f * 0.8f * 0.8f * 0.8f));
+			trail5.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f * 0.8f * 0.8f * 0.8f * 0.8f));
+
 			if (ballButton.getComponent<ButtonComponent>()->isReleased()) {
 				AppData::getInput().setMousePosLock(false);
 				ballButton.getComponent<ButtonComponent>()->update();
@@ -254,6 +293,11 @@ namespace golf {
 
 				arrowTip.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
 				arrowBody.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+				trail1.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+				trail2.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+				trail3.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+				trail4.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+				trail5.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
 
 				score++;
 				aiming = false;
