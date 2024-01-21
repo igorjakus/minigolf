@@ -29,7 +29,7 @@ namespace golf {
             if (std::filesystem::is_regular_file(entry)) {
                 music.emplace_back(std::make_shared<ma_sound>());
                 loadSound(music.back().get(), entry.path().string(), &musicEngine);
-                DTL_INF("AUDIO: Loaded soundtrack file {0}", entry.path().filename());
+                DTL_INF("AUDIO: Loaded soundtrack file {0}", entry.path().filename().string());
             }
         }
 
@@ -38,7 +38,7 @@ namespace golf {
             if (std::filesystem::is_regular_file(entry)) {
                 soundEffects.emplace_back(std::make_shared<ma_sound>());
                 loadSound(soundEffects.back().get(), entry.path().string(), &soundEffectsEngine);
-                DTL_INF("AUDIO: Loaded sound effects {0}", entry.path().filename());
+                DTL_INF("AUDIO: Loaded sound effects {0}", entry.path().filename().string());
                 soundsMap[entry.path().stem().string()] = static_cast<int>(soundEffects.size() - 1);
             }
         }
