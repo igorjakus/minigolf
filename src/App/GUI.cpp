@@ -58,15 +58,10 @@ void ButtonComponent::update() {
 	auto[x, y] = AppData::getInput().getMouseWorldPos(*m_camera);
 	float xPos = getTransform()->x;
 	float yPos = getTransform()->y;
-	float rot = getTransform()->rot;
 	float xScale = getTransform()->xScale;
 	float yScale = getTransform()->yScale;
-	if(rot == 0) [[likely]] {
-		m_hovered =  x > xPos - xScale / 2 && x < xPos + xScale / 2 && y > yPos - yScale / 2 && y < yPos + yScale / 2;
-	} else [[unlikely]] {
-		DTL_WAR("Obrócone przyciski obecnie nie działają");
-		m_hovered = false;
-	}
+	m_hovered =  x > xPos - xScale / 2 && x < xPos + xScale / 2 && y > yPos - yScale / 2 && y < yPos + yScale / 2;
+
 
 	if(!AppData::getInput().isLeftMousePressed()) {
 		m_pressed = false;
@@ -186,6 +181,12 @@ float GUIComponent::getYOffset() const {
 
 GUILayer::GUILayer()
 	:m_camera(0, 0, 1.f, 1.f, 1.f), m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
+
+	AppData::getInput().attachCamera(&m_camera, 1.f, true);
+}
+
+GUILayer::GUILayer(const std::string& shaderName)
+	:m_camera(0, 0, 1.f, 1.f, 1.f), m_graphicsLayer(*AppData::getSus().GetShader(shaderName), m_camera) {
 
 	AppData::getInput().attachCamera(&m_camera, 1.f, true);
 }

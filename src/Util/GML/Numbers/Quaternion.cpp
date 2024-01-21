@@ -45,19 +45,19 @@ namespace GML {
 	// ======================= Utilities ========================
 	// ==========================================================
 
-	std::string Quaternion::toString() const {
-		std::string s = std::to_string(w);
-		if (x >= 0)
-			s += "+";
-		s += std::to_string(x) + "i";
-		if (y >= 0)
-			s += "+";
-		s += std::to_string(y) + "j";
-		if (z >= 0)
-			s += "+";
-		s += std::to_string(z) + "k";
-		return s;
-	}
+	// std::string Quaternion::toString() const {
+	// 	std::string s = std::to_string(w);
+	// 	if (x >= 0)
+	// 		s += "+";
+	// 	s += std::to_string(x) + "i";
+	// 	if (y >= 0)
+	// 		s += "+";
+	// 	s += std::to_string(y) + "j";
+	// 	if (z >= 0)
+	// 		s += "+";
+	// 	s += std::to_string(z) + "k";
+	// 	return s;
+	// }
 	float Quaternion::getMagnitude() const {
 		return std::sqrt(w * w + x * x + y * y + z * z);
 	}

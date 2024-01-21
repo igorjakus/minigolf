@@ -8,18 +8,23 @@
 namespace golf {
 
 
-class Scene {
+class Scene : public std::enable_shared_from_this<Scene> {
 
 public:
-	Scene() = default;
+	Scene();
 	virtual ~Scene() = default;
-	Scene(const Scene &) = default;
-	Scene(Scene &&) = default;
-	Scene &operator=(const Scene &) = default;
-	Scene &operator=(Scene &&) = default;
+	Scene(const Scene &) = delete;
+	Scene(Scene &&) = delete;
+	Scene &operator=(const Scene &) = delete;
+	Scene &operator=(Scene &&) = delete;
 
 	virtual void update(float deltaT) = 0;
 	virtual void render() = 0;
+
+	[[nodiscard]] uint64_t getCameraSetID() const;
+
+private:
+	uint64_t m_cameraSetID;
 
 };
 

@@ -31,6 +31,7 @@ Checks: '-*,
   -modernize-use-trailing-return-type,
   readability-*,
   -readability-named-parameter,
+  -readability-identifier-length,
   -readability-uppercase-literal-suffix,
   -readability-convert-member-functions-to-static,
   -readability-magic-numbers'

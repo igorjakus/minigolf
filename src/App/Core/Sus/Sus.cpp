@@ -19,9 +19,9 @@ namespace golf
 	}
 
 	//=====[Textures]=====
-	void Sus::LoadListOfTextures(std::initializer_list<std::string> files,int scaleX,int scaleY) {
+	void Sus::LoadListOfTextures(std::initializer_list<std::string> files,int scaleX,int scaleY, int filter, int sWrap, int tWrap) {
 		for (auto file : files) {
-			Sus::LoadTexture(file,glm::ivec2(scaleX,scaleY));
+			Sus::LoadTexture(file,glm::ivec2(scaleX,scaleY), filter, sWrap, tWrap);
 		}
 	}
 	void Sus::LoadTexture(const std::string& file, glm::ivec2 textureRatio, int filter, int sWrap, int tWrap) {
@@ -260,8 +260,8 @@ namespace golf
 	}
 	
 	void Sus::UpdateSaveFile() {
-		std::string path = "../../../assets/data/Levels.txt"; //b³agam Macieju i £ukaszu, nie zabijajcie za to proszê :cc
-		std::string path_temp = "../../../assets/data/Temp.txt";
+		std::string path = "assets/data/Levels.txt"; //b³agam Macieju i £ukaszu, nie zabijajcie za to proszê :cc
+		std::string path_temp = "assets/data/Temp.txt";
 
 		std::ifstream file(path);
 		std::ofstream file_temp(path_temp);
@@ -272,14 +272,14 @@ namespace golf
 
 		while (std::getline(file, line)) {
 			mapa = m_Levels.find(counter);
-			file_temp << "Level " << counter <<": HighScore: " << mapa->second.HighScore() << ", Stars: " << mapa->second.IsUnlocked() << ", isUnlocked: " << mapa->second.IsUnlocked() << "\n";
+			file_temp << "Level " << counter <<": HighScore: " << mapa->second.HighScore() << ", Stars: " << mapa->second.StarCount() << ", isUnlocked: " << mapa->second.IsUnlocked() << "\n";
 			counter++;
 		}
 		file.close();
 		file_temp.close();
 
-		std::remove("../../../assets/data/Levels.txt");
-		(void)std::rename("../../../assets/data/Temp.txt", "../../../assets/data/Levels.txt");//za to te¿, na razie dzia³a co jest najwazniejsze, a bêdê móg³ zrobiæ ³adniej
+		std::remove("assets/data/Levels.txt");
+		(void)std::rename("assets/data/Temp.txt", "assets/data/Levels.txt");//za to te¿, na razie dzia³a co jest najwazniejsze, a bêdê móg³ zrobiæ ³adniej
 		DTL_INF("SUS: Updated Level file");
 	}
 

@@ -87,6 +87,7 @@ private:
 class GUILayer {
 public:
 	GUILayer();
+	explicit GUILayer(const std::string& shaderName);
 
 	std::shared_ptr<GUIComponent> createGUIComponent();
 	void deleteGUIComponent(GUIComponent* component);

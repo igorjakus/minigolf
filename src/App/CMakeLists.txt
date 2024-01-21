@@ -18,6 +18,8 @@ set(SOURCES
 	Graphics.cpp
 	GUI.h 
 	GUI.cpp
+	Slingshot.h
+	Slingshot.cpp
 
 	# Core
 	Core/AppData.h
@@ -27,6 +29,7 @@ set(SOURCES
 	Core/SceneManager/SceneManager.h
 	Core/SceneManager/SceneManager.cpp 
 	Core/SceneManager/Scene.h
+	Core/SceneManager/Scene.cpp
 
 	# Sus
 	Core/Sus/Sus.h
@@ -35,15 +38,26 @@ set(SOURCES
 	# Input
 	Core/Input/UserInput.h
 	Core/Input/UserInput.cpp
+
+	# Audio
+	Core/Audio/Audio.h
+	Core/Audio/Audio.cpp
+
+	# Physics
+	physics.cpp
+	physics.h
+
+	# CameraControls
+	CameraControls.h 
+	CameraControls.cpp
 	
 	# Scenes
 	scenes/levels.cpp 
 	scenes/levels.h
 	scenes/misc.cpp 
 	scenes/misc.h 
-	# Audio
-	Core/Audio/Audio.h
-	Core/Audio/Audio.cpp
+	scenes/transition.h 
+	scenes/transition.cpp
 
 )
 

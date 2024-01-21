@@ -9,9 +9,9 @@ namespace golf {
 		void LoadAll();
 
 		//=====[Textures]=====
-		void LoadListOfTextures(std::initializer_list<std::string> files, int scaleX = 1, int scaleY = 1);
+		void LoadListOfTextures(std::initializer_list<std::string> files, int scaleX = 1, int scaleY = 1, int filter = GL_NEAREST, int sWrap = GL_CLAMP_TO_EDGE, int tWrap = GL_CLAMP_TO_EDGE);
 
-		void LoadTexture(const std::string& file, glm::ivec2 textureRatio = { 1, 1 }, int filter = GL_LINEAR, int sWrap = GL_REPEAT, int tWrap = GL_REPEAT);
+		void LoadTexture(const std::string& file, glm::ivec2 textureRatio = { 1, 1 }, int filter = GL_NEAREST, int sWrap = GL_CLAMP_TO_EDGE, int tWrap = GL_CLAMP_TO_EDGE);
 
 		void LoadAllTextures();
 
@@ -31,7 +31,7 @@ namespace golf {
 		
 		//=====[Animation]=====
 
-		void LoadAnimation(const std::string& file, int filter= GL_LINEAR, uint frames = 1, float frametime = 1, uint width = 1, uint heigth = 1);
+		void LoadAnimation(const std::string& file, int filter= GL_NEAREST, uint frames = 1, float frametime = 1, uint width = 1, uint heigth = 1);
 
 		agl::Animation* GetAnimation(const std::string& file);
 

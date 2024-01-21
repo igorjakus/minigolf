@@ -17,6 +17,7 @@
 #include<unordered_map>
 #include<initializer_list>
 #include<queue>
+#include<list>
 
 //maths lib
 #include<glm/glm.hpp>

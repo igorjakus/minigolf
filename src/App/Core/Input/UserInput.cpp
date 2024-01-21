@@ -1,4 +1,6 @@
 #include <pch.h>
+
+#include <utility>
 #include "UserInput.h"
 #include "../AppData.h"
 
@@ -30,9 +32,7 @@ bool Input::isKeyClicked(const std::string& key) {
 	if(item != m_keys.end()) {
 		int keyValue = item->second.keyCode;
 		bool pressedNow = glfwGetKey(m_window, keyValue) == GLFW_PRESS;
-		bool result = !item->second.wasPressed && pressedNow;
-		item->second.wasPressed = pressedNow;
-		return result;
+		return !item->second.wasPressed && pressedNow;
 	}
 	DTL_WAR("Call to unknown key value: \"{0}\"", key);
 	return false;
@@ -85,9 +85,7 @@ bool Input::isLeftMousePressed() const {
 
 bool Input::isLeftMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS; 
-	bool result = !m_LmbWasPressed && pressedNow;
-	m_LmbWasPressed = pressedNow;
-	return result;
+	return !m_LmbWasPressed && pressedNow;
 }
 
 bool Input::isRightMousePressed() const {
@@ -96,9 +94,7 @@ bool Input::isRightMousePressed() const {
 
 bool Input::isRightMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS; 
-	bool result = !m_RmbWasPressed && pressedNow;
-	m_RmbWasPressed = pressedNow;
-	return result;
+	return !m_RmbWasPressed && pressedNow;
 }
 
 bool Input::isMiddleMousePressed() const {
@@ -107,9 +103,7 @@ bool Input::isMiddleMousePressed() const {
 
 bool Input::isMiddleMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS; 
-	bool result = !m_MmbWasPressed && pressedNow;
-	m_MmbWasPressed = pressedNow;
-	return result;
+	return !m_MmbWasPressed && pressedNow;
 }
 
 //////////////////////////////////////////////
@@ -183,15 +177,19 @@ float Input::getMouseOffsetY() const {
 }
 
 std::pair<float, float> Input::getMouseWorldOffset(agl::Camera& camera) const {
-	return screenToWorld(getMouseOffset(), camera);
+	auto [xPos, yPos] = getMouseWorldPos(camera);
+	auto [xPrev, yPrev] = screenToWorld(m_prevMousePos, camera);
+	xPos -= xPrev;
+	yPos -= yPrev;
+	return { xPos, yPos };
 }
 
 float Input::getMouseWorldOffsetX(agl::Camera& camera) const {
-	return screenToWorld(getMouseOffset(), camera).first;
+	return getMouseWorldOffset(camera).first;
 }
 
 float Input::getMouseWorldOffsetY(agl::Camera& camera) const {
-	return screenToWorld(getMouseOffset(), camera).second;
+	return getMouseWorldOffset(camera).second;
 }
 
 //////////////////////////////////////////////
@@ -201,13 +199,13 @@ float Input::getMouseWorldOffsetY(agl::Camera& camera) const {
 //NOLINTBEGIN
 //TODO: Custom cursor support
 void Input::setCustomCursor() {
-	unsigned char pixels[16 * 16 * 4];
-	memset(pixels, 0xff, sizeof(pixels));
-
+	std::string temp_str = "assets/textures/cursor.png";
+	int x = 64; int y = 64; int b = 0;
+	uint8_t* data = stbi_load(temp_str.c_str(), &x,&y,&b,4);
 	GLFWimage image;
-	image.width = 16;
-	image.height = 16;
-	image.pixels = pixels;
+	image.width = x;
+	image.height = y;
+	image.pixels = data;
 
 	m_customCursor = glfwCreateCursor(&image, 0, 0);
 	glfwSetCursor(m_window, m_customCursor);
@@ -226,24 +224,30 @@ bool Input::isFocused() const {
 ///				Camera resize control
 //////////////////////////////////////////////
 
+Input::CameraSet::CameraSet(uint64_t id) : setID(id) {}
+
 void Input::attachCamera(agl::Camera* camera, float constvalue, bool dynamic) {
-	m_cameras.push_front({camera, constvalue, dynamic});
-	m_camerasCounts.front() += 1;
+	m_cameraSets.back()->cameras.push_back({camera, constvalue, dynamic});
 	const float screenX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float screenY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	m_cameras.front().updateSize(screenX, screenY);
+	m_cameraSets.back()->cameras.back().updateSize(screenX, screenY);
 }
 
-void Input::resetCameras() {
-	size_t toErase = m_camerasCounts.back();
-	for (size_t index = toErase; index > 0; index--) {
-		m_cameras.pop_back();
+void Input::changeCameraSet(uint64_t setID) {
+	if (m_currentCameraSet != m_cameraSets.end()) {
+		m_cameraSets.erase(m_currentCameraSet);
 	}
-	m_camerasCounts.pop_back();
+	for(m_currentCameraSet = m_cameraSets.begin(); m_currentCameraSet != m_cameraSets.end(); m_currentCameraSet++) {
+		if(setID == m_currentCameraSet->get()->setID) {
+			break;
+		}
+	}
 }
 
-void Input::newScene() {
-	m_camerasCounts.push_front(0);
+uint64_t Input::newScene() {
+	m_cameraSets.emplace_back(std::make_shared<CameraSet>(m_cameraSetsCount));
+	m_cameraSetsCount++;
+	return m_cameraSets.back()->setID;
 }
 
 //////////////////////////////////////////////
@@ -278,6 +282,14 @@ void Input::setTargetWindow(const agl::Window& window) {
 
 void Input::frameEnd() {
 	m_scrollOffset = 0.0;
+
+	for (auto& item : m_keys) {
+		item.second.wasPressed = glfwGetKey(m_window, item.second.keyCode) == GLFW_PRESS;
+	}
+
+	m_LmbWasPressed = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	m_RmbWasPressed = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+	m_MmbWasPressed = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
 }
 
 // void Input::s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { //NOLINT
@@ -297,7 +309,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 //
 // }
 void Input::s_resizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height) { //NOLINT
-	for(auto& cam : s_instance->m_cameras) {
+	for(auto& cam : s_instance->m_currentCameraSet->get()->cameras) {
 		cam.updateSize(static_cast<float>(width), static_cast<float>(height));
 	}
 }
@@ -314,8 +326,7 @@ Input::Input()
 :m_window(nullptr), m_customCursor(nullptr) {
 	s_instance = this;
 	setKeys();
-	m_camerasCounts.push_front(0);
-	m_camerasCounts.push_front(0);
+	m_currentCameraSet = m_cameraSets.end();
 }
 
 Input::~Input() {

@@ -12,8 +12,9 @@ namespace golf
 		:m_title(title), m_updatesPerSecond(c_defaultUPS) {
 	
 		AppData::init(width, height, title);
+		glClearColor(0.1f, 0.4f, 0.1f, 255); //temp
 
-		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlackScene()));
 		AppData::getSceneManager().nextScene();
 	
 		DTL_INF("Application created: {0}", title);
@@ -54,6 +55,8 @@ namespace golf
 	
 	void App::update(float deltaT) {
 		AppData::getSceneManager().update(deltaT);
+
+		AppData::getInput().frameEnd();
 	}
 	
 	void App::render() {
@@ -61,7 +64,6 @@ namespace golf
 		
 		AppData::getSceneManager().render();
 	
-		AppData::getInput().frameEnd();
 		AppData::getWindow().FEP();
 	}
 	
