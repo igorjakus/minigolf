@@ -58,10 +58,8 @@ namespace golf {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
         
-        DTL_INF("chuj");
         // uninit music engine and sound objects
         ma_engine_uninit(&musicEngine);
-        DTL_INF("cipa");
         for (auto m : music) {
             ma_sound_uninit(m.get());
         }
@@ -120,13 +118,24 @@ namespace golf {
         }
         ma_sound_stop(getSong(numberOfPlayingSong));
         isMusicThreadActive = false;
-        DTL_INF("git");
     }
 
-    void Audio::increaseMusicVolume() { musicVolume += VOLUME_INCREMENT; }
-    void Audio::decreaseMusicVolume() { musicVolume -= VOLUME_INCREMENT; }
-    void Audio::increaseSoundEffectsVolume() { soundEffectsVolume += VOLUME_INCREMENT; }
-    void Audio::decreaseSoundEffectsVolume() { soundEffectsVolume -= VOLUME_INCREMENT; }
+    void Audio::increaseMusicVolume() { 
+        musicVolume += VOLUME_INCREMENT; 
+        ma_engine_set_volume(&musicEngine, musicVolume);
+    }
+    void Audio::decreaseMusicVolume() { 
+        musicVolume -= VOLUME_INCREMENT; 
+        ma_engine_set_volume(&musicEngine, musicVolume);
+    }
+    void Audio::increaseSoundEffectsVolume() {
+        soundEffectsVolume += VOLUME_INCREMENT;
+        ma_engine_set_volume(&soundEffectsEngine, soundEffectsVolume);
+    }
+    void Audio::decreaseSoundEffectsVolume() { 
+        soundEffectsVolume -= VOLUME_INCREMENT; 
+        ma_engine_set_volume(&soundEffectsEngine, soundEffectsVolume);
+    }
     void Audio::pauseMusicON() { isMusicPaused = true; }
     void Audio::pauseMusicOFF() { isMusicPaused = false; }
     void Audio::pauseMusicSWITCH() { isMusicPaused = !isMusicPaused; }
