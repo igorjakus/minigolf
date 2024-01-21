@@ -540,7 +540,7 @@ namespace golf {
 			else {
 				stars = 3;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 2));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
@@ -800,7 +800,7 @@ namespace golf {
 			else {
 				stars = 3;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 3));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
@@ -1102,13 +1102,14 @@ namespace golf {
 			else {
 				stars = 3;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 4));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}
+
 	void LevelFourScene::render() {
 		background.render();
 		m_graphicsLayer.draw();
@@ -1281,7 +1282,7 @@ namespace golf {
 		starDisplay.getTransform()->setScale(0.17f, 0.0633f);
 	}
 
-	void LevelFiveScene::update([[maybe_unused]] float deltaT)
+	void LevelFiveScene::update(float deltaT)
 	{
 		static bool moveUp1 = true;
 		static bool moveUp2 = false;
@@ -1457,7 +1458,7 @@ namespace golf {
 			else {
 				stars = 3;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 5));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
