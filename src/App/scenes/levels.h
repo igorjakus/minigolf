@@ -40,10 +40,18 @@ namespace golf {
 		Entity hole;
 
 		Entity pauseButton;
+		Entity replayButton;
+		Entity camLockButton;
+
+		Entity firstDigit;
+		Entity secondDigit;
+
+		bool camLocked = true;
 
 		bool won = false;
 		int score = 0;
 		int stars = 3;
+
 	};
 
 	class LevelTwoScene : public Scene {

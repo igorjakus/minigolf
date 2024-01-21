@@ -16,7 +16,6 @@
 
 namespace golf {
 
-
 	using PositionType = GUIComponent::positionType;
 	using ModeType = GUIComponent::modeType;
 
@@ -86,7 +85,7 @@ namespace golf {
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		hole.getComponent<VisualComponent>()->setTexture("sponge");
+		hole.getComponent<VisualComponent>()->setTexture("hole");
 		hole.getTransform()->setPos(7.0f, 5.0f);
 		hole.getTransform()->setScale(0.5f);
 
@@ -108,14 +107,43 @@ namespace golf {
 		pauseButton.getTransform()->setScale(0.1f, 0.1f);
 		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		replayButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		replayButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.15f, ModeType::RELATIVE);
+		replayButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		replayButton.getTransform()->setScale(0.1f, 0.1f);
+		replayButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		camLockButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camLockButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.25f, ModeType::RELATIVE);
+		camLockButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		camLockButton.getTransform()->setScale(0.1f, 0.1f);
+		camLockButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		firstDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		firstDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.105f, -0.05f, ModeType::RELATIVE);
+		firstDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		firstDigit.getTransform()->setScale(0.1f, 0.1f);
+		firstDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		secondDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		secondDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.05f, -0.05f, ModeType::RELATIVE);
+		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		secondDigit.getTransform()->setScale(0.1f, 0.1f);
+		secondDigit.getComponent<VisualComponent>()->setTexture("0");
 	}
 
 	void LevelOneScene::update(float deltaT)
 	{
 		// camera
-		cameraControls.update(deltaT);
-		if(ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
-			cameraControls.follow(ball.getTransform()->x, ball.getTransform()->y);
+		if (!camLocked) {
+			cameraControls.update(deltaT);
+			if(ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
+				cameraControls.follow(ball.getTransform()->x, ball.getTransform()->y);
+			}
+		}
+		else {
+			m_camera.setFocalLength(0.65f);
+			m_camera.setPosition(4, 3);
 		}
 
 		// ball
@@ -162,15 +190,47 @@ namespace golf {
 		}
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
+		ptr = replayButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked()) {
+			auto next = std::shared_ptr<Scene>(new LevelOneScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			replayButton.getComponent<VisualComponent>()->setTexture("replay_pressed");
+		}
+		else { replayButton.getComponent<VisualComponent>()->setTexture("replay_not_pressed"); }
+
+		ptr = camLockButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked()) {
+			camLocked = !camLocked;
+		}
+		if (ptr->isHovered()) {
+			if(camLocked){ camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_pressed"); }
+		}
+		else {
+			if (camLocked) { camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_not_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_not_pressed"); }
+		}
+
+		
+		firstDigit.getComponent<VisualComponent>()->setTexture(std::to_string(score % 10));
+		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score%100)/10));
+
 		// Logika zakonczenia poziomu
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			if (score > 11) {
+			if (score > 9) {
 				stars = 0;
 			}
-			else if (score > 6) {
+			else if (score > 5) {
 				stars = 1;
 			}
-			else if (score > 3) {
+			else if (score > 2) {
 				stars = 2;
 			}
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
