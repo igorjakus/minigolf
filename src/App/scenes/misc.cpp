@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "misc.h"
-#include "../Graphics.h"
 #include "levels.h"
+#include "transition.h"
+#include "../Graphics.h"
 #include "../Core/AppData.h"
 
 
@@ -11,26 +12,41 @@ namespace golf {
 	using ModeType = GUIComponent::modeType;
 
 	//funkcja ktora uruchamia odpowiedni poziom
-	void startLevel(int levelNumber)
+	void startLevel(int levelNumber, std::shared_ptr<Scene> thisScene)
 	{
 		if (levelNumber == 1) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
+			auto next = std::shared_ptr<Scene>(new LevelOneScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (levelNumber == 2) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
+			auto next = std::shared_ptr<Scene>(new LevelTwoScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (levelNumber == 3) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelThreeScene()));
+			auto next = std::shared_ptr<Scene>(new LevelThreeScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (levelNumber == 4) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFourScene()));
+			auto next = std::shared_ptr<Scene>(new LevelFourScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (levelNumber == 5) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFiveScene()));
+			auto next = std::shared_ptr<Scene>(new LevelFiveScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}
@@ -85,7 +101,10 @@ namespace golf {
 		auto ptr = playButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -96,7 +115,10 @@ namespace golf {
 		ptr = howToGolfButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new HowToGolfScene()));
+			auto next = std::shared_ptr<Scene>(new HowToGolfScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -107,7 +129,10 @@ namespace golf {
 		ptr = creditsButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new CreditsScene()));
+			auto next = std::shared_ptr<Scene>(new CreditsScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -285,8 +310,7 @@ namespace golf {
 		
 		if (AppData::getSus().IsUnlocked(1)) {
 			if (ptr->isClicked()) {
-				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelOneScene()));
-				AppData::getSceneManager().nextScene();
+				startLevel(1, shared_from_this());
 			}
 			if (ptr->isHovered()) {
 				lvlOneButton.getComponent<VisualComponent>()->setTexture("1_pressed");
@@ -303,8 +327,7 @@ namespace golf {
 			}
 			else { lvlTwoButton.getComponent<VisualComponent>()->setTexture("2_not_pressed"); }
 			if (ptr->isClicked()) {
-				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelTwoScene()));
-				AppData::getSceneManager().nextScene();
+				startLevel(2, shared_from_this());
 				return;
 			}
 		}
@@ -318,8 +341,7 @@ namespace golf {
 			}
 			else { lvlThreeButton.getComponent<VisualComponent>()->setTexture("3_not_pressed"); }
 			if (ptr->isClicked()) {
-				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelThreeScene()));
-				AppData::getSceneManager().nextScene();
+				startLevel(3, shared_from_this());
 				return;
 			}
 		}
@@ -333,8 +355,7 @@ namespace golf {
 			}
 			else { lvlFourButton.getComponent<VisualComponent>()->setTexture("4_not_pressed"); }
 			if (ptr->isClicked()) {
-				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFourScene()));
-				AppData::getSceneManager().nextScene();
+				startLevel(4, shared_from_this());
 				return;
 			}
 		}
@@ -348,8 +369,7 @@ namespace golf {
 			}
 			else { lvlFiveButton.getComponent<VisualComponent>()->setTexture("5_not_pressed"); }
 			if (ptr->isClicked()) {
-				AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelFiveScene()));
-				AppData::getSceneManager().nextScene();
+				startLevel(5, shared_from_this());
 				return;
 			}
 		}
@@ -363,7 +383,10 @@ namespace golf {
 		}
 		else { mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed"); }
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new MainMenu()));
+			auto next = std::shared_ptr<Scene>(new MainMenu());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			return;
 		}
@@ -438,7 +461,10 @@ namespace golf {
 		auto ptr = menuButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -451,7 +477,7 @@ namespace golf {
 		ptr = replayButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			startLevel(finishedLevelNumber);
+			startLevel(finishedLevelNumber, shared_from_this());
 		}
 		if (ptr->isHovered()) {
 			replayButton.getComponent<VisualComponent>()->setTexture("replay_pressed");
@@ -462,7 +488,7 @@ namespace golf {
 		ptr = nextLevelButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			startLevel(finishedLevelNumber + 1);
+			startLevel(finishedLevelNumber + 1, shared_from_this());
 		}
 		if (ptr->isHovered()) {
 			nextLevelButton.getComponent<VisualComponent>()->setTexture("next_pressed");
@@ -502,7 +528,10 @@ namespace golf {
 		auto ptr = mainMenuButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new MainMenu()));
+			auto next = std::shared_ptr<Scene>(new MainMenu());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -540,7 +569,10 @@ namespace golf {
 		auto ptr = mainMenuButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new MainMenu()));
+			auto next = std::shared_ptr<Scene>(new MainMenu());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {

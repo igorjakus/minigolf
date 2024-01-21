@@ -185,6 +185,12 @@ GUILayer::GUILayer()
 	AppData::getInput().attachCamera(&m_camera, 1.f, true);
 }
 
+GUILayer::GUILayer(const std::string& shaderName)
+	:m_camera(0, 0, 1.f, 1.f, 1.f), m_graphicsLayer(*AppData::getSus().GetShader(shaderName), m_camera) {
+
+	AppData::getInput().attachCamera(&m_camera, 1.f, true);
+}
+
 std::shared_ptr<GUIComponent> GUILayer::createGUIComponent() {
 	std::shared_ptr<GUIComponent> comp = std::make_shared<GUIComponent>(this);
 	m_guis.push_back(comp);

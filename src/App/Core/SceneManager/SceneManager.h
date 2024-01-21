@@ -11,9 +11,13 @@ namespace golf  {
 	
 		void pushScene(std::shared_ptr<Scene> newScene);
 		void nextScene();
+
+		void lock();
+		void unlock();
 	
 	private:
 		bool m_changeScene = false;
+		bool m_lock = false;
 
 		std::shared_ptr<Scene> m_bufferScene;
 		std::shared_ptr<Scene> m_currentScene;

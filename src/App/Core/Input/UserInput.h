@@ -2,7 +2,6 @@
 
 #include "Agl.h"
 #include "Window.h"
-#include <list>
 
 namespace golf
 {
@@ -53,8 +52,8 @@ Input();
 	[[nodiscard]] float getMouseWorldOffsetY(agl::Camera&) const;
 
 	void attachCamera(agl::Camera* camera, float constvalue, bool dynamic = false);
-	void resetCameras();
-	void newScene();
+	void changeCameraSet(uint64_t setID);
+	uint64_t newScene();
 
 	void setCustomCursor();
 
@@ -100,8 +99,14 @@ private:
 
 		void updateSize(float width, float height);
 	};
-	std::list<Camera> m_cameras;
-	std::list<size_t> m_camerasCounts;
+	struct CameraSet {
+		std::vector<Camera> cameras;
+		uint64_t setID;
+		explicit CameraSet(uint64_t id);
+	};
+	std::list<std::shared_ptr<CameraSet>> m_cameraSets;
+	std::list<std::shared_ptr<CameraSet>>::iterator m_currentCameraSet;
+	uint64_t m_cameraSetsCount = 0;
 
 	static Input* s_instance; //NOLINT
 	// static void s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

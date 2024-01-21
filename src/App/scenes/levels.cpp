@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "levels.h"
+#include "misc.h"
+#include "transition.h"
 #include "../Graphics.h"
 #include "../Core/AppData.h"
-#include "misc.h"
 
 #include "Util/GML/LinearAlgebra/Vec3f.h"
 #include "Util/GML/LinearAlgebra/Vec2f.h"
@@ -331,7 +332,10 @@ namespace golf {
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -350,7 +354,10 @@ namespace golf {
 			else if (score > 3) {
 				stars = 2;
 			}
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score,stars,1)));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}
@@ -438,7 +445,10 @@ namespace golf {
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -494,7 +504,10 @@ namespace golf {
 		}
 
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 2)));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 2));
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}
@@ -578,7 +591,10 @@ namespace golf {
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -608,7 +624,10 @@ namespace golf {
 		}
 
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 3)));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 3));
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}
@@ -712,7 +731,10 @@ namespace golf {
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -744,7 +766,10 @@ namespace golf {
 		}
 
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 4)));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 4));
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}
@@ -861,7 +886,10 @@ namespace golf {
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		ptr->update();
 		if (ptr->isClicked()) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 		if (ptr->isHovered()) {
@@ -946,7 +974,10 @@ namespace golf {
 		}
 
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new ResultsScene(score, stars, 5)));
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 5));
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
 	}

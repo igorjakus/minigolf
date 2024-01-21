@@ -27,6 +27,7 @@ set(SOURCES
 	Core/SceneManager/SceneManager.h
 	Core/SceneManager/SceneManager.cpp 
 	Core/SceneManager/Scene.h
+	Core/SceneManager/Scene.cpp
 
 	# Sus
 	Core/Sus/Sus.h
@@ -45,6 +46,8 @@ set(SOURCES
 	scenes/levels.h
 	scenes/misc.cpp 
 	scenes/misc.h 
+	scenes/transition.h 
+	scenes/transition.cpp
 
 )
 

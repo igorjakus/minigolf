@@ -1,4 +1,6 @@
 #include <pch.h>
+
+#include <utility>
 #include "UserInput.h"
 #include "../AppData.h"
 
@@ -222,24 +224,30 @@ bool Input::isFocused() const {
 ///				Camera resize control
 //////////////////////////////////////////////
 
+Input::CameraSet::CameraSet(uint64_t id) : setID(id) {}
+
 void Input::attachCamera(agl::Camera* camera, float constvalue, bool dynamic) {
-	m_cameras.push_front({camera, constvalue, dynamic});
-	m_camerasCounts.front() += 1;
+	m_cameraSets.back()->cameras.push_back({camera, constvalue, dynamic});
 	const float screenX = static_cast<float>(AppData::getWindow().getWindowSize().x);
 	const float screenY = static_cast<float>(AppData::getWindow().getWindowSize().y);
-	m_cameras.front().updateSize(screenX, screenY);
+	m_cameraSets.back()->cameras.back().updateSize(screenX, screenY);
 }
 
-void Input::resetCameras() {
-	size_t toErase = m_camerasCounts.back();
-	for (size_t index = toErase; index > 0; index--) {
-		m_cameras.pop_back();
+void Input::changeCameraSet(uint64_t setID) {
+	if (m_currentCameraSet != m_cameraSets.end()) {
+		m_cameraSets.erase(m_currentCameraSet);
 	}
-	m_camerasCounts.pop_back();
+	for(m_currentCameraSet = m_cameraSets.begin(); m_currentCameraSet != m_cameraSets.end(); m_currentCameraSet++) {
+		if(setID == m_currentCameraSet->get()->setID) {
+			break;
+		}
+	}
 }
 
-void Input::newScene() {
-	m_camerasCounts.push_front(0);
+uint64_t Input::newScene() {
+	m_cameraSets.emplace_back(std::make_shared<CameraSet>(m_cameraSetsCount));
+	m_cameraSetsCount++;
+	return m_cameraSets.back()->setID;
 }
 
 //////////////////////////////////////////////
@@ -301,7 +309,7 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 //
 // }
 void Input::s_resizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height) { //NOLINT
-	for(auto& cam : s_instance->m_cameras) {
+	for(auto& cam : s_instance->m_currentCameraSet->get()->cameras) {
 		cam.updateSize(static_cast<float>(width), static_cast<float>(height));
 	}
 }
@@ -318,8 +326,7 @@ Input::Input()
 :m_window(nullptr), m_customCursor(nullptr) {
 	s_instance = this;
 	setKeys();
-	m_camerasCounts.push_front(0);
-	m_camerasCounts.push_front(0);
+	m_currentCameraSet = m_cameraSets.end();
 }
 
 Input::~Input() {
