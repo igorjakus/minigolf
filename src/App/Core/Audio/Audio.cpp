@@ -61,6 +61,7 @@ namespace golf {
         DTL_INF("chuj");
         // uninit music engine and sound objects
         ma_engine_uninit(&musicEngine);
+        DTL_INF("cipa");
         for (auto m : music) {
             ma_sound_uninit(m.get());
         }
