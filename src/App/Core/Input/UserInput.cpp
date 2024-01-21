@@ -309,8 +309,10 @@ void Input::s_scrollCallback([[maybe_unused]] GLFWwindow* window, [[maybe_unused
 //
 // }
 void Input::s_resizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height) { //NOLINT
-	for(auto& cam : s_instance->m_currentCameraSet->get()->cameras) {
-		cam.updateSize(static_cast<float>(width), static_cast<float>(height));
+	for (auto& set : s_instance->m_cameraSets) {
+		for (auto& cam : set->cameras) {
+			cam.updateSize(static_cast<float>(width), static_cast<float>(height));
+		}
 	}
 }
 
