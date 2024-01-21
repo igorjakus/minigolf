@@ -227,8 +227,9 @@ glm::ivec2 agl::Window::getAspectRatio() const
 	if (m_ID == nullptr)
 	{ DTL_ERR("Window hasn't yet been created. First create a window before trying to get window aspect ratio."); return {}; }
 	const auto winsize = getWindowSize();
-	const int gcd = std::_Gcd(winsize.x, winsize.y);
-	return { winsize.x / gcd, winsize.y / gcd };
+	// const int gcd = std::gcd(winsize.x, winsize.y);
+	DTL_ERR("Ta funkcja jest do wyjebania nie używaj jej. (agl::Window::getAspectRatio())");
+	return { winsize.x, winsize.y};
 }
 
 GLFWwindow* agl::Window::passPointer() const

@@ -7,6 +7,7 @@
 #include<chrono>
 #include<memory>
 #include<cmath>
+#include<numeric>
 
 //data structures
 #include<vector>
