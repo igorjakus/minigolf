@@ -73,17 +73,13 @@ namespace golf {
 		Background background;
 
 		Entity grass;
-		std::unique_ptr<agl::Object> WallA;
-		std::unique_ptr<agl::Object> WallB;
-		std::unique_ptr<agl::Texture> WallTex;
+
 		Entity wallA;
 		Entity wallB;
-
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;
 		Entity frame4;
-
 
 		Entity ball;
 
@@ -123,7 +119,6 @@ namespace golf {
 		Entity wallA;
 		Entity wallB;
 
-
 		Entity grass;
 		Entity frame1;
 		Entity frame2;
@@ -133,7 +128,6 @@ namespace golf {
 		Entity ball;
 
 		Entity hole;
-
 
 		Entity pauseButton;
 		Entity replayButton;
@@ -163,8 +157,8 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
 		CameraControls cameraControls;
-
 		PhysicsEngine physics;
+		Background background;
 
 		Entity wallA;
 		Entity wallB;
@@ -180,7 +174,6 @@ namespace golf {
 		Entity wall2;
 		Entity wall3;
 		
-
 		Entity grass;
 		Entity grass2;
 		Entity ramp;
@@ -188,7 +181,6 @@ namespace golf {
 		Entity ball;
 
 		Entity hole;
-
 
 		Entity pauseButton;
 		Entity replayButton;
@@ -218,8 +210,8 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
 		CameraControls cameraControls;
-
 		PhysicsEngine physics;
+		Background background;
 
 		Entity grass;
 		Entity wallA;

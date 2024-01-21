@@ -54,7 +54,6 @@ namespace golf {
 
 		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame1.getTransform()->setPos(0.0f, 3.0f);
 		frame1.getTransform()->setScale(0.2f, 6.19f);
 		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -62,7 +61,6 @@ namespace golf {
 
 		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame2.getTransform()->setPos(4.0f, 6.0f);
 		frame2.getTransform()->setScale(8.15f, 0.2f);
 		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -70,7 +68,6 @@ namespace golf {
 
 		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame3.getTransform()->setPos(8.1f, 3.0f);
 		frame3.getTransform()->setScale(0.2f, 6.19f);
 		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -78,7 +75,6 @@ namespace golf {
 
 		frame4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame4.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		frame4.getTransform()->setPos(4.0f, 0.0f);
 		frame4.getTransform()->setScale(8.15f, 0.2f);
 		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -282,12 +278,9 @@ namespace golf {
 		guiLayer.render();
 	}
 
-
-
 	// ===============================
 	// LevelTwoScene
 	// ===============================
-
 
 	LevelTwoScene::LevelTwoScene()
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
@@ -334,7 +327,7 @@ namespace golf {
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallA.getTransform()->setPos(2.5f, 3.0f);
 		wallA.getTransform()->setScale( 0.2f, 2.0f);
-		wallA.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallA.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
 		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
@@ -342,11 +335,8 @@ namespace golf {
 		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallB.getTransform()->setPos(5.5f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 2.0f);
-		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallB.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-
-
-
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		hole.getComponent<VisualComponent>()->setTexture("hole");
@@ -443,55 +433,29 @@ namespace golf {
 		physics.update(deltaT);
 		
 		
-		
-		auto ptr = pauseButton.getComponent<ButtonComponent>();
-		ptr->update();
-		if (ptr->isClicked()) {
-			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
-			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
-			AppData::getSceneManager().pushScene(transition);
-			AppData::getSceneManager().pushScene(next);
-			AppData::getSceneManager().nextScene();
-		}
-		if (ptr->isHovered()) {
-			pauseButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
-		}
-		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
+		// Moving obstacles
 
-
+		const float wallSpeed = 1.f;
 		static bool moveUp = true; 
-		float wallSpeed = 1.0f; 
-
 		if (moveUp) {
-			wallA.getTransform()->setPos(wallA.getTransform()->getPos().first, wallA.getTransform()->getPos().second + deltaT * wallSpeed);
+			wallA.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, wallSpeed };
+			wallB.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, -wallSpeed };
+		} else {
+			wallA.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, -wallSpeed };
+			wallB.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, wallSpeed };
 		}
-		else {
-			wallA.getTransform()->setPos(wallA.getTransform()->getPos().first, wallA.getTransform()->getPos().second - deltaT * wallSpeed);
-		}
-
-		if (moveUp) {
-			wallB.getTransform()->setPos(wallB.getTransform()->getPos().first, wallB.getTransform()->getPos().second - deltaT * wallSpeed);
-		}
-		else {
-			wallB.getTransform()->setPos(wallB.getTransform()->getPos().first, wallB.getTransform()->getPos().second + deltaT * wallSpeed);
-			
-		}
-
-		
 		float upperLimit = 4.8f;  
 		float lowerLimit = 1.2f;  
-
 		if (wallA.getTransform()->getPos().second >= upperLimit) {
 			moveUp = false;
-		}
-		else if (wallA.getTransform()->getPos().second <= lowerLimit) {
+		} else if (wallA.getTransform()->getPos().second <= lowerLimit) {
 			moveUp = true;
 		}
 
 
-
 		// GUI
-		ptr = pauseButton.getComponent<ButtonComponent>();
+
+		auto ptr = pauseButton.getComponent<ButtonComponent>();
 		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
 		if (ptr->isClicked()) {
 			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
@@ -507,7 +471,7 @@ namespace golf {
 
 		ptr = replayButton.getComponent<ButtonComponent>();
 		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
-		if (ptr->isClicked()) {
+		if (ptr->isClicked() || ball.getComponent<DynamicPhysicsComponent>()->exploded()) {
 			auto next = std::shared_ptr<Scene>(new LevelTwoScene());
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -592,7 +556,6 @@ namespace golf {
 		guiLayer.render();
 	}
 
-
 	// ===============================
 	// LevelThreeScene
 	// ===============================
@@ -636,13 +599,14 @@ namespace golf {
 		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
-
+		const float rotateSpeed = 0.7f;
 		wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallA.getTransform()->setPos(4.0f, 3.0f);
 		wallA.getTransform()->setScale(6.0f, 0.2f);
-		wallA.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallA.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		wallA.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = {0, 0, rotateSpeed};
 		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
@@ -650,9 +614,9 @@ namespace golf {
 		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wallB.getTransform()->setPos(4.0f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 6.0f);
-		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallB.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		wallB.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, rotateSpeed };
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		hole.getComponent<VisualComponent>()->setTexture("hole");
@@ -709,12 +673,6 @@ namespace golf {
 
 	void LevelThreeScene::update(float deltaT)
 	{
-
-		float rotateSpeed = 45.0f;  // Dostosuj prêdkoœæ obrotu wallA
-		wallA.getTransform()->rot += deltaT * rotateSpeed;
-		wallB.getTransform()->rot += deltaT * rotateSpeed;
-
-
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
@@ -753,7 +711,6 @@ namespace golf {
 		}
 
 		physics.update(deltaT);
-
 
 		// GUI
 
@@ -885,7 +842,7 @@ namespace golf {
 		ramp.getTransform()->setScale(2.7f, 4);
 		ramp.getTransform()->setPos(5.4f, -0.3f);
 		ramp.getTransform()->rot =45.0f;
-
+		ramp.addComponent<SurfaceComponent>(physics.addSurfaceElement(0.9f, 0.4f));
 		
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
@@ -930,12 +887,14 @@ namespace golf {
 		frame6.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame6.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
+		const float rotateSpeed = 2.f;
 		wall1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall1.getComponent<VisualComponent>()->setTexture("Wood");
 		wall1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		wall1.getTransform()->setPos(2.5f, -2.0f);
 		wall1.getTransform()->setScale(2.5f, 0.2f);
-		wall1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall1.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		wall1.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, rotateSpeed };
 		wall1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		wall2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
@@ -944,7 +903,8 @@ namespace golf {
 		wall2.getTransform()->setPos(5.5f, -3.5f);
 		wall2.getTransform()->setScale(2.5f, 0.2f);
 		wall2.getTransform()->rot = 20.0f;
-		wall2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall2.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		wall2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, rotateSpeed };
 		wall2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 
@@ -954,7 +914,8 @@ namespace golf {
 		wall3.getTransform()->setPos(2.5f, -5.5f);
 		wall3.getTransform()->setScale(2.5f, 0.2f);
 		wall3.getTransform()->rot = 100.0f;
-		wall3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall3.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		wall3.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, rotateSpeed };
 		wall3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		//=========
@@ -1014,13 +975,6 @@ namespace golf {
 	void LevelFourScene::update(float deltaT)
 	{
 
-		float rotateSpeed1 = 80.0f;
-
-		wall1.getTransform()->rot -= deltaT * rotateSpeed1;
-		wall2.getTransform()->rot += deltaT * rotateSpeed1;
-		wall3.getTransform()->rot -= deltaT * rotateSpeed1;
-
-
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
@@ -1059,7 +1013,6 @@ namespace golf {
 		}
 
 		physics.update(deltaT);
-
 
 		// GUI
 
@@ -1157,6 +1110,7 @@ namespace golf {
 		}
 	}
 	void LevelFourScene::render() {
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -1166,8 +1120,7 @@ namespace golf {
 	// ===============================
 
 	LevelFiveScene::LevelFiveScene()
-		: m_camera(0.f, 0.f, 1.f, 1.f, 1.f),
-		m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
+		: m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
 		cameraControls(m_camera, 2.f, 14.f, 10.f, 0.f) {
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
@@ -1177,7 +1130,6 @@ namespace golf {
 		grass.getTransform()->setScale(16.0f, 12.0f);
 		grass.getTransform()->setPos(8, 6);
 
-
 		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
 		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
@@ -1186,12 +1138,14 @@ namespace golf {
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
+		const float rotateSpeed = 1.5f;
 		w1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		w1.getComponent<VisualComponent>()->setTexture("Wood");
 		w1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w1.getTransform()->setPos(5.0f, 9.2f);
 		w1.getTransform()->setScale(4.0f, 0.2f);
-		w1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		w1.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		w1.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, rotateSpeed };
 		w1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		w2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
@@ -1199,7 +1153,8 @@ namespace golf {
 		w2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w2.getTransform()->setPos(5.0f, 9.2f);
 		w2.getTransform()->setScale(0.2f, 4.0f);
-		w2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		w2.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		w2.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, rotateSpeed };
 		w2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		w3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
@@ -1207,7 +1162,8 @@ namespace golf {
 		w3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w3.getTransform()->setPos(11.0f, 9.2f);
 		w3.getTransform()->setScale(4.0f, 0.2f);
-		w3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		w3.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		w3.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, -rotateSpeed };
 		w3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		w4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
@@ -1215,14 +1171,15 @@ namespace golf {
 		w4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		w4.getTransform()->setPos(11.0f, 9.2f);
 		w4.getTransform()->setScale( 0.2f, 4.0f);
-		w4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		w4.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		w4.getComponent<KinematicPhysicsComponent>()->m_angular_velocity = { 0, 0, -rotateSpeed };
 		w4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		q1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		q1.getComponent<VisualComponent>()->setTexture("ramp1");
 		q1.getTransform()->setPos(5.0f, 2.2f);
 		q1.getTransform()->setScale(1.0f, 2.0f);
-		q1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		q1.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
 		q1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 
@@ -1230,7 +1187,7 @@ namespace golf {
 		q2.getComponent<VisualComponent>()->setTexture("ramp1");
 		q2.getTransform()->setPos(8.0f, 2.7f);
 		q2.getTransform()->setScale(1.0f, 2.0f);
-		q2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		q2.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
 		q2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 
@@ -1238,7 +1195,7 @@ namespace golf {
 		q3.getComponent<VisualComponent>()->setTexture("ramp1");
 		q3.getTransform()->setPos(11.0f, 3.3f);
 		q3.getTransform()->setScale(1.0f, 2.0f);
-		q3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		q3.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
 		q3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 
@@ -1326,40 +1283,29 @@ namespace golf {
 
 	void LevelFiveScene::update([[maybe_unused]] float deltaT)
 	{
-		float rotateSpeed1 = 80.0f;
-
-		w1.getTransform()->rot += deltaT * rotateSpeed1;
-		w2.getTransform()->rot += deltaT * rotateSpeed1;
-		w3.getTransform()->rot -= deltaT * rotateSpeed1;
-		w4.getTransform()->rot -= deltaT * rotateSpeed1;
-		
-
-
 		static bool moveUp1 = true;
 		static bool moveUp2 = false;
 		static bool moveUp3 = true;
 		float wallSpeed1 = 1.0f;
-		float wallSpeed2 = 1.5f;
+		float wallSpeed2 = 2.5f;
+		float wallSpeed3 = 3.5f;
 
 		if (moveUp1) {
-			q1.getTransform()->setPos(q1.getTransform()->getPos().first, q1.getTransform()->getPos().second + deltaT * wallSpeed1);
-		}
-		else {
-			q1.getTransform()->setPos(q1.getTransform()->getPos().first, q1.getTransform()->getPos().second - deltaT * wallSpeed1);
+			q1.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, wallSpeed1 };
+		} else {
+			q1.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, -wallSpeed1 };
 		}
 
 		if (moveUp2) {
-			q2.getTransform()->setPos(q2.getTransform()->getPos().first, q2.getTransform()->getPos().second + deltaT * wallSpeed1);
-		}
-		else {
-			q2.getTransform()->setPos(q2.getTransform()->getPos().first, q2.getTransform()->getPos().second - deltaT * wallSpeed1);
+			q2.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, wallSpeed2 };
+		} else {
+			q2.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, -wallSpeed2 };
 		}
 
 		if (moveUp3) {
-			q3.getTransform()->setPos(q3.getTransform()->getPos().first, q3.getTransform()->getPos().second + deltaT * wallSpeed2);
-		}
-		else {
-			q3.getTransform()->setPos(q3.getTransform()->getPos().first, q3.getTransform()->getPos().second - deltaT * wallSpeed2);
+			q3.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, wallSpeed3 };
+		} else {
+			q3.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, -wallSpeed3 };
 		}
 
 		float upperLimit = 4.6f;
@@ -1367,25 +1313,21 @@ namespace golf {
 
 		if (q1.getTransform()->getPos().second >= upperLimit) {
 			moveUp1 = false;
-		}
-		else if (q1.getTransform()->getPos().second <= lowerLimit) {
+		} else if (q1.getTransform()->getPos().second <= lowerLimit) {
 			moveUp1 = true;
 		}
 
 		if (q2.getTransform()->getPos().second >= upperLimit) {
 			moveUp2 = false;
-		}
-		else if (q2.getTransform()->getPos().second <= lowerLimit) {
+		} else if (q2.getTransform()->getPos().second <= lowerLimit) {
 			moveUp2 = true;
 		}
 
 		if (q3.getTransform()->getPos().second >= upperLimit) {
 			moveUp3 = false;
-		}
-		else if (q3.getTransform()->getPos().second <= lowerLimit) {
+		} else if (q3.getTransform()->getPos().second <= lowerLimit) {
 			moveUp3 = true;
 		}
-
 
 		// camera
 		if (!camLocked) {
@@ -1425,7 +1367,6 @@ namespace golf {
 		}
 
 		physics.update(deltaT);
-
 
 		// GUI
 
@@ -1472,7 +1413,6 @@ namespace golf {
 			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_not_pressed"); }
 		}
 
-
 		firstDigit.getComponent<VisualComponent>()->setTexture(std::to_string(score % 10));
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
@@ -1502,6 +1442,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
+
 		if (AppData::getInput().isKeyPressed("P") || won) {
 			score--;
 			if (score > 9) {
@@ -1525,6 +1466,7 @@ namespace golf {
 	}
 
 	void LevelFiveScene::render() {
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}

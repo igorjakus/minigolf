@@ -84,9 +84,6 @@ namespace golf {
 		return Obj;
 	}
 
-
-
-
 	//Kula z kwadratem
 	void PhysicsEngine::check_collision(std::shared_ptr<HitboxComponent> A,std::shared_ptr<HitboxComponent> B){
 		//stworz siatke boxa
@@ -151,7 +148,7 @@ namespace golf {
 
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
 			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius) {
-				DTL_ERR("kot wybuchł");
+				DTL_WAR("kot wybuchł");
 				auto ptr = Owner1->getComponent<DynamicPhysicsComponent>();
 				if(ptr) { ptr->m_exploded = true; }
 				return;
