@@ -23,7 +23,9 @@ namespace golf {
 		m_time += deltaT;
 		AppData::getSceneManager().lock();
 
-		if (m_time > m_duration / 2 + m_pause / 2) {
+		if (m_time < m_duration / 2 - m_pause / 2) {
+			m_scene1->update(deltaT);
+		} else if (m_time > m_duration / 2 + m_pause / 2) {
 			m_scene2->update(deltaT);
 		}
 

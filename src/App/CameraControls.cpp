@@ -7,50 +7,30 @@
 namespace golf {
 
 CameraControls::CameraControls(agl::Camera& camera, float maxLeft, float maxRight, float maxUp, float maxDown)
-	: m_camera(&camera), m_camMinX(maxLeft), m_camMaxX(maxRight), m_camMaxY(maxUp), m_camMinY(maxDown) {
-
-	m_camUp.addComponent<GUIComponent>(m_gui.createGUIComponent());
-	m_camUp.getComponent<GUIComponent>()->setPosition(GUIComponent::positionType::TOP, 0.f, 0.f, GUIComponent::modeType::RELATIVE);
-	m_camUp.getTransform()->setScale(1000.f, 0.1f);
-	m_camUp.addComponent<ButtonComponent>(ButtonComponent::create(m_gui));
-
-	m_camDown.addComponent<GUIComponent>(m_gui.createGUIComponent());
-	m_camDown.getComponent<GUIComponent>()->setPosition(GUIComponent::positionType::BOTTOM, 0.f, 0.f, GUIComponent::modeType::RELATIVE);
-	m_camDown.getTransform()->setScale(1000.f, 0.1f);
-	m_camDown.addComponent<ButtonComponent>(ButtonComponent::create(m_gui));
-
-	m_camRight.addComponent<GUIComponent>(m_gui.createGUIComponent());
-	m_camRight.getComponent<GUIComponent>()->setPosition(GUIComponent::positionType::RIGHT, 0.f, 0.f, GUIComponent::modeType::RELATIVE);
-	m_camRight.getTransform()->setScale(0.1f, 1000.f);
-	m_camRight.addComponent<ButtonComponent>(ButtonComponent::create(m_gui));
-
-	m_camLeft.addComponent<GUIComponent>(m_gui.createGUIComponent());
-	m_camLeft.getComponent<GUIComponent>()->setPosition(GUIComponent::positionType::LEFT, 0.f, 0.f, GUIComponent::modeType::RELATIVE);
-	m_camLeft.getTransform()->setScale(0.1f, 1000.f);
-	m_camLeft.addComponent<ButtonComponent>(ButtonComponent::create(m_gui));
-
-}
+	: m_camera(&camera), m_camMinX(maxLeft), m_camMaxX(maxRight), m_camMaxY(maxUp), m_camMinY(maxDown) {}
 
 void CameraControls::update(float deltaT) {
 	m_gui.render();
-	m_camUp.getComponent<ButtonComponent>()->update();
-	m_camDown.getComponent<ButtonComponent>()->update();
-	m_camRight.getComponent<ButtonComponent>()->update();
-	m_camLeft.getComponent<ButtonComponent>()->update();
+
+	const float winWidth = static_cast<float>(AppData::getWindow().getWindowSize().x);
+	const float winHeight = static_cast<float>(AppData::getWindow().getWindowSize().y);
+
+	const float mousePosX = AppData::getInput().getMouseX() / winWidth;
+	const float mousePosY = AppData::getInput().getMouseY() / winHeight;
 
 	bool cursorActive = !AppData::getInput().isMouseLocked();
 	const float cameraSpeed = 10 * m_camera->getFocalLength();
 	const float cameraResponse = 30;
-	if (AppData::getInput().isKeyPressed("UP") || AppData::getInput().isKeyPressed("W") || (m_camUp.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
+	if (AppData::getInput().isKeyPressed("UP") || AppData::getInput().isKeyPressed("W") || ( mousePosY < 0.1f && cursorActive)) {
 		m_camUpSpeed += 2 * deltaT * cameraResponse;
 	}
-	if (AppData::getInput().isKeyPressed("LEFT") || AppData::getInput().isKeyPressed("A") || (m_camLeft.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
+	if (AppData::getInput().isKeyPressed("LEFT") || AppData::getInput().isKeyPressed("A") || (mousePosX < 0.1f && cursorActive)) {
 		m_camLeftSpeed += 2 * deltaT * cameraResponse;
 	}
-	if (AppData::getInput().isKeyPressed("RIGHT") || AppData::getInput().isKeyPressed("D") || (m_camRight.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
+	if (AppData::getInput().isKeyPressed("RIGHT") || AppData::getInput().isKeyPressed("D") || (mousePosX > 0.9f && cursorActive)) {
 		m_camRightSpeed += 2 * deltaT * cameraResponse;
 	}
-	if (AppData::getInput().isKeyPressed("DOWN") || AppData::getInput().isKeyPressed("S") || (m_camDown.getComponent<ButtonComponent>()->isHovered() && cursorActive)) {
+	if (AppData::getInput().isKeyPressed("DOWN") || AppData::getInput().isKeyPressed("S") || (mousePosY > 0.9f && cursorActive)) {
 		m_camDownSpeed += 2 * deltaT * cameraResponse;
 	}
 
