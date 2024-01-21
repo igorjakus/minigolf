@@ -37,8 +37,8 @@ namespace golf {
         // load sound effects
         for (const auto& entry : std::filesystem::directory_iterator(SOUNDEFFECTS_PATH)) {
             if (std::filesystem::is_regular_file(entry)) {
-                sounds.emplace_back(std::make_shared<ma_sound>());
-                loadSound(sounds.back().get(), entry.path().string(), &soundEffectsEngine);
+                soundEffects.emplace_back(std::make_shared<ma_sound>());
+                loadSound(soundEffects.back().get(), entry.path().string(), &soundEffectsEngine);
                 DTL_INF("Audio: Loaded sound effects {0}", entry.path().filename());
             }
         }
@@ -54,7 +54,7 @@ namespace golf {
 
         // uninit sound effect engine and sound objects
         ma_engine_uninit(&soundEffectsEngine);
-        for (auto s : sounds)
+        for (auto s : soundEffects)
             ma_sound_uninit(s.get());
 
         // uninit music engine and sound objects
@@ -90,11 +90,11 @@ namespace golf {
         bool isSongPlaying = true;
 
         while (!exitMusic) {
-            isSongPlaying = ma_sound_is_playing(getSound(songToPlay));
+            isSongPlaying = ma_sound_is_playing(getSong(songToPlay));
 
             // paused but playing
             if (isMusicPaused && isSongPlaying)
-                ma_sound_stop(getSound(songToPlay));
+                ma_sound_stop(getSong(songToPlay));
 
             // not paused and not playing
             else if (!isMusicPaused && !isSongPlaying) {
@@ -103,20 +103,24 @@ namespace golf {
                     timesPlayedInRow = 0;
                 }
                 timesPlayedInRow++;
-                ma_sound_start(getSound(songToPlay));
+                ma_sound_start(getSong(songToPlay));
             }
 
             // paused but not playing: good
             // not paused but playing: good
         }
-        ma_sound_stop(getSound(songToPlay));
+        ma_sound_stop(getSong(songToPlay));
     }
 
     void Audio::pauseMusicON() { isMusicPaused = true; }
     void Audio::pauseMusicOFF() { isMusicPaused = false; }
     void Audio::pauseMusicSWITCH() { isMusicPaused = !isMusicPaused; }
 
-    ma_sound* Audio::getSound(int number) {
+    ma_sound* Audio::getSong(int number) {
         return music[number].get();
+    }
+
+    ma_sound* Audio::getSoundEffect(int number) {
+        return soundEffects[number].get();
     }
 }
