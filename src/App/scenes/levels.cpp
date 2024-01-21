@@ -136,15 +136,13 @@ namespace golf {
 	{
 		// camera
 		if (!camLocked) {
-			cameraControls.update(deltaT);
 			if(ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
 				cameraControls.follow(ball.getTransform()->x, ball.getTransform()->y);
 			}
+		} else {
+			cameraControls.lock(4.f, 3.f, 0.65f);
 		}
-		else {
-			m_camera.setFocalLength(0.65f);
-			m_camera.setPosition(4, 3);
-		}
+		cameraControls.update(deltaT);
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
@@ -192,7 +190,7 @@ namespace golf {
 
 		ptr = replayButton.getComponent<ButtonComponent>();
 		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
-		if (ptr->isClicked()) {
+		if (ptr->isClicked() || ball.getComponent<DynamicPhysicsComponent>()->exploded()) {
 			auto next = std::shared_ptr<Scene>(new LevelOneScene());
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);

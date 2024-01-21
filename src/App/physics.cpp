@@ -152,6 +152,7 @@ namespace golf {
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
 			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius) {
 				DTL_ERR("kot wybuchł");
+				Owner1->getComponent<DynamicPhysicsComponent>()->m_exploded = true;
 				return;
 			}
 			Owner1->getTransform()->x += Wiemcoto.x;
@@ -324,10 +325,13 @@ namespace golf {
 	}
 
 	DynamicPhysicsComponent::DynamicPhysicsComponent(float mass,float inertia)
-		: m_in_physics_scope(true), m_mass(mass), m_inertia(inertia) {}
+		: m_in_physics_scope(true), m_mass(mass), m_inertia(inertia), m_exploded(false) {}
 
 	bool DynamicPhysicsComponent::isMoving() const {
 		return m_velocity.getLengthSquared() > 0 || m_angular_acceleration.z > 0;
+	}
+	bool DynamicPhysicsComponent::exploded() const {
+		return m_exploded;
 	}
 		
 
