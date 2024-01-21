@@ -12,7 +12,6 @@
 
 namespace golf {
 
-
 	using PositionType = GUIComponent::positionType;
 	using ModeType = GUIComponent::modeType;
 
@@ -80,7 +79,7 @@ namespace golf {
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		hole.getComponent<VisualComponent>()->setTexture("sponge");
+		hole.getComponent<VisualComponent>()->setTexture("hole");
 		hole.getTransform()->setPos(7.0f, 5.0f);
 		hole.getTransform()->setScale(0.5f);
 
@@ -165,71 +164,103 @@ namespace golf {
 		pauseButton.getTransform()->setScale(0.1f, 0.1f);
 		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
+		replayButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		replayButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.15f, ModeType::RELATIVE);
+		replayButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		replayButton.getTransform()->setScale(0.1f, 0.1f);
+		replayButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		camLockButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camLockButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.25f, ModeType::RELATIVE);
+		camLockButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		camLockButton.getTransform()->setScale(0.1f, 0.1f);
+		camLockButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		firstDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		firstDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.105f, -0.05f, ModeType::RELATIVE);
+		firstDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		firstDigit.getTransform()->setScale(0.1f, 0.1f);
+		firstDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		secondDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		secondDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.05f, -0.05f, ModeType::RELATIVE);
+		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		secondDigit.getTransform()->setScale(0.1f, 0.1f);
+		secondDigit.getComponent<VisualComponent>()->setTexture("0");
 	}
 
 	void LevelOneScene::update(float deltaT)
 	{
 		// camera
+		if (!camLocked) {
+			camUp.getComponent<ButtonComponent>()->update();
+			camDown.getComponent<ButtonComponent>()->update();
+			camRight.getComponent<ButtonComponent>()->update();
+			camLeft.getComponent<ButtonComponent>()->update();
 
-		camUp.getComponent<ButtonComponent>()->update();
-		camDown.getComponent<ButtonComponent>()->update();
-		camRight.getComponent<ButtonComponent>()->update();
-		camLeft.getComponent<ButtonComponent>()->update();
+			const float cameraSpeed = 10 * m_camera.getFocalLength();
+			const float cameraResponse = 30;
+			if (AppData::getInput().isKeyPressed("UP") || AppData::getInput().isKeyPressed("W") || (camUp.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+				camUpSpeed += deltaT * cameraResponse;
+			}
+			else {
+				camUpSpeed -= deltaT * cameraResponse;
+			}
+			if (AppData::getInput().isKeyPressed("LEFT") || AppData::getInput().isKeyPressed("A") || (camLeft.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+				camLeftSpeed += deltaT * cameraResponse;
+			}
+			else {
+				camLeftSpeed -= deltaT * cameraResponse;
+			}
+			if (AppData::getInput().isKeyPressed("RIGHT") || AppData::getInput().isKeyPressed("D") || (camRight.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+				camRightSpeed += deltaT * cameraResponse;
+			}
+			else {
+				camRightSpeed -= deltaT * cameraResponse;
+			}
+			if (AppData::getInput().isKeyPressed("DOWN") || AppData::getInput().isKeyPressed("S") || (camDown.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+				camDownSpeed += deltaT * cameraResponse;
+			}
+			else {
+				camDownSpeed -= deltaT * cameraResponse;
+			}
 
-		const float cameraSpeed = 10 * m_camera.getFocalLength();
-		const float cameraResponse = 30;
-		if (AppData::getInput().isKeyPressed("UP") || AppData::getInput().isKeyPressed("W") || (camUp.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-			camUpSpeed += deltaT * cameraResponse;
-		} else {
-			camUpSpeed -= deltaT * cameraResponse;
-		}
-		if (AppData::getInput().isKeyPressed("LEFT") || AppData::getInput().isKeyPressed("A") || (camLeft.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-			camLeftSpeed += deltaT * cameraResponse;
-		} else {
-			camLeftSpeed -= deltaT * cameraResponse;
-		}
-		if (AppData::getInput().isKeyPressed("RIGHT") || AppData::getInput().isKeyPressed("D") || (camRight.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-			camRightSpeed += deltaT * cameraResponse;
-		} else {
-			camRightSpeed -= deltaT * cameraResponse;
-		}
-		if (AppData::getInput().isKeyPressed("DOWN") || AppData::getInput().isKeyPressed("S") || (camDown.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-			camDownSpeed += deltaT * cameraResponse;
-		} else {
-			camDownSpeed -= deltaT * cameraResponse;
-		}
+			camUpSpeed = util::clamp(camUpSpeed, 0, cameraSpeed);
+			camRightSpeed = util::clamp(camRightSpeed, 0, cameraSpeed);
+			camLeftSpeed = util::clamp(camLeftSpeed, 0, cameraSpeed);
+			camDownSpeed = util::clamp(camDownSpeed, 0, cameraSpeed);
 
-		camUpSpeed = util::clamp(camUpSpeed, 0, cameraSpeed);
-		camRightSpeed = util::clamp(camRightSpeed, 0, cameraSpeed);
-		camLeftSpeed = util::clamp(camLeftSpeed, 0, cameraSpeed);
-		camDownSpeed = util::clamp(camDownSpeed, 0, cameraSpeed);
+			float cameraX = m_camera.getPosition().x + deltaT * (camRightSpeed - camLeftSpeed);
+			float cameraY = m_camera.getPosition().y + deltaT * (camUpSpeed - camDownSpeed);
+			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
+				float c = 0.1f;
+				c = 1.f - pow(c, deltaT);
+				cameraX = util::lerp(cameraX, ball.getTransform()->x, c);
+				cameraY = util::lerp(cameraY, ball.getTransform()->y, c);
+				targetZoom = 0.5f;
+				zoomTimer = 0.f;
+			}
+			cameraX = util::clamp(cameraX, camMinX, camMaxX);
+			cameraY = util::clamp(cameraY, camMinY, camMaxY);
+			m_camera.setPosition(cameraX, cameraY);
 
-		float cameraX = m_camera.getPosition().x + deltaT * (camRightSpeed - camLeftSpeed);
-		float cameraY = m_camera.getPosition().y + deltaT * (camUpSpeed - camDownSpeed);
-		if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
-			float c = 0.1f;
-			c = 1.f - pow(c, deltaT);
-			cameraX = util::lerp(cameraX, ball.getTransform()->x, c);
-			cameraY = util::lerp(cameraY, ball.getTransform()->y, c);
-			targetZoom = 0.5f;
-			zoomTimer = 0.f;
+			if (AppData::getInput().getWheelOffset() >= 1) {
+				targetZoom *= 0.8f;
+				zoomTimer = 0;
+			}
+			if (AppData::getInput().getWheelOffset() <= -1) {
+				targetZoom *= 1.25f;
+				zoomTimer = 0;
+			}
+			targetZoom = util::clamp(targetZoom, 0.3f, 1.f);
+			zoomTimer += deltaT * 3.f; if (zoomTimer > 1) { zoomTimer = 1; }
+			zoom = util::lerp(zoom, targetZoom, zoomTimer);
+			m_camera.setFocalLength(zoom);
 		}
-		cameraX = util::clamp(cameraX, camMinX, camMaxX);
-		cameraY = util::clamp(cameraY, camMinY, camMaxY);
-		m_camera.setPosition(cameraX, cameraY);
-
-		if (AppData::getInput().getWheelOffset() >= 1) {
-			targetZoom *= 0.8f;
-			zoomTimer = 0;
+		else {
+			m_camera.setFocalLength(0.65f);
+			m_camera.setPosition(4,3);
 		}
-		if (AppData::getInput().getWheelOffset() <= -1) {
-			targetZoom *= 1.25f;
-			zoomTimer = 0;
-		}
-		targetZoom = util::clamp(targetZoom, 0.3f, 1.f);
-		zoomTimer += deltaT * 3.f; if (zoomTimer > 1) { zoomTimer = 1; }
-		zoom = util::lerp(zoom, targetZoom, zoomTimer);
-		m_camera.setFocalLength(zoom);
 
 		// ball
 		if (!ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
@@ -343,15 +374,47 @@ namespace golf {
 		}
 		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
 
+		ptr = replayButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked()) {
+			auto next = std::shared_ptr<Scene>(new LevelOneScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			replayButton.getComponent<VisualComponent>()->setTexture("replay_pressed");
+		}
+		else { replayButton.getComponent<VisualComponent>()->setTexture("replay_not_pressed"); }
+
+		ptr = camLockButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked()) {
+			camLocked = !camLocked;
+		}
+		if (ptr->isHovered()) {
+			if(camLocked){ camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_pressed"); }
+		}
+		else {
+			if (camLocked) { camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_not_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_not_pressed"); }
+		}
+
+		
+		firstDigit.getComponent<VisualComponent>()->setTexture(std::to_string(score % 10));
+		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score%100)/10));
+
 		// Logika zakonczenia poziomu
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			if (score > 11) {
+			if (score > 9) {
 				stars = 0;
 			}
-			else if (score > 6) {
+			else if (score > 5) {
 				stars = 1;
 			}
-			else if (score > 3) {
+			else if (score > 2) {
 				stars = 2;
 			}
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));

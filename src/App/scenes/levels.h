@@ -63,13 +63,22 @@ namespace golf {
 		float targetZoom = 0.5f;
 		float zoomTimer = 1.f;
 
+		bool camLocked = true;
+
 		Entity pauseButton;
+		Entity replayButton;
+		Entity camLockButton;
+
+		Entity firstDigit;
+		Entity secondDigit;
 
 		bool aiming = false;
+
 
 		bool won = false;
 		int score = 0;
 		int stars = 3;
+
 	};
 
 	

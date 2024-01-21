@@ -87,7 +87,7 @@ namespace golf {
 		creditsButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		exitButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		exitButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		exitButton.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMLEFT, 0.03f, 0.03f, ModeType::RELATIVE);
 		exitButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		exitButton.getComponent<VisualComponent>()->setTexture("exit_not_pressed");
 		exitButton.getTransform()->setScale(0.12f, 0.12f);
@@ -294,7 +294,7 @@ namespace golf {
 
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMLEFT, 0.03f, 0.03f, ModeType::RELATIVE);
 		mainMenuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
@@ -516,7 +516,7 @@ namespace golf {
 
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMLEFT, 0.03f, 0.03f, ModeType::RELATIVE);
 		mainMenuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
@@ -557,7 +557,7 @@ namespace golf {
 
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.6f, -0.4f, ModeType::RELATIVE);
+		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMLEFT, 0.03f, 0.03f, ModeType::RELATIVE);
 		mainMenuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
