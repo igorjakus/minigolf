@@ -21,17 +21,21 @@ namespace golf {
 		// Play sound once
 		void playSound(int number);
 
-		void playMusic();
-
 		ma_sound* getSound(int number);
 
-	private:
-		bool isMusicPlaying;
+		// later can make a function that changes them
+		bool exitMusic;
+		bool pauseMusic;
 
+	private:
 		ma_engine musicEngine;
 		ma_engine soundEventEngine;
 
 		std::vector<std::shared_ptr<ma_sound>> music;
 		std::vector<std::shared_ptr<ma_sound>> sounds;
+
+		// only constructor should call it
+		// you can stop it by changing exitMusic to true
+		void playMusic();
 	};
 }

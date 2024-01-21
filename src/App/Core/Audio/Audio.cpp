@@ -27,15 +27,20 @@ namespace golf {
             loadSound(sounds.back().get(), filePath, &soundEventEngine);
         }
 
+        // set appropriate bool values
+        exitMusic = false;
+        pauseMusic = false;
+
+        // ATTENTION!!!
         // ZAPEWNE SIE WYKRZACZY POTEM TO
-        //std::thread musicThread([&]() {
-            //playMusic();
-           // });
-        // UWAGA UWAGA
-        //musicThread.detach();
+        std::thread musicThread([&]() { playMusic(); });
+        musicThread.detach();
     }
 
     Audio::~Audio() {
+        // indirectly should close playMusic thread
+        exitMusic = true;
+
         // uninit engines
         ma_engine_uninit(&musicEngine);
         ma_engine_uninit(&soundEventEngine);
@@ -46,8 +51,6 @@ namespace golf {
         for (auto s : sounds)
             ma_sound_uninit(s.get());
 
-        // pewnie trzeba isMusicPlaying dac na false ale jakimis lockami pilnowac zeby sie nie wykrzaczylo
-        
         // console info
         DTL_INF("Audio engine and sounds objects terminated successfully");
     }
@@ -75,16 +78,40 @@ namespace golf {
 
     void Audio::playSound(int number) {
         // to nie jest bezpieczne raczej
+        // może trzeba gdzieś przechowywać, że mamy jeszcze jakieś wątki i zanim zamkniemy poczekać aż się skończą
+        // i wtedy uninitować dźwięki i engine
         std::thread tmp(ma_sound_start, music[number].get());
         tmp.detach();  
     }
 
     void Audio::playMusic() {
-        int nr = 1;
-        while (isMusicPlaying) {
-            if((!ma_sound_is_playing(getSound(nr))))
-                ma_sound_start(getSound(nr));
+        size_t songCount = music.size();
+        int songToPlay = 0;
+        const int playNTimes = 2;
+        int timesPlayedInRow = 1;
+        bool isSongPlaying = true;
+
+        while (!exitMusic) {
+            isSongPlaying = ma_sound_is_playing(getSound(songToPlay));
+
+            // paused but playing
+            if (pauseMusic && isSongPlaying)
+                ma_sound_stop(getSound(songToPlay));
+
+            // not paused and not playing
+            else if (!pauseMusic && !isSongPlaying) {
+                if (timesPlayedInRow == playNTimes) {
+                    songToPlay = (songToPlay + 1) % songCount;
+                    timesPlayedInRow = 0;
+                }
+                timesPlayedInRow++;
+                ma_sound_start(getSound(songToPlay));
+            }
+
+            // paused but not playing: good
+            // not paused but playing: good
         }
+        ma_sound_stop(getSound(songToPlay));
     }
 
     ma_sound* Audio::getSound(int number) {
