@@ -51,6 +51,14 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
+
+		if (levelNumber == 6) {
+			auto next = std::shared_ptr<Scene>(new LevelSixScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
 	}
 	//================================
 	//MainMenu
@@ -294,6 +302,30 @@ namespace golf {
 		}
 		lvlFiveStars.getTransform()->setScale(0.295f, 0.095f);
 
+		//==Level 6
+		lvlSixButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlSixButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.4f, 0.0f, ModeType::RELATIVE);
+		lvlSixButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		lvlSixButton.getComponent<VisualComponent>()->setTexture("2_not_pressed");
+		lvlSixButton.getTransform()->setScale(0.2f, 0.2f);
+		lvlSixButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		lvlSixStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlSixStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.4f, -0.1f, ModeType::RELATIVE);
+		lvlSixStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		if (AppData::getSus().StarCount(2) == 3) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (AppData::getSus().StarCount(2) == 2) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (AppData::getSus().StarCount(2) == 1) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (AppData::getSus().StarCount(2) == 0) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+		lvlSixStars.getTransform()->setScale(0.295f, 0.095f);
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMLEFT, 0.03f, 0.03f, ModeType::RELATIVE);
@@ -374,6 +406,23 @@ namespace golf {
 			}
 		}
 		else { lvlFiveButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
+
+
+		ptr = lvlSixButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (AppData::getSus().IsUnlocked(6)) {
+			if (ptr->isHovered()) {
+				lvlSixButton.getComponent<VisualComponent>()->setTexture("6_pressed");
+			}
+			else { lvlSixButton.getComponent<VisualComponent>()->setTexture("6_not_pressed"); }
+			if (ptr->isClicked()) {
+				startLevel(6, shared_from_this());
+				return;
+			}
+		}
+		else { lvlSixButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
+
+
 
 		ptr = mainMenuButton.getComponent<ButtonComponent>();
 		ptr->update();
