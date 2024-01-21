@@ -40,6 +40,7 @@ namespace golf {
 
 		[[nodiscard]] bool isMoving() const;
 		[[nodiscard]] bool exploded() const;
+		void explode();
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
 
