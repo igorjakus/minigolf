@@ -62,10 +62,17 @@ set(SOURCES
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(
-  ${PROJECT_NAME}
-  PRIVATE project::project_options
-		  project::project_warnings)
+if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Release")
+    set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+        LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
+        LINK_FLAGS_RELEASE "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+    )
+endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE project::project_options project::project_warnings)
 
 add_custom_target(copy_assets ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
