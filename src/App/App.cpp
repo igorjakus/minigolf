@@ -69,10 +69,6 @@ namespace golf
 	void App::update(float deltaT) {
 		AppData::getSceneManager().update(deltaT);
 
-		if (AppData::getInput().isKeyClicked("F1") && !AppData::getSceneManager().isLocked()) {
-			AppData::getWindow().setFullscreen(!AppData::getWindow().isFullscreen());
-		}
-
 		AppData::getInput().frameEnd();
 	}
 	
