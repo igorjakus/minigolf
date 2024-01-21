@@ -111,15 +111,33 @@ namespace golf {
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
+		CameraControls cameraControls;
+
+		PhysicsEngine physics;
 
 		Entity wallA;
 		Entity wallB;
 
+
+		Entity grass;
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;
 		Entity frame4;
+
+		Entity ball;
+
+		Entity hole;
+
+
 		Entity pauseButton;
+		Entity replayButton;
+		Entity camLockButton;
+
+		Entity firstDigit;
+		Entity secondDigit;
+
+		bool camLocked = true;
 
 		bool won = false;
 		int score = 0;
