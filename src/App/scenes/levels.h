@@ -33,10 +33,33 @@ namespace golf {
 		Entity frame3;
 		Entity frame4;
 
+		float showBallButton = 0.f;
+		Entity ballButton;
 		Entity ball;
 		Entity hole;
 
+		Entity arrowTip;
+		Entity arrowBody;
+
+		float camUpSpeed = 0;
+		float camDownSpeed = 0;
+		float camRightSpeed = 0;
+		float camLeftSpeed = 0;
+		Entity camLeft;
+		Entity camRight;
+		Entity camUp;
+		Entity camDown;
+		float camMinX = 0.f;
+		float camMaxX = 8.f;
+		float camMinY = 0.f;
+		float camMaxY = 6.f;
+		float zoom = 1.f;
+		float targetZoom = 0.5f;
+		float zoomTimer = 1.f;
+
 		Entity pauseButton;
+
+		bool aiming = false;
 
 		bool won = false;
 		int score = 0;

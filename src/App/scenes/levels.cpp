@@ -6,6 +6,7 @@
 
 #include "Util/GML/LinearAlgebra/Vec3f.h"
 #include "Util/GML/LinearAlgebra/Vec2f.h"
+#include "Util/GML/Constants.h"
 #include "Util/Util.hpp"
 
 namespace golf {
@@ -23,16 +24,6 @@ namespace golf {
 	{
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
-		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.01f, -0.01f, ModeType::RELATIVE);
-		pauseButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		pauseButton.getComponent<VisualComponent>()->setTexture("popcat");
-		pauseButton.getTransform()->setScale(0.1f, 0.1f);
-		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		///////////////////////////
-		// Tu ci trawke dodalem
-		///////////////////////////
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		grass.getComponent<VisualComponent>()->setTexture("Grass");
 		grass.getComponent<VisualComponent>()->setTexRepeat(1.0f);
@@ -93,56 +84,183 @@ namespace golf {
 		hole.getTransform()->setScale(0.5f);
 
 		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
-		ball.getComponent<VisualComponent>()->setTexture("ballcat");
+		ball.getComponent<VisualComponent>()->setTexture("Ball");
 		ball.getTransform()->setPos(1.0f, 1.0f);
-		ball.getTransform()->setScale(0.3f);
+		ball.getTransform()->setScale(0.2f);
 		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement());
 		ball.getComponent<DynamicPhysicsComponent>()->m_mass = 0.1f;
 		ball.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.005f;
-		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.15f));
-		ball.addComponent<ButtonComponent>(ButtonComponent::create(m_camera));
+		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
+		ballButton.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ballButton.getComponent<VisualComponent>()->setTexture("BallButton");
+		ballButton.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+		ballButton.getTransform()->setScale(0.5f);
+		ballButton.addComponent<ButtonComponent>(ButtonComponent::create(m_camera));
+
+		arrowTip.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		arrowTip.getComponent<VisualComponent>()->setTexture("arrow_tip");
+		arrowTip.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+		arrowTip.getTransform()->setScale(0.5f);
+
+		arrowBody.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		arrowBody.getComponent<VisualComponent>()->setTexture("arrow_body");
+		arrowBody.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+		arrowBody.getTransform()->setScale(0.4f);
+
+		/////////////////
+		// GUI
+		/////////////////
+
+		camUp.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camUp.getComponent<GUIComponent>()->setPosition(PositionType::TOP, 0.f, 0.f, ModeType::RELATIVE);
+		camUp.getTransform()->setScale(1000.f, 0.1f);
+		camUp.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		camDown.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camDown.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOM, 0.f, 0.f, ModeType::RELATIVE);
+		camDown.getTransform()->setScale(1000.f, 0.1f);
+		camDown.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		camRight.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camRight.getComponent<GUIComponent>()->setPosition(PositionType::RIGHT, 0.f, 0.f, ModeType::RELATIVE);
+		camRight.getTransform()->setScale(0.1f, 1000.f);
+		camRight.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		camLeft.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camLeft.getComponent<GUIComponent>()->setPosition(PositionType::LEFT, 0.f, 0.f, ModeType::RELATIVE);
+		camLeft.getTransform()->setScale(0.1f, 1000.f);
+		camLeft.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.05f, ModeType::RELATIVE);
+		pauseButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		pauseButton.getTransform()->setScale(0.1f, 0.1f);
+		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 	}
 
 	void LevelOneScene::update(float deltaT)
 	{
 		// camera
-		const float cameraSpeed = 5;
-		if (AppData::getInput().isKeyPressed("UP")) {
-			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y + deltaT * cameraSpeed);
+
+		camUp.getComponent<ButtonComponent>()->update();
+		camDown.getComponent<ButtonComponent>()->update();
+		camRight.getComponent<ButtonComponent>()->update();
+		camLeft.getComponent<ButtonComponent>()->update();
+
+		const float cameraSpeed = 10 * m_camera.getFocalLength();
+		const float cameraResponse = 30;
+		if (AppData::getInput().isKeyPressed("UP") || AppData::getInput().isKeyPressed("W") || (camUp.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+			camUpSpeed += deltaT * cameraResponse;
+		} else {
+			camUpSpeed -= deltaT * cameraResponse;
 		}
-		if (AppData::getInput().isKeyPressed("LEFT")) {
-			m_camera.setPosition(m_camera.getPosition().x - deltaT * cameraSpeed, m_camera.getPosition().y );
+		if (AppData::getInput().isKeyPressed("LEFT") || AppData::getInput().isKeyPressed("A") || (camLeft.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+			camLeftSpeed += deltaT * cameraResponse;
+		} else {
+			camLeftSpeed -= deltaT * cameraResponse;
 		}
-		if (AppData::getInput().isKeyPressed("RIGHT")) {
-			m_camera.setPosition(m_camera.getPosition().x + deltaT * cameraSpeed, m_camera.getPosition().y );
+		if (AppData::getInput().isKeyPressed("RIGHT") || AppData::getInput().isKeyPressed("D") || (camRight.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+			camRightSpeed += deltaT * cameraResponse;
+		} else {
+			camRightSpeed -= deltaT * cameraResponse;
 		}
-		if (AppData::getInput().isKeyPressed("DOWN")) {
-			m_camera.setPosition(m_camera.getPosition().x, m_camera.getPosition().y - deltaT * cameraSpeed);
+		if (AppData::getInput().isKeyPressed("DOWN") || AppData::getInput().isKeyPressed("S") || (camDown.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
+			camDownSpeed += deltaT * cameraResponse;
+		} else {
+			camDownSpeed -= deltaT * cameraResponse;
 		}
+
+		camUpSpeed = util::clamp(camUpSpeed, 0, cameraSpeed);
+		camRightSpeed = util::clamp(camRightSpeed, 0, cameraSpeed);
+		camLeftSpeed = util::clamp(camLeftSpeed, 0, cameraSpeed);
+		camDownSpeed = util::clamp(camDownSpeed, 0, cameraSpeed);
+
+		float cameraX = m_camera.getPosition().x + deltaT * (camRightSpeed - camLeftSpeed);
+		float cameraY = m_camera.getPosition().y + deltaT * (camUpSpeed - camDownSpeed);
+		if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
+			float c = 0.1f;
+			c = 1.f - pow(c, deltaT);
+			cameraX = util::lerp(cameraX, ball.getTransform()->x, c);
+			cameraY = util::lerp(cameraY, ball.getTransform()->y, c);
+			targetZoom = 0.5f;
+			zoomTimer = 0.f;
+		}
+		cameraX = util::clamp(cameraX, camMinX, camMaxX);
+		cameraY = util::clamp(cameraY, camMinY, camMaxY);
+		m_camera.setPosition(cameraX, cameraY);
 
 		if (AppData::getInput().getWheelOffset() >= 1) {
-			m_camera.setFocalLength(m_camera.getFocalLength() * 0.8f);
+			targetZoom *= 0.8f;
+			zoomTimer = 0;
 		}
 		if (AppData::getInput().getWheelOffset() <= -1) {
-			m_camera.setFocalLength(m_camera.getFocalLength() * 1.25f);
+			targetZoom *= 1.25f;
+			zoomTimer = 0;
 		}
+		targetZoom = util::clamp(targetZoom, 0.3f, 1.f);
+		zoomTimer += deltaT * 3.f; if (zoomTimer > 1) { zoomTimer = 1; }
+		zoom = util::lerp(zoom, targetZoom, zoomTimer);
+		m_camera.setFocalLength(zoom);
 
-		// pilka
+		// ball
 		if (!ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
-			ball.getComponent<ButtonComponent>()->update();
-		}
-		if (ball.getComponent<ButtonComponent>()->isPressed()) {
-			AppData::getInput().setMousePosLock(true);
-		} else if(ball.getComponent<ButtonComponent>()->isReleased()) {
-			auto [x, y] = AppData::getInput().getMouseWorldOffset(m_camera);
-			ball.getComponent<DynamicPhysicsComponent>()->apply_impulse({ -x,-y,0 }, {0, 0, 0});
-			ball.getComponent<ButtonComponent>()->update();
-			score++;
+			ballButton.getComponent<ButtonComponent>()->update();
+			if (ballButton.getComponent<ButtonComponent>()->isHovered() || ballButton.getComponent<ButtonComponent>()->isPressed()) {
+				showBallButton = 1.f;
+			} else {
+				showBallButton -= deltaT * 5.f;
+			}
 		} else {
-			AppData::getInput().setMousePosLock(false);
+			showBallButton = 0.f;
 		}
 
+		ballButton.getTransform()->setPos(ball.getTransform()->x, ball.getTransform()->y);
+		ballButton.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(util::clerp(0, 255, showBallButton)));
+		ballButton.getTransform()->rot += deltaT * 90.f;
+
+		if (ballButton.getComponent<ButtonComponent>()->isPressed()) {
+			aiming = true;
+			AppData::getInput().setMousePosLock(true);
+		}
+		const float maxShotStrength = 3.f;
+		if (aiming) {
+			auto [x, y] = AppData::getInput().getMouseWorldOffset(m_camera);
+			GML::Vec2f pos = { x, y };
+			GML::Vec2f norm = pos.normalized();
+			float strength = util::clamp(pos.getLength(), 0, maxShotStrength);
+			GML::Vec2f val = norm * strength;
+
+			float angle = -std::atan(x / y) * GML::F_RAD_TO_DEG;
+			if (y >= 0) { angle += 180; }
+			float param = util::norm(0, maxShotStrength, strength);
+			uchar red = static_cast<uchar>(util::clerp(150, 230, param));
+			uchar green = static_cast<uchar>(util::clerp(255, 0, param));
+			arrowTip.getComponent<VisualComponent>()->setColor(red, green, 0, 255);
+			arrowTip.getTransform()->rot = angle;
+			arrowBody.getComponent<VisualComponent>()->setColor(red, green, 0, 255);
+			arrowBody.getTransform()->rot = angle;
+
+			arrowTip.getTransform()->setPos(ball.getTransform()->x + norm.x * (arrowTip.getTransform()->xScale / 2 + 0.1f),
+				ball.getTransform()->y + norm.y * (arrowTip.getTransform()->xScale / 2 + 0.1f));
+			arrowBody.getTransform()->yScale = val.getLength();
+			arrowBody.getTransform()->setPos(ball.getTransform()->x + norm.x * (arrowBody.getTransform()->yScale / 2 + arrowTip.getTransform()->xScale + 0.11f),
+				ball.getTransform()->y + norm.y * (arrowBody.getTransform()->yScale / 2 + arrowTip.getTransform()->xScale + 0.11f));
+
+			if (ballButton.getComponent<ButtonComponent>()->isReleased()) {
+				AppData::getInput().setMousePosLock(false);
+				ballButton.getComponent<ButtonComponent>()->update();
+				ball.getComponent<DynamicPhysicsComponent>()->apply_impulse({ -val.x, -val.y, 0 }, { 0, 0, 0 });
+
+				arrowTip.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+				arrowBody.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
+
+				score++;
+				aiming = false;
+			}
+		}
+
+		// hole logic
 		{
 			float ballX = ball.getTransform()->x;
 			float ballY = ball.getTransform()->y;
@@ -164,8 +282,10 @@ namespace golf {
 
 		physics.update(deltaT);
 
+		// GUI
+
 		auto ptr = pauseButton.getComponent<ButtonComponent>();
-		ptr->update();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
 		if (ptr->isClicked()) {
 			AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new LevelSelectionScene()));
 			AppData::getSceneManager().nextScene();

@@ -54,6 +54,8 @@ namespace golf
 	
 	void App::update(float deltaT) {
 		AppData::getSceneManager().update(deltaT);
+
+		AppData::getInput().frameEnd();
 	}
 	
 	void App::render() {
@@ -61,7 +63,6 @@ namespace golf
 		
 		AppData::getSceneManager().render();
 	
-		AppData::getInput().frameEnd();
 		AppData::getWindow().FEP();
 	}
 	

@@ -30,9 +30,7 @@ bool Input::isKeyClicked(const std::string& key) {
 	if(item != m_keys.end()) {
 		int keyValue = item->second.keyCode;
 		bool pressedNow = glfwGetKey(m_window, keyValue) == GLFW_PRESS;
-		bool result = !item->second.wasPressed && pressedNow;
-		item->second.wasPressed = pressedNow;
-		return result;
+		return !item->second.wasPressed && pressedNow;
 	}
 	DTL_WAR("Call to unknown key value: \"{0}\"", key);
 	return false;
@@ -85,9 +83,7 @@ bool Input::isLeftMousePressed() const {
 
 bool Input::isLeftMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS; 
-	bool result = !m_LmbWasPressed && pressedNow;
-	m_LmbWasPressed = pressedNow;
-	return result;
+	return !m_LmbWasPressed && pressedNow;
 }
 
 bool Input::isRightMousePressed() const {
@@ -96,9 +92,7 @@ bool Input::isRightMousePressed() const {
 
 bool Input::isRightMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS; 
-	bool result = !m_RmbWasPressed && pressedNow;
-	m_RmbWasPressed = pressedNow;
-	return result;
+	return !m_RmbWasPressed && pressedNow;
 }
 
 bool Input::isMiddleMousePressed() const {
@@ -107,9 +101,7 @@ bool Input::isMiddleMousePressed() const {
 
 bool Input::isMiddleMouseClicked() {
 	bool pressedNow = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS; 
-	bool result = !m_MmbWasPressed && pressedNow;
-	m_MmbWasPressed = pressedNow;
-	return result;
+	return !m_MmbWasPressed && pressedNow;
 }
 
 //////////////////////////////////////////////
@@ -282,6 +274,14 @@ void Input::setTargetWindow(const agl::Window& window) {
 
 void Input::frameEnd() {
 	m_scrollOffset = 0.0;
+
+	for (auto& item : m_keys) {
+		item.second.wasPressed = glfwGetKey(m_window, item.second.keyCode) == GLFW_PRESS;
+	}
+
+	m_LmbWasPressed = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	m_RmbWasPressed = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+	m_MmbWasPressed = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
 }
 
 // void Input::s_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { //NOLINT
