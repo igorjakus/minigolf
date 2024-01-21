@@ -2,21 +2,20 @@
 #include "dtl.h"
 #define SOUNDTRACK_PATH "assets/audio/soundtrack/"
 #define SOUNDEFFECTS_PATH "assets/audio/effects/"
-#define MUSIC_VOLUME 0.25f
-#define SOUND_EFFECTS_VOLUME 0.75f
+#define VOLUME_INCREMENT 0.1f
 
 namespace golf {
     Audio::Audio() {
         // init music engine
         if (ma_engine_init(nullptr, &musicEngine) == MA_SUCCESS) {
-            ma_engine_set_volume(&musicEngine, MUSIC_VOLUME);
+            ma_engine_set_volume(&musicEngine, musicVolume);
             DTL_INF("AUDIO: Music engine initalized successfully");
         }
         else { DTL_ERR("AUDIO: Failed to initialize music engine!"); }
 
         // init sound effects engine
         if (ma_engine_init(nullptr, &soundEffectsEngine) == MA_SUCCESS) {
-            ma_engine_set_volume(&soundEffectsEngine, SOUND_EFFECTS_VOLUME);
+            ma_engine_set_volume(&soundEffectsEngine, soundEffectsVolume);
             DTL_INF("AUDIO: Sound effects engine initalized successfully");
         }
         else { DTL_ERR("AUDIO: Failed to initialize sound effects engine!"); }
@@ -55,6 +54,11 @@ namespace golf {
             ma_sound_uninit(s.get());
         }
 
+        while (isMusicThreadActive) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        
+        DTL_INF("chuj");
         // uninit music engine and sound objects
         ma_engine_uninit(&musicEngine);
         for (auto m : music) {
@@ -77,6 +81,7 @@ namespace golf {
         /* to może nie być bezpieczne, być może trzeba będzie przechowywać czy mamy jeszcze jakieś wątki otwarte
         i dopiero jak się skończą to wtedy uninitować dźwięki i engine*/
         ma_sound_start(soundEffects.at(static_cast<std::vector<std::shared_ptr<ma_sound> >::size_type>(number)).get());
+        
     }
 
     void Audio::playSound(std::string songName) { 
@@ -113,8 +118,14 @@ namespace golf {
             // not paused but playing: good
         }
         ma_sound_stop(getSong(numberOfPlayingSong));
+        isMusicThreadActive = false;
+        DTL_INF("git");
     }
 
+    void Audio::increaseMusicVolume() { musicVolume += VOLUME_INCREMENT; }
+    void Audio::decreaseMusicVolume() { musicVolume -= VOLUME_INCREMENT; }
+    void Audio::increaseSoundEffectsVolume() { soundEffectsVolume += VOLUME_INCREMENT; }
+    void Audio::decreaseSoundEffectsVolume() { soundEffectsVolume -= VOLUME_INCREMENT; }
     void Audio::pauseMusicON() { isMusicPaused = true; }
     void Audio::pauseMusicOFF() { isMusicPaused = false; }
     void Audio::pauseMusicSWITCH() { isMusicPaused = !isMusicPaused; }
