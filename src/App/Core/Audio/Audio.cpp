@@ -1,7 +1,10 @@
 #include "Audio.h"
 #include "dtl.h" // for printing errors
 #include <string> // std::string
+#include <thread> // std::vector
 
+#define SOUNDTRACK_PATH "assets/audio/soundtrack/"
+#define SOUNDEFFECTS_PATH
 
 namespace golf {
     Audio::Audio() {
@@ -15,7 +18,7 @@ namespace golf {
         std::vector<std::string> musicFiles{ "breakbeat", "house-progresywny", "neon", "ognisko", "spacer_nad_rzeka", "tajny_agent", "zawrot-glowy"};
         for (auto &musicFile: musicFiles) {
             music.emplace_back(std::make_shared<ma_sound>());
-            std::string filePath = "assets/audio/" + musicFile + ".mp3";
+            std::string filePath = SOUNDTRACK_PATH + musicFile + ".mp3";
             loadSound(music.back().get(), filePath, &musicEngine);
         }
 
@@ -27,30 +30,24 @@ namespace golf {
             loadSound(sounds.back().get(), filePath, &soundEventEngine);
         }
 
-        // set appropriate bool values
-        exitMusic = false;
-        pauseMusic = false;
-
-        // ATTENTION!!!
-        // ZAPEWNE SIE WYKRZACZY POTEM TO
         std::thread musicThread([&]() { playMusic(); });
-        musicThread.detach();
+        musicThread.detach(); // ZAPEWNE SIE WYKRZACZY POTEM TO
     }
 
     Audio::~Audio() {
-        // indirectly should close playMusic thread
-        exitMusic = true;
+        // close playMusic thread
+        exitMusic = true; 
 
-        // uninit engines
-        ma_engine_uninit(&musicEngine);
+        // uninit sound effect engine and sound objects
         ma_engine_uninit(&soundEventEngine);
-
-        // uninit sound objects
-        for (auto m: music)
-            ma_sound_uninit(m.get());
         for (auto s : sounds)
             ma_sound_uninit(s.get());
 
+        // uninit music engine and sound objects
+        ma_engine_uninit(&musicEngine);
+        for (auto m: music)
+            ma_sound_uninit(m.get());
+        
         // console info
         DTL_INF("Audio engine and sounds objects terminated successfully");
     }
@@ -95,11 +92,11 @@ namespace golf {
             isSongPlaying = ma_sound_is_playing(getSound(songToPlay));
 
             // paused but playing
-            if (pauseMusic && isSongPlaying)
+            if (isMusicPaused && isSongPlaying)
                 ma_sound_stop(getSound(songToPlay));
 
             // not paused and not playing
-            else if (!pauseMusic && !isSongPlaying) {
+            else if (!isMusicPaused && !isSongPlaying) {
                 if (timesPlayedInRow == playNTimes) {
                     songToPlay = (songToPlay + 1) % songCount;
                     timesPlayedInRow = 0;
@@ -113,6 +110,10 @@ namespace golf {
         }
         ma_sound_stop(getSound(songToPlay));
     }
+
+    void Audio::pauseMusicON() { isMusicPaused = true; }
+    void Audio::pauseMusicOFF() { isMusicPaused = false; }
+    void Audio::pauseMusicSWITCH() { isMusicPaused = !isMusicPaused; }
 
     ma_sound* Audio::getSound(int number) {
         return music[number].get();

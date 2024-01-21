@@ -3,7 +3,6 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include <vector>
-#include <thread> // playing audio is gonna be on another thread
 
 namespace golf {
 
@@ -21,11 +20,12 @@ namespace golf {
 		// Play sound once
 		void playSound(int number);
 
-		ma_sound* getSound(int number);
+		// Pause ON/OFF
+		void pauseMusicON();
+		void pauseMusicOFF();
+		void pauseMusicSWITCH();
 
-		// later can make a function that changes them
-		bool exitMusic;
-		bool pauseMusic;
+		ma_sound* getSound(int number);
 
 	private:
 		ma_engine musicEngine;
@@ -34,8 +34,9 @@ namespace golf {
 		std::vector<std::shared_ptr<ma_sound>> music;
 		std::vector<std::shared_ptr<ma_sound>> sounds;
 
-		// only constructor should call it
-		// you can stop it by changing exitMusic to true
-		void playMusic();
+		bool isMusicPaused = false; // change it via pauseMusicON/OFF/SWITCH
+		bool exitMusic = false; // only destructor change it, stops playMusic thread
+
+		void playMusic(); // runs on different thread
 	};
 }
