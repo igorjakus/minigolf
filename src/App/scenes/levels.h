@@ -5,6 +5,7 @@
 #include "../GUI.h"
 #include "../ECS/Entity.h"
 #include "../physics.h"
+#include "App/CameraControls.h"
 
 
 namespace golf {
@@ -20,6 +21,7 @@ namespace golf {
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
+		CameraControls cameraControls;
 
 		PhysicsEngine physics;
 
@@ -46,22 +48,6 @@ namespace golf {
 		Entity trail3;
 		Entity trail4;
 		Entity trail5;
-
-		float camUpSpeed = 0;
-		float camDownSpeed = 0;
-		float camRightSpeed = 0;
-		float camLeftSpeed = 0;
-		Entity camLeft;
-		Entity camRight;
-		Entity camUp;
-		Entity camDown;
-		float camMinX = 0.f;
-		float camMaxX = 8.f;
-		float camMinY = 0.f;
-		float camMaxY = 6.f;
-		float zoom = 1.f;
-		float targetZoom = 0.5f;
-		float zoomTimer = 1.f;
 
 		Entity pauseButton;
 

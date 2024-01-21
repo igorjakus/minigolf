@@ -37,9 +37,13 @@ set(SOURCES
 	Core/Input/UserInput.h
 	Core/Input/UserInput.cpp
 
-	#Physics
+	# Physics
 	physics.cpp
 	physics.h
+
+	# CameraControls
+	CameraControls.h 
+	CameraControls.cpp
 	
 	# Scenes
 	scenes/levels.cpp 

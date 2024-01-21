@@ -85,6 +85,7 @@ namespace golf {
 			param = util::cnorm(0, m_duration / 2 - m_pause / 2, m_time);
 		} else if(m_time > m_duration / 2 + m_pause / 2) {
 			param = util::cnorm(m_duration, m_duration / 2 + m_pause / 2, m_time);
+			m_scene2->render();
 		}
 		uchar alpha = static_cast<uchar>(util::clerp(0, 255, param));
 		m_plane.getComponent<VisualComponent>()->setColor(0, 0, 0, alpha);
