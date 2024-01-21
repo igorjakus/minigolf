@@ -42,6 +42,10 @@ void SceneManager::unlock() {
 	m_lock = false;
 }
 
+bool SceneManager::isLocked() const {
+	return m_lock;
+}
+
 void SceneManager::update(float deltaT) {
 	m_currentScene->update(deltaT);
 	if (m_changeScene) {

@@ -11,13 +11,11 @@
 namespace golf {
 
 
-	HitboxComponent::HitboxComponent(HitboxComponent::Typ tego_typu ,float radius = 0) 
-		: m_Typ_obiektu(tego_typu), m_radius(radius) {}
+	HitboxComponent::HitboxComponent(HitboxComponent::Typ type, float radius, bool spiky) 
+		: m_Typ_obiektu(type), m_radius(radius), m_spiky(spiky) {}
 
 	SurfaceComponent::SurfaceComponent(float a,float c)
 		: rollingResistance(a), spinningResistance(c) {}
-		
-	
 
 	//physics engine
 
@@ -147,7 +145,7 @@ namespace golf {
 		if(Owner1->hasComponent<DynamicPhysicsComponent>()){
 
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
-			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius) {
+			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius || m_Obj2->m_spiky) {
 				DTL_WAR("kot wybuchł");
 				auto ptr = Owner1->getComponent<DynamicPhysicsComponent>();
 				if(ptr) { ptr->m_exploded = true; }

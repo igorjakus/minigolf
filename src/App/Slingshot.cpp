@@ -135,6 +135,14 @@ void SlingshotComponent::update(float deltaT) {
 			m_shot = true;
 		}
 	}
+
+	if (getOwner()->getComponent<DynamicPhysicsComponent>()->exploded()) {
+		m_button.getTransform()->setPos(getTransform()->x, getTransform()->y);
+		m_button.getComponent<VisualComponent>()->setTexture("bum");
+		m_button.getComponent<VisualComponent>()->setColor(255, 255, 255, 255);
+		m_button.getTransform()->rot += deltaT * 720.f;
+		m_button.getTransform()->setScale(m_button.getTransform()->xScale * (1 + 5 * deltaT));
+	}
 }
 
 
