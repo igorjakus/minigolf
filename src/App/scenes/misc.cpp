@@ -6,6 +6,8 @@
 #include "../Core/AppData.h"
 
 
+//NOLINTBEGIN(readability-function-cognitive-complexity)
+
 namespace golf {
 
 	using PositionType = GUIComponent::positionType;
@@ -92,8 +94,6 @@ namespace golf {
 		exitButton.getComponent<VisualComponent>()->setTexture("exit_not_pressed");
 		exitButton.getTransform()->setScale(0.12f, 0.12f);
 		exitButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		glClearColor(0.1f, 0.4f, 0.1f, 255);
 	}
 	void MainMenu::update([[maybe_unused]] float deltaT) {
 
@@ -299,8 +299,6 @@ namespace golf {
 		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
 		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		glClearColor(0.06f, 0.24f, 0.06f, 255);
 	}
 
 	void LevelSelectionScene::update([[maybe_unused]] float deltaT)
@@ -521,8 +519,6 @@ namespace golf {
 		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
 		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		glClearColor(0.06f, 0.24f, 0.06f, 255);
 	}
 	void CreditsScene::update([[maybe_unused]] float deltaT) {
 		auto ptr = mainMenuButton.getComponent<ButtonComponent>();
@@ -562,8 +558,6 @@ namespace golf {
 		mainMenuButton.getComponent<VisualComponent>()->setTexture("return_not_pressed");
 		mainMenuButton.getTransform()->setScale(0.12f, 0.12f);
 		mainMenuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		glClearColor(0.0f, 0.0f, 0.0f, 255);
 	}
 	void HowToGolfScene::update([[maybe_unused]] float deltaT) {
 		auto ptr = mainMenuButton.getComponent<ButtonComponent>();
@@ -585,4 +579,29 @@ namespace golf {
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
+
+	////////////////////////////
+	/// BlackScene
+	////////////////////////////
+
+	BlackScene::BlackScene()
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
+	}
+	void BlackScene::update([[maybe_unused]] float deltaT) {
+		m_timer -= deltaT;
+		if(m_timer < 0) {
+			auto next = std::shared_ptr<Scene>(new MainMenu());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneFade(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+			m_timer = 999.f;
+		}
+	}
+	void BlackScene::render() {
+		m_graphicsLayer.draw();
+	}
 }
+
+
+//NOLINTEND(readability-function-cognitive-complexity)

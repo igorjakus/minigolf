@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ECS/Entity.h"
 #include "ECS/Component.h"
 #include "GML/LinearAlgebra/Vec2f.h"
 #include "GML/LinearAlgebra/Mat2f.h"
@@ -39,7 +38,7 @@ namespace golf {
 		void apply_torque_impulse(GML::Vec3f torque);
 		void update_positions(float deltaT,std::vector<std::shared_ptr<SurfaceComponent>> &Surfaces);  
 
-		bool isMoving();
+		[[nodiscard]] bool isMoving() const;
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
 
@@ -92,10 +91,11 @@ namespace golf {
 		void check_collision(std::shared_ptr<HitboxComponent>, std::shared_ptr<HitboxComponent>);
 
 		//return ID of element
-		std::shared_ptr<DynamicPhysicsComponent> addDynamicElement();
+		std::shared_ptr<DynamicPhysicsComponent> addDynamicElement(float mass = 1.f, float inertia = 0.5f);
 		std::shared_ptr<KinematicPhysicsComponent> addKinematicElement();
 		std::shared_ptr<StaticPhysicsComponent> addStaticElement();
 
+		std::shared_ptr<SurfaceComponent> addSurfaceElement(float rollingResistance = 0.1f, float spinningResistance = 0.05f);
 
 	private:
 		//trzymam je

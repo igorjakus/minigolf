@@ -10,6 +10,8 @@
 #include "Util/GML/Constants.h"
 #include "Util/Util.hpp"
 
+//NOLINTBEGIN(readability-function-cognitive-complexity)
+
 namespace golf {
 
 	using PositionType = GUIComponent::positionType;
@@ -20,9 +22,11 @@ namespace golf {
 	// ===============================
 
 	LevelOneScene::LevelOneScene()
-		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
+		cameraControls(m_camera, 0.f, 8.f, 6.f, 0.f)
 	{
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
+		m_camera.setPosition(1.f, 1.f);
 
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		grass.getComponent<VisualComponent>()->setTexture("Grass");
@@ -118,9 +122,7 @@ namespace golf {
 		ball.getComponent<VisualComponent>()->setTexture("Ball");
 		ball.getTransform()->setPos(1.0f, 1.0f);
 		ball.getTransform()->setScale(0.2f);
-		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement());
-		ball.getComponent<DynamicPhysicsComponent>()->m_mass = 0.1f;
-		ball.getComponent<DynamicPhysicsComponent>()->m_inertia = 0.005f;
+		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
 		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
 		ballButton.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ballButton.getComponent<VisualComponent>()->setTexture("BallButton");
@@ -137,26 +139,6 @@ namespace golf {
 		/////////////////
 		// GUI
 		/////////////////
-
-		camUp.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		camUp.getComponent<GUIComponent>()->setPosition(PositionType::TOP, 0.f, 0.f, ModeType::RELATIVE);
-		camUp.getTransform()->setScale(1000.f, 0.1f);
-		camUp.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		camDown.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		camDown.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOM, 0.f, 0.f, ModeType::RELATIVE);
-		camDown.getTransform()->setScale(1000.f, 0.1f);
-		camDown.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		camRight.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		camRight.getComponent<GUIComponent>()->setPosition(PositionType::RIGHT, 0.f, 0.f, ModeType::RELATIVE);
-		camRight.getTransform()->setScale(0.1f, 1000.f);
-		camRight.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
-
-		camLeft.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		camLeft.getComponent<GUIComponent>()->setPosition(PositionType::LEFT, 0.f, 0.f, ModeType::RELATIVE);
-		camLeft.getTransform()->setScale(0.1f, 1000.f);
-		camLeft.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.05f, ModeType::RELATIVE);
@@ -193,73 +175,14 @@ namespace golf {
 	{
 		// camera
 		if (!camLocked) {
-			camUp.getComponent<ButtonComponent>()->update();
-			camDown.getComponent<ButtonComponent>()->update();
-			camRight.getComponent<ButtonComponent>()->update();
-			camLeft.getComponent<ButtonComponent>()->update();
-
-			const float cameraSpeed = 10 * m_camera.getFocalLength();
-			const float cameraResponse = 30;
-			if (AppData::getInput().isKeyPressed("UP") || AppData::getInput().isKeyPressed("W") || (camUp.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-				camUpSpeed += deltaT * cameraResponse;
+			cameraControls.update(deltaT);
+			if(ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
+				cameraControls.follow(ball.getTransform()->x, ball.getTransform()->y);
 			}
-			else {
-				camUpSpeed -= deltaT * cameraResponse;
-			}
-			if (AppData::getInput().isKeyPressed("LEFT") || AppData::getInput().isKeyPressed("A") || (camLeft.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-				camLeftSpeed += deltaT * cameraResponse;
-			}
-			else {
-				camLeftSpeed -= deltaT * cameraResponse;
-			}
-			if (AppData::getInput().isKeyPressed("RIGHT") || AppData::getInput().isKeyPressed("D") || (camRight.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-				camRightSpeed += deltaT * cameraResponse;
-			}
-			else {
-				camRightSpeed -= deltaT * cameraResponse;
-			}
-			if (AppData::getInput().isKeyPressed("DOWN") || AppData::getInput().isKeyPressed("S") || (camDown.getComponent<ButtonComponent>()->isHovered() && !aiming)) {
-				camDownSpeed += deltaT * cameraResponse;
-			}
-			else {
-				camDownSpeed -= deltaT * cameraResponse;
-			}
-
-			camUpSpeed = util::clamp(camUpSpeed, 0, cameraSpeed);
-			camRightSpeed = util::clamp(camRightSpeed, 0, cameraSpeed);
-			camLeftSpeed = util::clamp(camLeftSpeed, 0, cameraSpeed);
-			camDownSpeed = util::clamp(camDownSpeed, 0, cameraSpeed);
-
-			float cameraX = m_camera.getPosition().x + deltaT * (camRightSpeed - camLeftSpeed);
-			float cameraY = m_camera.getPosition().y + deltaT * (camUpSpeed - camDownSpeed);
-			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
-				float c = 0.1f;
-				c = 1.f - pow(c, deltaT);
-				cameraX = util::lerp(cameraX, ball.getTransform()->x, c);
-				cameraY = util::lerp(cameraY, ball.getTransform()->y, c);
-				targetZoom = 0.5f;
-				zoomTimer = 0.f;
-			}
-			cameraX = util::clamp(cameraX, camMinX, camMaxX);
-			cameraY = util::clamp(cameraY, camMinY, camMaxY);
-			m_camera.setPosition(cameraX, cameraY);
-
-			if (AppData::getInput().getWheelOffset() >= 1) {
-				targetZoom *= 0.8f;
-				zoomTimer = 0;
-			}
-			if (AppData::getInput().getWheelOffset() <= -1) {
-				targetZoom *= 1.25f;
-				zoomTimer = 0;
-			}
-			targetZoom = util::clamp(targetZoom, 0.3f, 1.f);
-			zoomTimer += deltaT * 3.f; if (zoomTimer > 1) { zoomTimer = 1; }
-			zoom = util::lerp(zoom, targetZoom, zoomTimer);
-			m_camera.setFocalLength(zoom);
 		}
 		else {
 			m_camera.setFocalLength(0.65f);
-			m_camera.setPosition(4,3);
+			m_camera.setPosition(4, 3);
 		}
 
 		// ball
@@ -481,11 +404,6 @@ namespace golf {
 		wallB.getTransform()->setPos(5.5f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 2.0f);
 
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
-
 	}
 
 	void LevelTwoScene::update(float deltaT)
@@ -551,9 +469,7 @@ namespace golf {
 
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -564,9 +480,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 2));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -626,12 +539,6 @@ namespace golf {
 		wallB.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 		wallB.getTransform()->setPos(4.0f, 3.0f);
 		wallB.getTransform()->setScale(0.2f, 6.0f);
-
-
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
 	}
 
 	void LevelThreeScene::update(float deltaT)
@@ -671,9 +578,8 @@ namespace golf {
 
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -684,9 +590,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 3));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -764,14 +667,6 @@ namespace golf {
 		wall3.getTransform()->setPos(2.5f, -5.5f);
 		wall3.getTransform()->setScale(2.5f, 0.2f);
 		wall3.getTransform()->rot = 100.0f;
-
-		
-
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
-
 	}
 
 	void LevelFourScene::update(float deltaT)
@@ -813,9 +708,7 @@ namespace golf {
 
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -826,9 +719,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 4));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -920,13 +810,6 @@ namespace golf {
 		q3.getComponent<VisualComponent>()->setColor(255, 0, 255, 255);
 		q3.getTransform()->setPos(11.0f, 3.3f);
 		q3.getTransform()->setScale(1.0f, 2.0f);
-
-
-		won = false;
-		score = 0;
-		scoreChanged = false;
-		stars = 3;
-
 	}
 
 	void LevelFiveScene::update([[maybe_unused]] float deltaT)
@@ -1021,9 +904,7 @@ namespace golf {
 		}
 
 		//logika poziomu:
-		if (scoreChanged) {
-			scoreChanged = false;
-			score++;
+		if (AppData::getInput().isKeyPressed("P") || won) {
 			//mozna uzaleznic gwiazdki od dowolnych tresholdów
 			if (score > 11) {
 				stars = 0;
@@ -1034,9 +915,6 @@ namespace golf {
 			if (score > 3) {
 				stars = 2;
 			}
-		}
-
-		if (AppData::getInput().isKeyPressed("P") || won) {
 			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 5));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
@@ -1054,3 +932,4 @@ namespace golf {
 }
 
 
+//NOLINTEND(readability-function-cognitive-complexity)

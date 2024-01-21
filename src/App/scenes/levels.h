@@ -5,6 +5,7 @@
 #include "../GUI.h"
 #include "../ECS/Entity.h"
 #include "../physics.h"
+#include "App/CameraControls.h"
 
 
 namespace golf {
@@ -20,6 +21,7 @@ namespace golf {
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
+		CameraControls cameraControls;
 
 		PhysicsEngine physics;
 
@@ -47,24 +49,6 @@ namespace golf {
 		Entity trail4;
 		Entity trail5;
 
-		float camUpSpeed = 0;
-		float camDownSpeed = 0;
-		float camRightSpeed = 0;
-		float camLeftSpeed = 0;
-		Entity camLeft;
-		Entity camRight;
-		Entity camUp;
-		Entity camDown;
-		float camMinX = 0.f;
-		float camMaxX = 8.f;
-		float camMinY = 0.f;
-		float camMaxY = 6.f;
-		float zoom = 1.f;
-		float targetZoom = 0.5f;
-		float zoomTimer = 1.f;
-
-		bool camLocked = true;
-
 		Entity pauseButton;
 		Entity replayButton;
 		Entity camLockButton;
@@ -74,6 +58,7 @@ namespace golf {
 
 		bool aiming = false;
 
+		bool camLocked = true;
 
 		bool won = false;
 		int score = 0;
@@ -108,10 +93,9 @@ namespace golf {
 		Entity frame4;
 		Entity pauseButton;
 
-		bool won;
-		int score;
-		bool scoreChanged;
-		int stars;
+		bool won = false;
+		int score = 0;
+		int stars = 3;
 	};
 
 	class LevelThreeScene : public Scene {
@@ -135,10 +119,9 @@ namespace golf {
 		Entity frame4;
 		Entity pauseButton;
 
-		bool won;
-		int score;
-		bool scoreChanged;
-		int stars;
+		bool won = false;
+		int score = 0;
+		int stars = 3;
 	};
 
 	class LevelFourScene : public Scene {
@@ -168,10 +151,9 @@ namespace golf {
 		Entity wall4;
 		Entity pauseButton;
 
-		bool won;
-		int score;
-		bool scoreChanged;
-		int stars;
+		bool won = false;
+		int score = 0;
+		int stars = 3;
 	};
 
 	class LevelFiveScene : public Scene {
@@ -209,10 +191,9 @@ namespace golf {
 		Entity q5;
 		Entity q6;
 
-		bool won;
-		int score;
-		bool scoreChanged;
-		int stars;
+		bool won = false;
+		int score = 0;
+		int stars = 3;
 	};
 	
 	

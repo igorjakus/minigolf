@@ -26,7 +26,6 @@ namespace golf {
 
 	};
 
-
 	class LevelSelectionScene : public Scene {
 	public:
 		LevelSelectionScene();
@@ -66,7 +65,6 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		[[maybe_unused]] int playerScore;
 		int nrOfStars;
-		bool isFirstUpdate = true;
 		int finishedLevelNumber;
 
 		GUILayer guiLayer;
@@ -108,5 +106,19 @@ namespace golf {
 
 		Entity tutorialSheet;
 		Entity mainMenuButton;
+	};
+
+	class BlackScene : public Scene {
+	public:
+		BlackScene();
+
+		void update(float deltaT) override;
+		void render() override;
+
+	private:
+		agl::Camera m_camera;
+		agl::GraphicLayer m_graphicsLayer;
+		
+		float m_timer = 1.f;
 	};
 }
