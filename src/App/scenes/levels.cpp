@@ -1313,7 +1313,234 @@ namespace golf {
 		guiLayer.render();
 	}
 
+	// ===============================
+	// LevelSixScene
+	// ===============================
 
+
+	LevelSixScene::LevelSixScene()
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
+		cameraControls(m_camera, 0.f, 8.f, 6.f, 0.f)
+	{
+		AppData::getInput().attachCamera(&m_camera, 10.0f);
+		m_camera.setPosition(1.f, 1.f);
+
+		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		grass.getComponent<VisualComponent>()->setTexture("Grass");
+		grass.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		grass.getTransform()->setScale(8.0f, 6.0f);
+		grass.getTransform()->setPos(4, 3);
+
+		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		wallA.getComponent<VisualComponent>()->setTexture("Wood");
+		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallA.getTransform()->setPos(3.0f, 2.0f);
+		wallA.getTransform()->setScale(6.0f, 0.2f);
+		wallA.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wallB.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		wallB.getComponent<VisualComponent>()->setTexture("Wood");
+		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallB.getTransform()->setPos(5.0f, 4.0f);
+		wallB.getTransform()->setScale(6.0f, 0.2f);
+		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame1.getTransform()->setPos(0.0f, 3.0f);
+		frame1.getTransform()->setScale(0.2f, 6.19f);
+		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame2.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame2.getTransform()->setPos(4.0f, 6.0f);
+		frame2.getTransform()->setScale(8.15f, 0.2f);
+		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame3.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame3.getTransform()->setPos(8.1f, 3.0f);
+		frame3.getTransform()->setScale(0.2f, 6.19f);
+		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		frame4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		frame4.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
+		frame4.getTransform()->setPos(4.0f, 0.0f);
+		frame4.getTransform()->setScale(8.15f, 0.2f);
+		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		frame4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+
+
+
+		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		hole.getComponent<VisualComponent>()->setTexture("hole");
+		hole.getTransform()->setPos(7.0f, 5.0f);
+		hole.getTransform()->setScale(0.5f);
+
+		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ball.getComponent<VisualComponent>()->setTexture("Ball");
+		ball.getTransform()->setPos(1.0f, 1.0f);
+		ball.getTransform()->setScale(0.2f);
+		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
+		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
+		ball.addComponent<SlingshotComponent>(std::make_shared<SlingshotComponent>(m_camera, m_graphicsLayer));
+
+		/////////////////
+		// GUI
+		/////////////////
+
+		pauseButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		pauseButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.05f, ModeType::RELATIVE);
+		pauseButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		pauseButton.getTransform()->setScale(0.1f, 0.1f);
+		pauseButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		replayButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		replayButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.16f, ModeType::RELATIVE);
+		replayButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		replayButton.getTransform()->setScale(0.1f, 0.1f);
+		replayButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		camLockButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		camLockButton.getComponent<GUIComponent>()->setPosition(PositionType::TOPRIGHT, -0.05f, -0.27f, ModeType::RELATIVE);
+		camLockButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		camLockButton.getTransform()->setScale(0.1f, 0.1f);
+		camLockButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		firstDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		firstDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.105f, -0.05f, ModeType::RELATIVE);
+		firstDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		firstDigit.getTransform()->setScale(0.1f, 0.1f);
+		firstDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		secondDigit.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		secondDigit.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.05f, -0.05f, ModeType::RELATIVE);
+		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		secondDigit.getTransform()->setScale(0.1f, 0.1f);
+		secondDigit.getComponent<VisualComponent>()->setTexture("0");
+	}
+
+	void LevelSixScene::update(float deltaT)
+	{
+		// camera
+		if (!camLocked) {
+			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
+				cameraControls.follow(ball.getTransform()->x, ball.getTransform()->y);
+			}
+		}
+		else {
+			cameraControls.lock(4.f, 3.f, 0.65f);
+		}
+		cameraControls.update(deltaT);
+
+		// ball
+		ball.getComponent<SlingshotComponent>()->update(deltaT);
+		if (ball.getComponent<SlingshotComponent>()->didShoot()) {
+			score++;
+		}
+
+		// hole logic
+		{
+			float ballX = ball.getTransform()->x;
+			float ballY = ball.getTransform()->y;
+			float holeX = hole.getTransform()->x;
+			float holeY = hole.getTransform()->y;
+			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
+			uchar color = 255;
+			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, { 0, 0, 0 });
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
+				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
+				color = static_cast<uchar>(util::clamp(col, 0, 255));
+				if (col < 0 && ball.getComponent<DynamicPhysicsComponent>()->m_velocity.getLength() < 0.03f) {
+					won = true;
+				}
+			}
+			ball.getComponent<VisualComponent>()->setColor(255, 255, 255, color);
+		}
+
+		physics.update(deltaT);
+
+		// GUI
+
+		auto ptr = pauseButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked()) {
+			auto next = std::shared_ptr<Scene>(new LevelSelectionScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			pauseButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
+		}
+		else { pauseButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
+
+		ptr = replayButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked() || ball.getComponent<DynamicPhysicsComponent>()->exploded()) {
+			AppData::getInput().setMousePosLock(false);
+			auto next = std::shared_ptr<Scene>(new LevelOneScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			replayButton.getComponent<VisualComponent>()->setTexture("replay_pressed");
+		}
+		else { replayButton.getComponent<VisualComponent>()->setTexture("replay_not_pressed"); }
+
+		ptr = camLockButton.getComponent<ButtonComponent>();
+		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
+		if (ptr->isClicked()) {
+			camLocked = !camLocked;
+		}
+		if (ptr->isHovered()) {
+			if (camLocked) { camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_pressed"); }
+		}
+		else {
+			if (camLocked) { camLockButton.getComponent<VisualComponent>()->setTexture("cam_locked_not_pressed"); }
+			else { camLockButton.getComponent<VisualComponent>()->setTexture("cam_unlocked_not_pressed"); }
+		}
+
+
+		firstDigit.getComponent<VisualComponent>()->setTexture(std::to_string(score % 10));
+		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
+
+		// Logika zakonczenia poziomu
+		if (AppData::getInput().isKeyPressed("P") || won) {
+			if (score > 2) {
+				stars = 2;
+			}
+			if (score > 5) {
+				stars = 1;
+			}
+			if (score > 9) {
+				stars = 0;
+			}
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+	}
+
+	void LevelSixScene::render()
+	{
+		background.render();
+		m_graphicsLayer.draw();
+		guiLayer.render();
+	}
 }
 
 

@@ -46,12 +46,14 @@ namespace golf {
 		Entity lvlThreeButton;
 		Entity lvlFourButton;
 		Entity lvlFiveButton;
+		Entity lvlSixButton;
 
 		Entity lvlOneStars;
 		Entity lvlTwoStars;
 		Entity lvlThreeStars;
 		Entity lvlFourStars;
 		Entity lvlFiveStars;
+		Entity lvlSixStars;
 
 		Entity mainMenuButton;
 	};
