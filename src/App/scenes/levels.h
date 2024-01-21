@@ -47,10 +47,12 @@ namespace golf {
 		Entity firstDigit;
 		Entity secondDigit;
 
+		Entity starDisplay;
+
 		bool camLocked = true;
 
 		bool won = false;
-		int score = 0;
+		int score = 1;
 		int stars = 3;
 
 	};
@@ -90,10 +92,12 @@ namespace golf {
 		Entity firstDigit;
 		Entity secondDigit;
 
+		Entity starDisplay;
+
 		bool camLocked = true;
 
 		bool won = false;
-		int score = 0;
+		int score = 1;
 		int stars = 3;
 	};
 
@@ -132,10 +136,12 @@ namespace golf {
 		Entity firstDigit;
 		Entity secondDigit;
 
+		Entity starDisplay;
+
 		bool camLocked = true;
 
 		bool won = false;
-		int score = 0;
+		int score = 1;
 		int stars = 3;
 	};
 
@@ -183,10 +189,12 @@ namespace golf {
 		Entity firstDigit;
 		Entity secondDigit;
 
+		Entity starDisplay;
+
 		bool camLocked = true;
 
 		bool won = false;
-		int score = 0;
+		int score = 1;
 		int stars = 3;
 	};
 
@@ -240,11 +248,13 @@ namespace golf {
 		Entity firstDigit;
 		Entity secondDigit;
 
+
+		Entity starDisplay;
+
 		bool camLocked = true;
 
-
 		bool won = false;
-		int score = 0;
+		int score = 1;
 		int stars = 3;
 	};
 	
