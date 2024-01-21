@@ -4,6 +4,11 @@
 #define SOUNDEFFECTS_PATH "assets/audio/effects/"
 #define VOLUME_INCREMENT 0.1f
 
+// optimization miniaudio flags
+#define MA_NO_FLAC
+#define MA_NO_WAV
+#define MA_NO_DEVICE_IO
+
 namespace golf {
     Audio::Audio() {
         // init music engine
@@ -70,10 +75,19 @@ namespace golf {
 
     // Init and load sound and check if everything went ok
     void Audio::loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine) {
-        const ma_result result = ma_sound_init_from_file(engine, soundFilePath.c_str(), 0, nullptr, nullptr, sound);
+        const ma_result result = ma_sound_init_from_file(
+            engine, 
+            soundFilePath.c_str(), 
+            MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_NO_SPATIALIZATION, 
+            nullptr, 
+            nullptr,
+            sound
+        );
         if (result != MA_SUCCESS) {
             DTL_ERR("AUDIO: Failed to initialize the sound! Path: " + soundFilePath);
         }
+        
+        
     }
 
     void Audio::playSound(int number) {
