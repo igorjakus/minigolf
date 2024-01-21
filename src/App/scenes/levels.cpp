@@ -190,7 +190,7 @@ namespace golf {
 
 		ptr = replayButton.getComponent<ButtonComponent>();
 		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
-		if (ptr->isClicked()) {
+		if (ptr->isClicked() || ball.getComponent<DynamicPhysicsComponent>()->exploded()) {
 			auto next = std::shared_ptr<Scene>(new LevelOneScene());
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);

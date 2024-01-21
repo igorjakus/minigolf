@@ -39,6 +39,7 @@ namespace golf {
 		void update_positions(float deltaT,std::vector<std::shared_ptr<SurfaceComponent>> &Surfaces);  
 
 		[[nodiscard]] bool isMoving() const;
+		[[nodiscard]] bool exploded() const;
 
 		explicit DynamicPhysicsComponent(float mass=1,float inertia=1);
 
@@ -56,6 +57,8 @@ namespace golf {
 
 		GML::Vec2f m_position;
 		GML::Vec3f m_rotation;  
+
+		bool m_exploded;
 
 	};
 
