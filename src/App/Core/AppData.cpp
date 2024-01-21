@@ -28,10 +28,6 @@ void AppData::init(uint width, uint height, const std::string& title) {
 	getInstance().m_window->setIcon("assets/icon/icon.png", "assets/icon/icon.png");
 	DTL_INF("Window created");
 
-	// Audio initialization
-	getInstance().m_audio = std::make_unique<Audio>(); // in constructor it init everything it needs outside of loading audio
-	DTL_INF("Audio engine initialized successfully");
-
 	// Sus initialization
 	getInstance().m_sus = std::make_unique<Sus>();
 	DTL_ENT("Loading assets...");
@@ -50,6 +46,10 @@ void AppData::init(uint width, uint height, const std::string& title) {
 	getInstance().m_input->setTargetWindow(*getInstance().m_window);
 	getInstance().m_input->setCustomCursor();
 	DTL_INF("User Input created");
+
+	// Audio initialization
+	getInstance().m_audio = std::make_unique<Audio>(); // in constructor it init everything it needs outside of loading audio
+	DTL_INF("Audio engine initialized successfully");
 
 	DTL_INF("Application systems initialized successfully");
 	DTL_ENT("===============================================================================");

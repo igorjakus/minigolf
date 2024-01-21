@@ -5,32 +5,31 @@
 #include <filesystem> // std::filesystem
 #define SOUNDTRACK_PATH "assets/audio/soundtrack/"
 #define SOUNDEFFECTS_PATH "assets/audio/effects/"
-
+#define MUSIC_VOLUME 0.5f
+#define SOUND_EFFECTS_VOLUME 0.75f
 
 namespace golf {
     Audio::Audio() {
-        const float MUSIC_VOLUME = 0.5, SOUND_EFFECTS_VOLUME = 0.75;
-
         // init music engine
         if (ma_engine_init(NULL, &musicEngine) == MA_SUCCESS) {
             ma_engine_set_volume(&musicEngine, MUSIC_VOLUME);
-            DTL_INF("Audio: Music engine initalized successfully");
+            DTL_INF("AUDIO: Music engine initalized successfully");
         }
-        else DTL_ERR("Audio: Failed to initialize music engine!");
+        else DTL_ERR("AUDIO: Failed to initialize music engine!");
 
         // init sound effects engine
         if (ma_engine_init(NULL, &soundEffectsEngine) == MA_SUCCESS) {
             ma_engine_set_volume(&soundEffectsEngine, SOUND_EFFECTS_VOLUME);
-            DTL_INF("Audio: Sound effects engine initalized successfully");
+            DTL_INF("AUDIO: Sound effects engine initalized successfully");
         }
-        else DTL_ERR("Audio: Failed to initialize sound effects engine!");
+        else DTL_ERR("AUDIO: Failed to initialize sound effects engine!");
         
         // load soundtrack
         for (const auto& entry : std::filesystem::directory_iterator(SOUNDTRACK_PATH)) {
             if (std::filesystem::is_regular_file(entry)) {
                 music.emplace_back(std::make_shared<ma_sound>());
                 loadSound(music.back().get(), entry.path().string(), &musicEngine);
-                DTL_INF("Audio: Loaded soundtrack file {0}", entry.path().filename());
+                DTL_INF("AUDIO: Loaded soundtrack file {0}", entry.path().filename());
             }
         }
 
@@ -39,7 +38,8 @@ namespace golf {
             if (std::filesystem::is_regular_file(entry)) {
                 soundEffects.emplace_back(std::make_shared<ma_sound>());
                 loadSound(soundEffects.back().get(), entry.path().string(), &soundEffectsEngine);
-                DTL_INF("Audio: Loaded sound effects {0}", entry.path().filename());
+                DTL_INF("AUDIO: Loaded sound effects {0}", entry.path().filename());
+                soundsMap[entry.path().stem().string()] = int(soundEffects.size() - 1);
             }
         }
 
@@ -71,15 +71,19 @@ namespace golf {
         ma_result result;
         result = ma_sound_init_from_file(engine, soundFilePath.c_str(), 0, NULL, NULL, sound);
         if (result != MA_SUCCESS)
-            DTL_ERR("Failed to initialize the sound! Path: " + soundFilePath);            
+            DTL_ERR("AUDIO: Failed to initialize the sound! Path: " + soundFilePath);            
     }
 
     void Audio::playSound(int number) {
         // to nie jest bezpieczne raczej
         // może trzeba gdzieś przechowywać, że mamy jeszcze jakieś wątki i zanim zamkniemy poczekać aż się skończą
         // i wtedy uninitować dźwięki i engine
-        std::thread tmp(ma_sound_start, music[number].get());
+        std::thread tmp(ma_sound_start, soundEffects[number].get());
         tmp.detach();  
+    }
+
+    void Audio::playSound(std::string songName) {
+        playSound(soundsMap[songName]);
     }
 
     void Audio::playMusic() {
@@ -118,9 +122,5 @@ namespace golf {
 
     ma_sound* Audio::getSong(int number) {
         return music[number].get();
-    }
-
-    ma_sound* Audio::getSoundEffect(int number) {
-        return soundEffects[number].get();
     }
 }

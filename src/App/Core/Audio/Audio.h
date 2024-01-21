@@ -12,14 +12,13 @@ namespace golf {
 		~Audio();
 
 		// Play sound once
-		void playSound(int number);
+		void playSound(int number);			  // index in soundEffects
+		void playSound(std::string songName); // file name without ext
 
 		// Pause ON/OFF
 		void pauseMusicON();
 		void pauseMusicOFF();
 		void pauseMusicSWITCH();
-
-		ma_sound* getSoundEffect(int number);
 
 	private:
 		ma_engine musicEngine;
@@ -27,6 +26,9 @@ namespace golf {
 
 		std::vector<std::shared_ptr<ma_sound>> music;
 		std::vector<std::shared_ptr<ma_sound>> soundEffects;
+
+		// create map that for every name holds index of sound effect in vector
+		std::map<std::string, int> soundsMap;
 
 		// Init and load sound and check if everything went ok
 		void loadSound(ma_sound* sound, std::string soundFilePath, ma_engine* engine);
