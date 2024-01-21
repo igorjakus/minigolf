@@ -33,6 +33,10 @@ namespace golf
 		std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 		std::chrono::duration<double> timeBetweenFrames{};
 		double lag = 0.0;
+
+		const double fpsInterval = 1.f;
+		double fpsTimer = 0.0;
+		uint fpsCount = 0;
 	
 		while (!shouldClose()) 
 		{
@@ -41,13 +45,21 @@ namespace golf
 			lastFrameTime = std::chrono::steady_clock::now();
 	
 			lag += timeBetweenFrames.count();
+			fpsTimer += timeBetweenFrames.count();
 	
 			while(lag >= timePerUpdate) {
 				update(deltaT);
 				lag -= timePerUpdate;
 			}
-	
+
 			render();
+
+			fpsCount++;
+			if (fpsTimer >= fpsInterval) {
+				fpsTimer = 0.f;
+				DTL_ENT("FPS: {0}", static_cast<uint>(static_cast<double>(fpsCount) / fpsInterval));
+				fpsCount = 0;
+			}
 		}
 	
 		terminate();
