@@ -428,7 +428,7 @@ namespace golf {
 		nextLevelButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.1f, ModeType::RELATIVE);
 		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		starDisplay.getTransform()->setScale(1.02f, 0.38f);
 		if (stars == 3) {
