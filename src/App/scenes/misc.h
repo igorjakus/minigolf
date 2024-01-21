@@ -4,6 +4,7 @@
 #include "Agl.h"
 #include "../GUI.h"
 #include "../ECS/Entity.h"
+#include "App/Background.h"
 
 namespace golf {
 	class MainMenu : public Scene {
@@ -16,8 +17,9 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
-
 		GUILayer guiLayer;
+		Background background;
+
 		Entity logo;
 		Entity playButton;
 		Entity howToGolfButton;
@@ -36,6 +38,7 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		Background background;
 
 		GUILayer guiLayer;
 		Entity lvlOneButton;
@@ -66,6 +69,7 @@ namespace golf {
 		[[maybe_unused]] int playerScore;
 		int nrOfStars;
 		int finishedLevelNumber;
+		Background background;
 
 		GUILayer guiLayer;
 		Entity menuButton;
@@ -84,6 +88,7 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		Background background;
 
 		GUILayer guiLayer;
 
@@ -101,6 +106,7 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		Background background;
 
 		GUILayer guiLayer;
 

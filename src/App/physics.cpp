@@ -152,7 +152,8 @@ namespace golf {
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
 			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius) {
 				DTL_ERR("kot wybuchł");
-				Owner1->getComponent<DynamicPhysicsComponent>()->m_exploded = true;
+				auto ptr = Owner1->getComponent<DynamicPhysicsComponent>();
+				if(ptr) { ptr->m_exploded = true; }
 				return;
 			}
 			Owner1->getTransform()->x += Wiemcoto.x;
@@ -182,8 +183,6 @@ namespace golf {
 
 				GML::Vec3f tarcie = (GML::Vec3f(-m_normalCollidePoint.y, m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
 				CircleComp->apply_impulse(tarcie, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
-
-				DTL_ERR("Boing");
 			}
 
 			if(Owner2->hasComponent<StaticPhysicsComponent>()){

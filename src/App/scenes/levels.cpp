@@ -244,6 +244,7 @@ namespace golf {
 
 	void LevelOneScene::render()
 	{ 
+		background.render();
 		m_graphicsLayer.draw(); 
 		guiLayer.render();
 	}
@@ -543,6 +544,7 @@ namespace golf {
 	}
 
 	void LevelTwoScene::render() {
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -773,7 +775,9 @@ namespace golf {
 		}
 	}
 
-	void LevelThreeScene::render() {
+	void LevelThreeScene::render()
+	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}

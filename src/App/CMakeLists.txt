@@ -21,6 +21,9 @@ set(SOURCES
 	Slingshot.h
 	Slingshot.cpp
 
+	Background.h 
+	Background.cpp
+
 	# Core
 	Core/AppData.h
 	Core/AppData.cpp 

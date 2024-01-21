@@ -5,6 +5,7 @@
 #include "../GUI.h"
 #include "../ECS/Entity.h"
 #include "../physics.h"
+#include "App/Background.h"
 #include "App/CameraControls.h"
 
 
@@ -22,8 +23,8 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
 		CameraControls cameraControls;
-
 		PhysicsEngine physics;
+		Background background;
 
 		Entity grass;
 
@@ -66,8 +67,8 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
 		CameraControls cameraControls;
-
 		PhysicsEngine physics;
+		Background background;
 
 		Entity grass;
 		std::unique_ptr<agl::Object> WallA;
@@ -112,8 +113,8 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		GUILayer guiLayer;
 		CameraControls cameraControls;
-
 		PhysicsEngine physics;
+		Background background;
 
 		Entity wallA;
 		Entity wallB;

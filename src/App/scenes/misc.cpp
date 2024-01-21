@@ -60,12 +60,13 @@ namespace golf {
 	{
 		AppData::getInput().attachCamera(&m_camera, 1.0f);
 
+		
+
 		logo.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		logo.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.25f, ModeType::RELATIVE);
 		logo.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		logo.getComponent<VisualComponent>()->setTexture("golf_logo");
 		logo.getTransform()->setScale(0.82f, 0.41f);
-
 
 		playButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		playButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER,0.0f,-0.1f, ModeType::RELATIVE);
@@ -153,6 +154,7 @@ namespace golf {
 	}
 	void MainMenu::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -394,6 +396,7 @@ namespace golf {
 
 	void LevelSelectionScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -498,6 +501,7 @@ namespace golf {
 
 	void ResultsScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -537,6 +541,7 @@ namespace golf {
 	}
 	void CreditsScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -576,6 +581,7 @@ namespace golf {
 	}
 	void HowToGolfScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
