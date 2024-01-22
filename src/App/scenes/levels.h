@@ -298,6 +298,8 @@ namespace golf {
 		Entity gate2;
 		Entity gate3;
 
+		Entity ice;
+
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;

@@ -1602,6 +1602,12 @@ namespace golf {
 		grass.getTransform()->setScale(8.0f, 8.0f);
 		grass.getTransform()->setPos(4, 4);
 
+		ice.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ice.getComponent<VisualComponent>()->setTexture("ice");
+		ice.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		ice.getTransform()->setPos(1.0f, 3.0f);
+		ice.getTransform()->setScale(2.0f, 2.0f);
+
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
@@ -1665,7 +1671,17 @@ namespace golf {
 		gate2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 		gate2.getTransform()->rot = 90;
 
-	
+
+		gate3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate3.getComponent<VisualComponent>()->setTexture("Wood");
+		gate3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate3.getTransform()->setPos(2.0f, 5.0f);
+		gate3.getTransform()->setScale(2.0f, 0.2f);
+		gate3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		gate3.getTransform()->rot = 90;
+
+
 
 
 		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
@@ -1754,7 +1770,7 @@ namespace golf {
 
 	void LevelSixScene::update(float deltaT)
 	{
-
+		/////////gate 1 i 2////////
 		time += deltaT;
 		if (time > 1) {
 			gate1.getTransform()->setPos(4.0f, 5.0f);
@@ -1768,6 +1784,27 @@ namespace golf {
 			gate2.getTransform()->rot = 0;
 			time = 0;
 		}
+
+		///////GATE 3/////////
+		float moveSpeed = 1.0f;
+		static bool moveLeft = true;
+		if (moveLeft) {
+			gate3.getTransform()->setPos(gate3.getTransform()->getPos().first - moveSpeed * deltaT, gate3.getTransform()->getPos().second);
+		}
+		else {
+			gate3.getTransform()->setPos(gate3.getTransform()->getPos().first + moveSpeed * deltaT, gate3.getTransform()->getPos().second);
+		}
+		float leftLimit = 1.0f;
+		float rightLimit = 2.0f;
+
+		if (gate3.getTransform()->getPos().first <= leftLimit) {
+			moveLeft = false;
+		}
+		else if (gate3.getTransform()->getPos().first >= rightLimit) {
+			moveLeft = true;
+		}
+
+		
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
