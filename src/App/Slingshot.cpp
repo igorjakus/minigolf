@@ -121,6 +121,7 @@ void SlingshotComponent::update(float deltaT) {
 		if (m_button.getComponent<ButtonComponent>()->isReleased()) {
 			AppData::getInput().setMousePosLock(false);
 			m_button.getComponent<ButtonComponent>()->update();
+
 			getOwner()->getComponent<DynamicPhysicsComponent>()->apply_impulse({ -val.x, -val.y, 0 }, { 0, 0, 0 });
 
 			m_arrowTip.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);

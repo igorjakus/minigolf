@@ -296,6 +296,8 @@ namespace golf {
 		Entity firstDigit;
 		Entity secondDigit;
 
+		Entity starDisplay;
+
 		bool camLocked = true;
 
 		bool won = false;

@@ -215,6 +215,12 @@ namespace golf {
 	void DynamicPhysicsComponent::apply_impulse(GML::Vec3f impulse, GML::Vec3f apply_point){ //zmienia velocity
 		m_velocity += static_cast<GML::Vec2f>(impulse) * (1/m_mass);
 		m_angular_velocity += GML::Vec3f::crossProduct(apply_point,impulse)/m_inertia;
+
+		if (!std::isfinite(m_velocity.x) || !std::isfinite(m_velocity.y)) {
+			m_velocity = GML::Vec2f(0.0f,0.0f);
+			m_angular_velocity = GML::Vec3f(0.0f, 0.0f, 0.0f);
+		}
+
 	}
 	void DynamicPhysicsComponent::apply_torque(GML::Vec3f torque) {
 		m_net_torque += torque;

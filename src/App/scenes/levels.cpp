@@ -150,7 +150,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if(ball.getComponent<SlingshotComponent>()->didShoot()) {
+		if(ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
 			score++;
 		}
 
@@ -406,7 +406,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot()) {
+		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
 			score++;
 		}
 
@@ -686,7 +686,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot()) {
+		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
 			score++;
 		}
 
@@ -988,7 +988,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot()) {
+		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
 			score++;
 		}
 
@@ -1343,7 +1343,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot()) {
+		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
 			score++;
 		}
 
@@ -1595,6 +1595,11 @@ namespace golf {
 		secondDigit.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		secondDigit.getTransform()->setScale(0.1f, 0.1f);
 		secondDigit.getComponent<VisualComponent>()->setTexture("0");
+
+		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::TOPLEFT, 0.045f, -0.11f, ModeType::RELATIVE);
+		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		starDisplay.getTransform()->setScale(0.17f, 0.0633f);
 	}
 
 	void LevelSixScene::update(float deltaT)
@@ -1612,7 +1617,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot()) {
+		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
 			score++;
 		}
 
@@ -1658,7 +1663,7 @@ namespace golf {
 		if (!AppData::getInput().isMouseLocked()) { ptr->update(); }
 		if (ptr->isClicked() || ball.getComponent<DynamicPhysicsComponent>()->exploded()) {
 			AppData::getInput().setMousePosLock(false);
-			auto next = std::shared_ptr<Scene>(new LevelOneScene());
+			auto next = std::shared_ptr<Scene>(new LevelSixScene());
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
@@ -1687,18 +1692,47 @@ namespace golf {
 		firstDigit.getComponent<VisualComponent>()->setTexture(std::to_string(score % 10));
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
+
+		if (score > 12) {
+			stars = 0;
+		}
+		else if (score > 8) {
+			stars = 1;
+		}
+		else if (score > 4) {
+			stars = 2;
+		}
+
+		if (stars == 3) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (stars == 2) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (stars == 1) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (stars == 0) {
+			starDisplay.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+
 		// Logika zakonczenia poziomu
+
 		if (AppData::getInput().isKeyPressed("P") || won) {
-			if (score > 2) {
-				stars = 2;
-			}
-			if (score > 5) {
-				stars = 1;
-			}
-			if (score > 9) {
+			score--;
+			if (score > 12) {
 				stars = 0;
 			}
-			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 1));
+			else if (score > 8) {
+				stars = 1;
+			}
+			else if (score > 4) {
+				stars = 2;
+			}
+			else {
+				stars = 3;
+			}
+			auto next = std::shared_ptr<Scene>(new ResultsScene(score, stars, 6));
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
