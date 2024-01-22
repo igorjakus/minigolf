@@ -43,4 +43,8 @@ endif()
 add_compile_definitions(GLM_FORCE_CXX11)
 add_compile_definitions(GLM_FORCE_SILENT_WARNINGS)
 
+if(APPLE)
+	add_compile_definitions(DCMAKE_OSX_ARCHITECTURES arm64)
+endif()
+
 add_subdirectory(src)

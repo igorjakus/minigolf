@@ -42,6 +42,10 @@ set(SOURCES
 	Core/Input/UserInput.h
 	Core/Input/UserInput.cpp
 
+	# Audio
+	Core/Audio/Audio.h
+	Core/Audio/Audio.cpp
+
 	# Physics
 	physics.cpp
 	physics.h

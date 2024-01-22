@@ -9,7 +9,7 @@ add_library(lib_dtl ${DTL_SOURCES})
 
 # Apply project options to this library
 if(project_LUKASZ_WARNINGS)
-	target_link_libraries(lib_dtl PRIVATE project::project_options project::project_warnings)
+	target_link_libraries(lib_agl PRIVATE project::project_options project::project_warnings)
 endif()
 
 # Library build

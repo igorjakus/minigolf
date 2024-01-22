@@ -249,7 +249,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 7) {
 				stars = 0;
@@ -269,6 +269,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -581,7 +582,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 5) {
 				stars = 0;
@@ -601,6 +602,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 
 		
@@ -889,7 +891,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 8) {
 				stars = 0;
@@ -909,6 +911,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -1207,7 +1210,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 9) {
 				stars = 0;
@@ -1227,6 +1230,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -1615,7 +1619,7 @@ namespace golf {
 
 		// Logika zakonczenia poziomu
 
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 10) {
 				stars = 0;
@@ -1635,6 +1639,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -1653,61 +1658,178 @@ namespace golf {
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
 		cameraControls(m_camera, 0.f, 8.f, 6.f, 0.f)
 	{
-		AppData::getInput().attachCamera(&m_camera, 10.0f);
+		AppData::getInput().attachCamera(&m_camera, 15.0f);
 		m_camera.setPosition(1.f, 1.f);
 
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		grass.getComponent<VisualComponent>()->setTexture("Grass");
 		grass.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		grass.getTransform()->setScale(8.0f, 6.0f);
-		grass.getTransform()->setPos(4, 3);
+		grass.getTransform()->setScale(8.0f, 8.0f);
+		grass.getTransform()->setPos(4, 4);
+
+		ice.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ice.getComponent<VisualComponent>()->setTexture("ice");
+		ice.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		ice.getTransform()->setPos(1.0f, 3.0f);
+		ice.getTransform()->setScale(2.0f, 2.0f);
+
+		lava.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		lava.getComponent<VisualComponent>()->setTexture("Lava");
+		lava.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava.getTransform()->setPos(0.0f, 7.0f);
+		lava.getTransform()->setScale(0.0f, 2.0f);
+		lava.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
+		lava2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		lava2.getComponent<VisualComponent>()->setTexture("Lava");
+		lava2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava2.getTransform()->setPos(7.0f, 6.0f);
+		lava2.getTransform()->setScale(2.0f, 0.0f);
+		lava2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, false));
+
+		lava3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		lava3.getComponent<VisualComponent>()->setTexture("Lava");
+		lava3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava3.getTransform()->setPos(6.0f, 1.0f);
+		lava3.getTransform()->setScale(0.0f, 2.0f);
+		lava3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, false));
+
+		c1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c1.getComponent<VisualComponent>()->setTexture("Lava");
+		c1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c1.getTransform()->setPos(6.0f, 0.5f);
+		c1.getTransform()->setScale(0.5f, 1.0f);
+		c1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
+		c2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c2.getComponent<VisualComponent>()->setTexture("Lava");
+		c2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c2.getTransform()->setPos(4.0f, 1.5f);
+		c2.getTransform()->setScale(0.5f, 1.0f);
+		c2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
+		c3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c3.getComponent<VisualComponent>()->setTexture("Lava");
+		c3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c3.getTransform()->setPos(2.0f, 0.5f);
+		c3.getTransform()->setScale(0.5f, 1.0f);
+		c3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
+		c4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c4.getComponent<VisualComponent>()->setTexture("Lava");
+		c4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c4.getTransform()->setPos(5.45f, 5.45f);
+		c4.getTransform()->setScale(1.0f, 1.0f);
+		c4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
 
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallA.getTransform()->setPos(2.0f, 2.0f);
-		wallA.getTransform()->setScale(3.0f, 0.2f);
+		wallA.getTransform()->setPos(3.0f, 6.0f);
+		wallA.getTransform()->setScale(6.0f, 0.2f);
 		wallA.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-		wallA.getTransform()->rot = 50;
+
 
 		wallB.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
 		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallB.getTransform()->setPos(5.0f, 4.0f);
-		wallB.getTransform()->setScale(2.0f, 0.2f);
+		wallB.getTransform()->setPos(6.0f, 4.0f);
+		wallB.getTransform()->setScale(4.2f, 0.2f);
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-		wallB.getTransform()->rot = 130;
+		wallB.getTransform()->rot = 90;
 
 		wallC.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallC.getComponent<VisualComponent>()->setTexture("Wood");
 		wallC.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallC.getTransform()->setPos(4.0f, 1.0f);
-		wallC.getTransform()->setScale(2.0f, 0.2f);
+		wallC.getTransform()->setPos(4.0f, 2.0f);
+		wallC.getTransform()->setScale(4.0f, 0.2f);
 		wallC.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallC.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-		wallC.getTransform()->rot = 130;
+	
+
+
+		wallD.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		wallD.getComponent<VisualComponent>()->setTexture("Wood");
+		wallD.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallD.getTransform()->setPos(2.0f, 3.0f);
+		wallD.getTransform()->setScale(2.2f, 0.2f);
+		wallD.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallD.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		wallD.getTransform()->rot = 90;
+
+		wallE.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		wallE.getComponent<VisualComponent>()->setTexture("Wood");
+		wallE.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallE.getTransform()->setPos(3.0f, 4.0f);
+		wallE.getTransform()->setScale(2.2f, 0.2f);
+		wallE.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallE.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+	
+		gate1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate1.getComponent<VisualComponent>()->setTexture("Wood");
+		gate1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate1.getTransform()->setPos(4.0f, 5.0f);
+		gate1.getTransform()->setScale(2.0f, 0.2f);
+		gate1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		gate1.getTransform()->rot = 90;
+
+		gate2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate2.getComponent<VisualComponent>()->setTexture("Wood");
+		gate2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate2.getTransform()->setPos(6.0f, 7.0f);
+		gate2.getTransform()->setScale(2.0f, 0.2f);
+		gate2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		gate2.getTransform()->rot = 90;
+
+
+		gate3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate3.getComponent<VisualComponent>()->setTexture("Wood");
+		gate3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate3.getTransform()->setPos(2.0f, 5.0f);
+		gate3.getTransform()->setScale(2.0f, 0.2f);
+		gate3.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		gate3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		gate3.getTransform()->rot = 90;
+
+		gate4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate4.getComponent<VisualComponent>()->setTexture("Wood");
+		gate4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate4.getTransform()->setPos(1.0f, 2.0f);
+		gate4.getTransform()->setScale(2.0f, 0.2f);
+		gate4.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		gate4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
 
 
 		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame1.getTransform()->setPos(0.0f, 3.0f);
-		frame1.getTransform()->setScale(0.2f, 6.19f);
+		frame1.getTransform()->setPos(0.0f, 4.0f);
+		frame1.getTransform()->setScale(0.2f, 8.19f);
 		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame2.getTransform()->setPos(4.0f, 6.0f);
+		frame2.getTransform()->setPos(4.0f, 8.0f);
 		frame2.getTransform()->setScale(8.15f, 0.2f);
 		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame3.getTransform()->setPos(8.1f, 3.0f);
-		frame3.getTransform()->setScale(0.2f, 6.19f);
+		frame3.getTransform()->setPos(8.1f, 4.0f);
+		frame3.getTransform()->setScale(0.2f, 8.19f);
 		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
@@ -1723,12 +1845,12 @@ namespace golf {
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		hole.getComponent<VisualComponent>()->setTexture("hole");
-		hole.getTransform()->setPos(7.0f, 5.0f);
+		hole.getTransform()->setPos(3.0f, 3.0f);
 		hole.getTransform()->setScale(0.5f);
 
 		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ball.getComponent<VisualComponent>()->setTexture("Ball");
-		ball.getTransform()->setPos(1.0f, 1.0f);
+		ball.getTransform()->setPos(3.0f, 7.0f);
 		ball.getTransform()->setScale(0.2f);
 		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
 		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
@@ -1776,6 +1898,75 @@ namespace golf {
 
 	void LevelSixScene::update(float deltaT)
 	{
+		/////////gate 1 i 2////////
+		time += deltaT;
+		if (time > 1) {
+			gate1.getTransform()->setPos(4.0f, 5.0f);
+			gate2.getTransform()->setPos(6.0f, 7.0f);
+			gate2.getTransform()->rot = 90;
+		}
+		if (time > 2) {
+			gate1.getTransform()->setPos(4.0f, 7.0f);
+
+			gate2.getTransform()->setPos(7.0f, 6.0f);
+			gate2.getTransform()->rot = 0;
+			time = 0;
+		}
+
+		///////GATE 3/////////
+		float moveSpeed = 1.0f;
+		static bool moveLeft = true;
+		if (moveLeft) {
+			gate3.getComponent<KinematicPhysicsComponent>()->m_velocity = { -moveSpeed, 0 } ;
+			gate4.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, -moveSpeed } ;
+		}
+		else {
+			gate3.getComponent<KinematicPhysicsComponent>()->m_velocity = { moveSpeed, 0 } ;
+			gate4.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, moveSpeed } ;
+		}
+		float leftLimit = 0.5f;
+		float rightLimit = 2.0f;
+
+		if (gate3.getTransform()->getPos().first <= leftLimit) {
+			moveLeft = false;
+		}
+		else if (gate3.getTransform()->getPos().first >= rightLimit) {
+			moveLeft = true;
+		}
+		//////////lawa/////////
+	
+		lava2.getTransform()->x = 999.f;
+		lava3.getTransform()->y = 999.f;
+		if (right) {
+			lava.getTransform()->getScale().first += 0.4f * deltaT;
+			lava.getTransform()->getPos().first += 0.2f * deltaT;
+		}
+		
+		if (down) {
+			lava2.getTransform()->getScale().second += 0.4f * deltaT;
+			lava2.getTransform()->getPos().second -= 0.2f * deltaT;
+			
+		}
+		if (lava.getTransform()->getPos().first > 4.0f) {
+			right = false;
+			down = true;
+			lava2.getTransform()->x = 7.f;
+			lava2.getComponent<HitboxComponent>()->m_spiky = true;
+		}
+		if (lava2.getTransform()->getPos().second < 3.0f) {
+			down = false;
+			left = true;
+			lava3.getComponent<HitboxComponent>()->m_spiky = true;
+			lava3.getTransform()->y = 1.f;
+		}
+		if (lava3.getTransform()->getPos().first < 3.0f) {
+			left = false;
+		}
+		if (left) {
+			lava3.getTransform()->getScale().first += 0.4f * deltaT;
+			lava3.getTransform()->getPos().first -= 0.2f * deltaT;
+		}
+		
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
@@ -1783,9 +1974,11 @@ namespace golf {
 			}
 		}
 		else {
-			cameraControls.lock(4.f, 3.f, 0.65f);
+			cameraControls.lock(4.f, 4.f, 0.65f);
 		}
 		cameraControls.update(deltaT);
+
+
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
@@ -1865,13 +2058,13 @@ namespace golf {
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
 
-		if (score > 6) {
+		if (score > 12) {
 			stars = 0;
 		}
-		else if (score > 4) {
+		else if (score > 9) {
 			stars = 1;
 		}
-		else if (score > 2) {
+		else if (score > 6) {
 			stars = 2;
 		}
 
@@ -1890,15 +2083,15 @@ namespace golf {
 
 		// Logika zakonczenia poziomu
 
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
-			if (score > 6) {
+			if (score > 12) {
 				stars = 0;
 			}
-			else if (score > 4) {
+			else if (score > 9) {
 				stars = 1;
 			}
-			else if (score > 2) {
+			else if (score > 6) {
 				stars = 2;
 			}
 			else {
@@ -1910,6 +2103,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 

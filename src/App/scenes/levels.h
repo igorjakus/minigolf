@@ -54,7 +54,6 @@ namespace golf {
 		bool won = false;
 		int score = 1;
 		int stars = 3;
-
 	};
 
 	class LevelTwoScene : public Scene {
@@ -301,11 +300,25 @@ namespace golf {
 		Entity wallA;
 		Entity wallB;
 		Entity wallC;
+		Entity wallD;
+		Entity wallE;
 
+		Entity gate1;
+		Entity gate2;
+		Entity gate3;
+		Entity gate4;
+		Entity ice;
+		Entity lava;
+		Entity lava2;
+		Entity lava3;
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;
 		Entity frame4;
+		Entity c1;
+		Entity c2;
+		Entity c3;
+		Entity c4;
 
 		Entity ball;
 
@@ -325,6 +338,10 @@ namespace golf {
 		bool won = false;
 		int score = 0;
 		int stars = 3;
-
+		float time = 0;
+		float time2 = 0;
+		bool right = true;
+		bool down = false;
+		bool left = false;
 	};
 }

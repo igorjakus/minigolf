@@ -2,6 +2,7 @@
 
 #include "physics.h"
 
+#include "App/Core/AppData.h"
 #include "ECS/Entity.h"
 #include "Util.hpp"
 #include "GML/Constants.h"
@@ -147,7 +148,12 @@ namespace golf {
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
 			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius || m_Obj2->m_spiky) {
 				auto ptr = Owner1->getComponent<DynamicPhysicsComponent>();
-				if(ptr) { ptr->m_exploded = true; }
+				if(ptr) { 
+					if(!ptr->m_exploded) {
+						AppData::getAudio().playSound("wybuch-glupi");
+						ptr->m_exploded = true; 
+					}
+				}
 				return;
 			}
 			Owner1->getTransform()->x += Wiemcoto.x;
@@ -177,6 +183,8 @@ namespace golf {
 
 				GML::Vec3f tarcie = (GML::Vec3f(-m_normalCollidePoint.y, m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
 				CircleComp->apply_impulse(tarcie, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
+
+				AppData::getAudio().playSound("odbicie");
 			}
 
 			if(Owner2->hasComponent<StaticPhysicsComponent>()){
@@ -198,6 +206,8 @@ namespace golf {
 
 				GML::Vec3f tarcie = (GML::Vec3f(m_normalCollidePoint.y, -m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
 				CircleComp->apply_impulse(tarcie, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
+
+				AppData::getAudio().playSound("odbicie");
 			}
 
 		}
@@ -325,6 +335,9 @@ namespace golf {
 	}
 	bool DynamicPhysicsComponent::exploded() const {
 		return m_exploded;
+	}
+	void DynamicPhysicsComponent::explode() {
+		m_exploded = true;
 	}
 		
 

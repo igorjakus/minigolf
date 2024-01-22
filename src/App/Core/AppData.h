@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "Audio/Audio.h"
 #include "Sus/Sus.h"
 #include "SceneManager/SceneManager.h"
 #include "Input/UserInput.h"
@@ -25,6 +26,7 @@ public:
 	static Sus& getSus();
 	static SceneManager& getSceneManager();
 	static Input& getInput();
+	static Audio& getAudio();
 
 private:
 	AppData() = default;
@@ -32,6 +34,7 @@ private:
 	static AppData& getInstance();
 
 	std::unique_ptr<agl::Window> m_window;
+	std::unique_ptr<Audio> m_audio;
 	std::unique_ptr<Sus> m_sus;
 	std::unique_ptr<SceneManager> m_sceneManager;
 	std::unique_ptr<Input> m_input;
