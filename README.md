@@ -8,10 +8,10 @@ Prosta gra 2D w tematyce mini golfa.
 
 ## Główne aspekty gry
 
-1. 6 róznych ciekawych poziomów
+1. 6 różnych ciekawych poziomów
 2. Przyjemny interfejs użytkownika
-4. Intuycyjne sterowanie
-3. Symulacja fizyki
+4. Intuicyjne sterowanie
+3. Realistyczna symulacja fizyki
 4. Zapis postępu w grze
 5. Efekty audiowizualne
 6. Wsparcie Windowsa oraz Linuxa
