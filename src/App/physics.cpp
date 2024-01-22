@@ -146,7 +146,6 @@ namespace golf {
 
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
 			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius || m_Obj2->m_spiky) {
-				DTL_WAR("kot wybuchł");
 				auto ptr = Owner1->getComponent<DynamicPhysicsComponent>();
 				if(ptr) { ptr->m_exploded = true; }
 				return;
@@ -154,8 +153,8 @@ namespace golf {
 			Owner1->getTransform()->x += Wiemcoto.x;
 			Owner1->getTransform()->y += Wiemcoto.y;
 
-			const float odbijability = 0.7f; //0 - 1 im wyzej tym odbijablej
-			const float tarcielity = 0.02f;
+			const float odbijability = 0.85f; //0 - 1 im wyzej tym odbijablej
+			const float tarcielity = 0.03f;
 
 			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
 				auto CircleComp = Owner1->getComponent<DynamicPhysicsComponent>();
@@ -240,7 +239,7 @@ namespace golf {
 			radius = Hitbox->m_radius;
 		}
 
-		float rollingResistance = 0.2f;
+		float rollingResistance = 0.3f;
 		float spinningResistance = 0.05f;
 
 		for (auto& ref : Surfaces) {

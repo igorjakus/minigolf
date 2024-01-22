@@ -332,7 +332,7 @@ namespace golf {
 		wall2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall2.getComponent<VisualComponent>()->setTexture("Wood");
 		wall2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wall2.getTransform()->setPos(7.3f, 0.7f);
+		wall2.getTransform()->setPos(7.3f, 0.8f);
 		wall2.getTransform()->setScale(0.2f, 2.2f);
 		wall2.getTransform()->rot = -45.f;
 		wall2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
@@ -490,7 +490,7 @@ namespace golf {
 		
 		// Moving obstacles
 
-		const float wallSpeed = 2.f;
+		const float wallSpeed = 3.f;
 		static bool moveUp = true; 
 		if (moveUp) {
 			wallA.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, wallSpeed };
