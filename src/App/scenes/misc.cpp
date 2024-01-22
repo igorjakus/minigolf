@@ -66,6 +66,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
+		AppData::getAudio().playSound("new-level");
 	}
 	//================================
 	//MainMenu

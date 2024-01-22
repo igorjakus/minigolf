@@ -34,7 +34,7 @@ bool ButtonComponent::isPressed() const {
 
 bool ButtonComponent::isClicked() const {
 	if(m_pressed && !m_wasPressed) {
-		AppData::getAudio().playSound("trafiony-dolek");
+		AppData::getAudio().playSound("click");
 	}
 	return m_pressed && !m_wasPressed;
 }
