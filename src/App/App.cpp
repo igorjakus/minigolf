@@ -34,7 +34,7 @@ namespace golf
 		std::chrono::duration<double> timeBetweenFrames{};
 		double lag = 0.0;
 
-		const double fpsInterval = 1.f;
+		const double fpsInterval = 1.;
 		double fpsTimer = 0.0;
 		uint fpsCount = 0;
 	
@@ -56,7 +56,7 @@ namespace golf
 
 			fpsCount++;
 			if (fpsTimer >= fpsInterval) {
-				fpsTimer = 0.f;
+				fpsTimer = 0.;
 				DTL_ENT("FPS: {0}", static_cast<uint>(static_cast<double>(fpsCount) / fpsInterval));
 				fpsCount = 0;
 			}

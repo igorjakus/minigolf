@@ -118,8 +118,12 @@ void SlingshotComponent::update(float deltaT) {
 		m_trail3.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f * 0.8f * 0.8f));
 		m_trail4.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f * 0.8f * 0.8f * 0.8f));
 		m_trail5.getComponent<VisualComponent>()->setColor(255, 255, 255, static_cast<uchar>(255 * 0.8f * 0.8f * 0.8f * 0.8f * 0.8f));
+		bool cancel = false;
+		if(AppData::getInput().isKeyClicked("ESCAPE") || AppData::getInput().isRightMouseClicked()) {
+			cancel = true;
+		}
 
-		if (m_button.getComponent<ButtonComponent>()->isReleased()) {
+		if (m_button.getComponent<ButtonComponent>()->isReleased() || cancel) {
 			AppData::getInput().setMousePosLock(false);
 			m_button.getComponent<ButtonComponent>()->update();
 
@@ -131,7 +135,7 @@ void SlingshotComponent::update(float deltaT) {
 			m_trail4.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
 			m_trail5.getComponent<VisualComponent>()->setColor(255, 255, 255, 0);
 
-			if(val.getLengthSquared() > 0 && std::isfinite(val.x) && std::isfinite(val.y)) {
+			if(val.getLengthSquared() > 0 && std::isfinite(val.x) && std::isfinite(val.y) && !cancel) {
 				m_shot = true;
 				getOwner()->getComponent<DynamicPhysicsComponent>()->apply_impulse({ -val.x, -val.y, 0 }, { 0, 0, 0 });
 			}
