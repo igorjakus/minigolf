@@ -321,6 +321,7 @@ namespace golf {
 		bool won = false;
 		int score = 0;
 		int stars = 3;
+		float time = 0;
 
 	};
 }

@@ -1650,7 +1650,7 @@ namespace golf {
 		gate1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		gate1.getComponent<VisualComponent>()->setTexture("Wood");
 		gate1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		gate1.getTransform()->setPos(4.0f, 7.0f);
+		gate1.getTransform()->setPos(4.0f, 5.0f);
 		gate1.getTransform()->setScale(2.0f, 0.2f);
 		gate1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		gate1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
@@ -1701,12 +1701,12 @@ namespace golf {
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		hole.getComponent<VisualComponent>()->setTexture("hole");
-		hole.getTransform()->setPos(7.0f, 5.0f);
+		hole.getTransform()->setPos(3.0f, 3.0f);
 		hole.getTransform()->setScale(0.5f);
 
 		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ball.getComponent<VisualComponent>()->setTexture("Ball");
-		ball.getTransform()->setPos(1.0f, 1.0f);
+		ball.getTransform()->setPos(1.0f, 7.0f);
 		ball.getTransform()->setScale(0.2f);
 		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
 		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
@@ -1754,6 +1754,20 @@ namespace golf {
 
 	void LevelSixScene::update(float deltaT)
 	{
+
+		time += deltaT;
+		if (time > 1) {
+			gate1.getTransform()->setPos(4.0f, 5.0f);
+			gate2.getTransform()->setPos(6.0f, 7.0f);
+			gate2.getTransform()->rot = 90;
+		}
+		if  (time >2) {
+			gate1.getTransform()->setPos(4.0f, 7.0f);
+			
+			gate2.getTransform()->setPos(7.0f, 6.0f);
+			gate2.getTransform()->rot = 0;
+			time = 0;
+		}
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
@@ -1764,6 +1778,8 @@ namespace golf {
 			cameraControls.lock(4.f, 3.f, 0.65f);
 		}
 		cameraControls.update(deltaT);
+
+
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
