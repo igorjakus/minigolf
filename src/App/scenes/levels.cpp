@@ -1881,8 +1881,8 @@ namespace golf {
 		//////////lawa/////////
 		
 		if (right) {
-		lava.getTransform()->getScale().first += 0.4 * deltaT;
-		lava.getTransform()->getPos().first += 0.2 * deltaT;
+		lava.getTransform()->getScale().first += 0.4f * deltaT;
+		lava.getTransform()->getPos().first += 0.2f * deltaT;
 		}
 		if (lava.getTransform()->getPos().first > 4.0f) {
 			right = false;
