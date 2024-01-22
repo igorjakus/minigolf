@@ -249,7 +249,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 7) {
 				stars = 0;
@@ -581,7 +581,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 5) {
 				stars = 0;
@@ -889,7 +889,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 8) {
 				stars = 0;
@@ -1207,7 +1207,7 @@ namespace golf {
 		}
 
 		// Logika zakonczenia poziomu
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 9) {
 				stars = 0;
@@ -1615,7 +1615,7 @@ namespace golf {
 
 		// Logika zakonczenia poziomu
 
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
 			if (score > 10) {
 				stars = 0;
@@ -2053,13 +2053,13 @@ namespace golf {
 		secondDigit.getComponent<VisualComponent>()->setTexture(std::to_string((score % 100) / 10));
 
 
-		if (score > 6) {
+		if (score > 12) {
 			stars = 0;
 		}
-		else if (score > 4) {
+		else if (score > 9) {
 			stars = 1;
 		}
-		else if (score > 2) {
+		else if (score > 6) {
 			stars = 2;
 		}
 
@@ -2078,15 +2078,15 @@ namespace golf {
 
 		// Logika zakonczenia poziomu
 
-		if (AppData::getInput().isKeyPressed("P") || won) {
+		if (won) {
 			score--;
-			if (score > 6) {
+			if (score > 12) {
 				stars = 0;
 			}
-			else if (score > 4) {
+			else if (score > 9) {
 				stars = 1;
 			}
-			else if (score > 2) {
+			else if (score > 6) {
 				stars = 2;
 			}
 			else {
