@@ -336,7 +336,7 @@ namespace golf {
 		bool camLocked = true;
 
 		bool won = false;
-		int score = 0;
+		int score = 1;
 		int stars = 3;
 		float time = 0;
 		float time2 = 0;
