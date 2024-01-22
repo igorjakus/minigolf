@@ -122,10 +122,16 @@ namespace golf {
 		PhysicsEngine physics;
 		Background background;
 
+		Entity grass;
 		Entity wallA;
 		Entity wallB;
+		Entity wall1;
+		Entity wall2;
+		Entity wall3;
+		Entity wall4;
+		Entity ice;
+		Entity sand;
 
-		Entity grass;
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;

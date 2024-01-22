@@ -239,7 +239,7 @@ namespace golf {
 			radius = Hitbox->m_radius;
 		}
 
-		float rollingResistance = 0.3f;
+		float rollingResistance = 0.25f;
 		float spinningResistance = 0.05f;
 
 		for (auto& ref : Surfaces) {

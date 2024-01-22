@@ -607,15 +607,6 @@ namespace golf {
 	}
 
 	void LevelTwoScene::render() {
-		IMGUI_CALL(ImGui::Begin("Debug"));
-		IMGUI_CALL(ImGui::SliderFloat("x1", &wall3.getTransform()->x, 5.f, 8.0f););
-		IMGUI_CALL(ImGui::SliderFloat("y1", &wall3.getTransform()->y, 3.f, 8.0f););
-		IMGUI_CALL(ImGui::SliderFloat("x2", &wall4.getTransform()->x, 5.f, 8.0f););
-		IMGUI_CALL(ImGui::SliderFloat("y2", &wall4.getTransform()->y, 3.f, 8.0f););
-		IMGUI_CALL(ImGui::SliderFloat("x3", &wall5.getTransform()->x, 5.f, 8.0f););
-		IMGUI_CALL(ImGui::SliderFloat("y3", &wall5.getTransform()->y, 3.f, 8.0f););
-		IMGUI_CALL(ImGui::End());
-
 		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
@@ -635,6 +626,53 @@ namespace golf {
 		grass.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		grass.getTransform()->setScale(8.0f, 8.0f);
 		grass.getTransform()->setPos(4, 3);
+
+		ice.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ice.getComponent<VisualComponent>()->setTexture("ice");
+		ice.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		ice.getTransform()->setScale(4.5f, 1.0f);
+		ice.getTransform()->setPos(5.75f, -0.5f);
+		ice.addComponent<SurfaceComponent>(physics.addSurfaceElement(0.09f, 0.01f));
+
+		sand.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		sand.getComponent<VisualComponent>()->setTexture("carp");
+		sand.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		sand.getTransform()->setScale(1.0f, 4.5f);
+		sand.getTransform()->setPos(.5f, 4.75f);
+		sand.addComponent<SurfaceComponent>(physics.addSurfaceElement(1.5f, 0.4f));
+
+		wall1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall1.getComponent<VisualComponent>()->setTexture("Wood");
+		wall1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall1.getTransform()->setPos(5.0f, 0.0f);
+		wall1.getTransform()->setScale(3.0f, 0.2f);
+		wall1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall2.getComponent<VisualComponent>()->setTexture("Wood");
+		wall2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall2.getTransform()->setPos(1.0f, 4.0f);
+		wall2.getTransform()->setScale(0.2f, 3.0f);
+		wall2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall3.getComponent<VisualComponent>()->setTexture("Wood");
+		wall3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall3.getTransform()->setPos(7.75f, 0.0f);
+		wall3.getTransform()->setScale(0.5f, 0.2f);
+		wall3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall4.getComponent<VisualComponent>()->setTexture("Wood");
+		wall4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall4.getTransform()->setPos(1.0f, 7.0f);
+		wall4.getTransform()->setScale(0.2f, 0.5f);
+		wall4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
 
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
@@ -685,12 +723,12 @@ namespace golf {
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		hole.getComponent<VisualComponent>()->setTexture("hole");
-		hole.getTransform()->setPos(7.0f, 5.0f);
+		hole.getTransform()->setPos(7.0f, 6.0f);
 		hole.getTransform()->setScale(0.5f);
 
 		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ball.getComponent<VisualComponent>()->setTexture("Ball");
-		ball.getTransform()->setPos(1.0f, 1.0f);
+		ball.getTransform()->setPos(0.5f, -0.5f);
 		ball.getTransform()->setScale(0.2f);
 		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
 		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
@@ -876,6 +914,12 @@ namespace golf {
 
 	void LevelThreeScene::render()
 	{
+		IMGUI_CALL(ImGui::Begin("Debug"));
+		IMGUI_CALL(ImGui::SliderFloat("x1", &wall1.getTransform()->x, 5.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("y1", &wall1.getTransform()->y, 3.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("x2", &wall2.getTransform()->x, 5.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("y2", &wall2.getTransform()->y, 3.f, 8.0f););
+		IMGUI_CALL(ImGui::End());
 		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
@@ -908,7 +952,7 @@ namespace golf {
 		ramp.getTransform()->setScale(2.7f, 4);
 		ramp.getTransform()->setPos(5.4f, -0.3f);
 		ramp.getTransform()->rot =45.0f;
-		ramp.addComponent<SurfaceComponent>(physics.addSurfaceElement(0.9f, 0.4f));
+		ramp.addComponent<SurfaceComponent>(physics.addSurfaceElement(1.5f, 0.4f));
 		
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
