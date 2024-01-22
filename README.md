@@ -27,7 +27,7 @@ Aplikacja:
 
 Grafika:
 - Produkcja własna
-- [AI](perchance.org/ai-text-to-image-generator)
+- [AI](https://perchance.org/ai-text-to-image-generator)
 
 Audio:
 - iMovie
