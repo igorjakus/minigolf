@@ -26,8 +26,6 @@ namespace golf {
         else { DTL_ERR("AUDIO: Failed to initialize sound effects engine!"); }
         
         // load soundtrack
-#ifndef __COMPILER_GCC__
-#ifndef __COMPILER_CLANG__
         for (const auto& entry : std::filesystem::directory_iterator(SOUNDTRACK_PATH)) {
             if (std::filesystem::is_regular_file(entry)) {
                 music.emplace_back(std::make_shared<ma_sound>());
@@ -35,8 +33,6 @@ namespace golf {
                 DTL_INF("AUDIO: Loaded soundtrack file {0}", entry.path().filename().string());
             }
         }
-#endif
-#endif
 
         // load sound effects
         for (const auto& entry : std::filesystem::directory_iterator(SOUNDEFFECTS_PATH)) {
@@ -49,12 +45,8 @@ namespace golf {
         }
 
         // play music on a different thead
-#ifndef __COMPILER_GCC__
-#ifndef __COMPILER_CLANG__
         std::thread musicThread([&]() { playMusic(); });
         musicThread.detach(); // ZAPEWNE SIE WYKRZACZY POTEM TO
-#endif
-#endif
     }
 
     Audio::~Audio() {
