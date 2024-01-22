@@ -932,7 +932,7 @@ namespace golf {
 
 	LevelFourScene::LevelFourScene()
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
-		cameraControls(m_camera, -5.f, 5.f, 2.f, -10.f) {
+		cameraControls(m_camera, 0.f, 7.f, 2.f, -8.f) {
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
@@ -949,10 +949,19 @@ namespace golf {
 
 		ramp.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ramp.getComponent<VisualComponent>()->setTexture("carp");
-		ramp.getTransform()->setScale(2.7f, 4);
-		ramp.getTransform()->setPos(5.4f, -0.3f);
+		ramp.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		ramp.getTransform()->setScale(2.75f, 4);
+		ramp.getTransform()->setPos(5.47f, -0.34f);
 		ramp.getTransform()->rot =45.0f;
 		ramp.addComponent<SurfaceComponent>(physics.addSurfaceElement(1.5f, 0.4f));
+
+		lava.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		lava.getComponent<VisualComponent>()->setTexture("Lava");
+		lava.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava.getTransform()->setPos(7.6f, -6.4f);
+		lava.getTransform()->setScale(0.4f, 3.0f);
+		lava.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
 		
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);

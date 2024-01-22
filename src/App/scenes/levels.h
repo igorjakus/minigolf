@@ -189,6 +189,7 @@ namespace golf {
 		Entity grass;
 		Entity grass2;
 		Entity ramp;
+		Entity lava;
 
 		Entity ball;
 
