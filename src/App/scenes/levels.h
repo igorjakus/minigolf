@@ -54,7 +54,6 @@ namespace golf {
 		bool won = false;
 		int score = 1;
 		int stars = 3;
-
 	};
 
 	class LevelTwoScene : public Scene {
