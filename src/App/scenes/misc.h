@@ -129,4 +129,21 @@ namespace golf {
 		
 		float m_timer = 1.f;
 	};
+
+	class EndScreen : public Scene {
+	public:
+		EndScreen();
+
+		void update(float deltaT) override;
+		void render() override;
+
+	private:
+		agl::Camera m_camera;
+		agl::GraphicLayer m_graphicsLayer;
+		Background background;
+
+		GUILayer guiLayer;
+		Entity menuButton;
+		Entity ThankYou;
+	};
 }

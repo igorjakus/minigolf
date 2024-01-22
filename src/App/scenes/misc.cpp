@@ -59,6 +59,13 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
+		if (levelNumber == 7) {
+			auto next = std::shared_ptr<Scene>(new EndScreen());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
 	}
 	//================================
 	//MainMenu
@@ -655,6 +662,53 @@ namespace golf {
 	}
 	void BlackScene::render() {
 		m_graphicsLayer.draw();
+	}
+
+	EndScreen::EndScreen()
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
+	{
+
+		AppData::getInput().attachCamera(&m_camera, 1.0f);
+
+		menuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		menuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.f, -0.3f, ModeType::RELATIVE);
+		menuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		menuButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed");
+		menuButton.getTransform()->setScale(0.2f, 0.2f);
+		menuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		ThankYou.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		ThankYou.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.1f, ModeType::RELATIVE);
+		ThankYou.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		ThankYou.getComponent<VisualComponent>()->setTexture("thank_you");
+		ThankYou.getTransform()->setScale(1.2f, 0.14f);
+		
+	}
+
+	void EndScreen::update([[maybe_unused]] float deltaT)
+	{
+		//quit
+		auto ptr = menuButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
+			auto next = std::shared_ptr<Scene>(new MainMenu());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			menuButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
+		}
+		else { menuButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
+
+	}
+
+	void EndScreen::render()
+	{
+		background.render();
+		m_graphicsLayer.draw();
+		guiLayer.render();
 	}
 }
 
