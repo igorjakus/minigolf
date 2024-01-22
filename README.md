@@ -19,9 +19,11 @@ Prosta gra 2D w tematyce mini golfa.
 ## Wykorzystane narzędzia i zasoby
 
 Aplikacja:
-- OpenGL
-- GLFW
-- Miniaudio
+- [GLAD](https://github.com/Dav1dde/glad)
+- [GLFW](https://github.com/glfw/glfw)
+- [Miniaudio](https://github.com/mackron/miniaudio)
+- [GLM](https://github.com/g-truc/glm)	
+- [STB](https://github.com/nothings/stb)
 - CMake
 - C++
 
