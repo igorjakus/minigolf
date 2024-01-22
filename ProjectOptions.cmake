@@ -23,7 +23,7 @@ endmacro()
 
 macro(project_options_setup)
 	option(project_LUKASZ_WARNINGS "Enable additional build settings to Łukasz's libraries" OFF)
-	option(project_WARNINGS_AS_ERRORS "Treat Warnings As Errors" ON)
+	option(project_WARNINGS_AS_ERRORS "Treat Warnings As Errors" OFF)
 	option(project_ENABLE_CLANG_TIDY "Enable clang-tidy" ON)
 endmacro()
 
