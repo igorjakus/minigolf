@@ -56,3 +56,6 @@ _ReSharper*
 # Macos
 .DS_Store
 \.DS_Store
+
+# Bash scripts
+*.sh

@@ -1,0 +1,94 @@
+#include <pch.h>
+#include "App.h"
+#include "Core/AppData.h"
+#include "scenes/misc.h"
+#include "dtl.h"
+
+namespace golf 
+{
+	const std::string App::c_defaultTitle = "Golf Game";
+	
+	App::App(uint width, uint height, const std::string& title)
+		:m_title(title), m_updatesPerSecond(c_defaultUPS) {
+	
+		AppData::init(width, height, title);
+
+		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlackScene()));
+		AppData::getSceneManager().nextScene();
+
+		// AppData::getWindow().setFullscreen(true);
+	
+		DTL_INF("Application created: {0}", title);
+	
+	}
+	
+	void App::run() {
+	
+		DTL_INF("Application run: {0}", m_title);
+	
+		const double timePerUpdate = 1.0/m_updatesPerSecond;
+		const auto deltaT = static_cast<float>(timePerUpdate);
+	
+		std::chrono::steady_clock::time_point lastFrameTime = std::chrono::steady_clock::now();
+		std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+		std::chrono::duration<double> timeBetweenFrames{};
+		double lag = 0.0;
+
+		const double fpsInterval = 1.;
+		double fpsTimer = 0.0;
+		uint fpsCount = 0;
+	
+		while (!shouldClose()) 
+		{
+			now = std::chrono::steady_clock::now();
+			timeBetweenFrames = std::chrono::duration_cast<std::chrono::duration<double>>(now - lastFrameTime);
+			lastFrameTime = std::chrono::steady_clock::now();
+	
+			lag += timeBetweenFrames.count();
+			fpsTimer += timeBetweenFrames.count();
+	
+			while(lag >= timePerUpdate) {
+				update(deltaT);
+				lag -= timePerUpdate;
+			}
+
+			render();
+
+			fpsCount++;
+			if (fpsTimer >= fpsInterval) {
+				fpsTimer = 0.;
+				DTL_ENT("FPS: {0}", static_cast<uint>(static_cast<double>(fpsCount) / fpsInterval));
+				fpsCount = 0;
+			}
+		}
+	
+		terminate();
+	
+	}
+	
+	void App::update(float deltaT) {
+		AppData::getSceneManager().update(deltaT);
+
+		AppData::getInput().frameEnd();
+	}
+	
+	void App::render() {
+		IMGUI_NEW_FRAME;
+		
+		AppData::getSceneManager().render();
+	
+		AppData::getWindow().FEP();
+	}
+	
+	bool App::shouldClose() {
+		return AppData::getWindow().closeCallBack();
+	}
+	
+	void App::terminate() {
+
+		AppData::terminate();
+	
+		DTL_INF("Application terminated: {0}", m_title);
+	
+	}
+}
