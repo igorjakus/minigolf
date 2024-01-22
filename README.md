@@ -1,15 +1,46 @@
 # minigolf
 
-Project for undergraduate studies
+Projekt studentów Instytutu Informatyki Uniwersytetu Wrocławskiego.
+
+Prosta gra 2D w tematyce mini golfa. 
 
 <img src=screenshot.png width=500> 
 
-## Building and documentation:
+## Główne aspekty gry
 
- * [Building Details](README_Building.md)
- * [AGL Documentation](src/AGL/README_AGL-Docs.md)
+1. 6 różnych ciekawych poziomów
+2. Przyjemny interfejs użytkownika
+4. Intuicyjne sterowanie
+3. Realistyczna symulacja fizyki
+4. Zapis postępu w grze
+5. Efekty audiowizualne
+6. Wsparcie Windowsa oraz Linuxa
 
-## Authors
+## Wykorzystane narzędzia i zasoby
+
+Aplikacja:
+- OpenGL
+- GLFW
+- Miniaudio
+- CMake
+- C++
+
+Grafika:
+- Produkcja własna
+- [AI](perchance.org/ai-text-to-image-generator)
+
+Audio:
+- iMovie
+- [pixabay.com](https://pixabay.com)
+
+## Jak zbudować projekt?
+
+Uwaga! Nie dajemy gwarancji, że projekt zostanie poprawnie zbudowany i uruchomiony na maszynie wirtualnej.
+
+[Windows](README_BuildingW.md)
+[Linux](README_BuildingL.md)
+
+## Autorzy
 
 * [Maciej Zgierski](https://github.com/GoscZnickiem)
 * [Oskar Meler](https://github.com/frogrammer9)
@@ -17,6 +48,7 @@ Project for undergraduate studies
 * [Helena Rafałowicz](https://github.com/helena-raf)
 * [Kacper Jodłowski](https://github.com/KotleciokORG)
 * [Igor Jakus](https://github.com/igorjakus)
+
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/igorjakus/minigolf?style=social)
 ![GitHub followers](https://img.shields.io/github/followers/minigolf?style=social)
