@@ -40,7 +40,7 @@ namespace golf {
 		bool isMusicPaused = false; // change it via pauseMusicON/OFF/SWITCH
 		bool exitMusic = false; // only destructor change it, stops playMusic thread
 
-		float musicVolume = 0.25f;
+		float musicVolume = 0.15f;
 		float soundEffectsVolume = 0.5f;
 
 		// Runs on a different thread, plays music

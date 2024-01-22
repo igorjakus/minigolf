@@ -45,8 +45,8 @@ namespace golf {
         }
 
         // play music on a different thead
-        std::thread musicThread([&]() { playMusic(); });
-        musicThread.detach(); // ZAPEWNE SIE WYKRZACZY POTEM TO
+        // std::thread musicThread([&]() { playMusic(); });
+        // musicThread.detach(); // ZAPEWNE SIE WYKRZACZY POTEM TO
     }
 
     Audio::~Audio() {

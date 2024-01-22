@@ -510,6 +510,8 @@ namespace golf {
 			AppData::getSus().ChangeStars(finishedLevelNumber, nrOfStars);
 		}
 		AppData::getSus().Unlock(finishedLevelNumber + 1);
+
+		AppData::getAudio().playSound("win-trabka");
 	}
 
 	void ResultsScene::update([[maybe_unused]] float deltaT)

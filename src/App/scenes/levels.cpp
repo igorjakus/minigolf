@@ -269,6 +269,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -601,6 +602,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 
 		
@@ -909,6 +911,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -1227,6 +1230,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -1635,6 +1639,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
@@ -1910,6 +1915,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 			score++;
+			AppData::getAudio().playSound("win-rock");
 		}
 	}
 
