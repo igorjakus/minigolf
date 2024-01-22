@@ -64,7 +64,6 @@ void AppData::terminate() {
 	AppData::getSus().UpdateSaveFile();
 	getInstance().m_sus.reset();
 	getInstance().m_input.reset();
-	getInstance().m_audio.reset();
 	DTL_INF("Application systems terminated successfully");
 	DTL_ENT("===============================================================================");
 }
