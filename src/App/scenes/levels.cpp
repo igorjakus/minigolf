@@ -285,7 +285,7 @@ namespace golf {
 
 	LevelTwoScene::LevelTwoScene()
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
-	cameraControls(m_camera, 0.f, 8.f, 6.f, 0.f)
+		cameraControls(m_camera, 0.f, 8.f, 6.f, 0.f)
 	{
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
@@ -294,6 +294,74 @@ namespace golf {
 		grass.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		grass.getTransform()->setScale(8.0f, 6.0f);
 		grass.getTransform()->setPos(4, 3);
+
+
+		wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wallA.getComponent<VisualComponent>()->setTexture("Wood");
+		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallA.getTransform()->setPos(2.5f, 3.0f);
+		wallA.getTransform()->setScale(0.2f, 2.0f);
+		wallA.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wallB.getComponent<VisualComponent>()->setTexture("Wood");
+		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallB.getTransform()->setPos(5.5f, 3.0f);
+		wallB.getTransform()->setScale(0.2f, 2.0f);
+		wallB.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
+		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		spikesBlock.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		spikesBlock.getComponent<VisualComponent>()->setTexture("Lava");
+		spikesBlock.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		spikesBlock.getTransform()->setPos(4.0f, 3.0f);
+		spikesBlock.getTransform()->setScale(1.5f, 2.5f);
+		spikesBlock.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		spikesBlock.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
+		wall1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall1.getComponent<VisualComponent>()->setTexture("Wood");
+		wall1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall1.getTransform()->setPos(0.8f, 5.2f);
+		wall1.getTransform()->setScale(0.2f, 2.2f);
+		wall1.getTransform()->rot = -45.f;
+		wall1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall2.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall2.getComponent<VisualComponent>()->setTexture("Wood");
+		wall2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall2.getTransform()->setPos(7.3f, 0.7f);
+		wall2.getTransform()->setScale(0.2f, 2.2f);
+		wall2.getTransform()->rot = -45.f;
+		wall2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall3.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall3.getComponent<VisualComponent>()->setTexture("Wood");
+		wall3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall3.getTransform()->setPos(6.35f, 5.65f);
+		wall3.getTransform()->setScale(0.7f, 0.7f);
+		wall3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall4.getComponent<VisualComponent>()->setTexture("Wood");
+		wall4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall4.getTransform()->setPos(6.35f, 4.35f);
+		wall4.getTransform()->setScale(0.7f, 0.7f);
+		wall4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall5.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall5.getComponent<VisualComponent>()->setTexture("Wood");
+		wall5.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall5.getTransform()->setPos(7.65f, 4.35f);
+		wall5.getTransform()->setScale(0.7f, 0.7f);
+		wall5.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall5.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
 
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
@@ -323,21 +391,6 @@ namespace golf {
 		frame4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
-		wallA.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-		wallA.getComponent<VisualComponent>()->setTexture("Wood");
-		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallA.getTransform()->setPos(2.5f, 3.0f);
-		wallA.getTransform()->setScale( 0.2f, 2.0f);
-		wallA.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
-		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-
-		wallB.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
-		wallB.getComponent<VisualComponent>()->setTexture("Wood");
-		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallB.getTransform()->setPos(5.5f, 3.0f);
-		wallB.getTransform()->setScale(0.2f, 2.0f);
-		wallB.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
-		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		hole.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		hole.getComponent<VisualComponent>()->setTexture("hole");
@@ -394,6 +447,7 @@ namespace golf {
 
 	void LevelTwoScene::update(float deltaT)
 	{
+
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
@@ -436,7 +490,7 @@ namespace golf {
 		
 		// Moving obstacles
 
-		const float wallSpeed = 1.f;
+		const float wallSpeed = 2.f;
 		static bool moveUp = true; 
 		if (moveUp) {
 			wallA.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, wallSpeed };
@@ -553,6 +607,15 @@ namespace golf {
 	}
 
 	void LevelTwoScene::render() {
+		IMGUI_CALL(ImGui::Begin("Debug"));
+		IMGUI_CALL(ImGui::SliderFloat("x1", &wall3.getTransform()->x, 5.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("y1", &wall3.getTransform()->y, 3.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("x2", &wall4.getTransform()->x, 5.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("y2", &wall4.getTransform()->y, 3.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("x3", &wall5.getTransform()->x, 5.f, 8.0f););
+		IMGUI_CALL(ImGui::SliderFloat("y3", &wall5.getTransform()->y, 3.f, 8.0f););
+		IMGUI_CALL(ImGui::End());
+
 		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
