@@ -310,6 +310,8 @@ namespace golf {
 		Entity gate4;
 		Entity ice;
 		Entity lava;
+		Entity lava2;
+		Entity lava3;
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;
@@ -336,5 +338,7 @@ namespace golf {
 		float time = 0;
 		float time2 = 0;
 		bool right = true;
+		bool down = false;
+		bool left = false;
 	};
 }

@@ -1674,6 +1674,18 @@ namespace golf {
 		lava.getTransform()->setPos(0.0f, 7.0f);
 		lava.getTransform()->setScale(0.0f, 2.0f);
 
+		lava2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		lava2.getComponent<VisualComponent>()->setTexture("Lava");
+		lava2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava2.getTransform()->setPos(7.0f, 6.0f);
+		lava2.getTransform()->setScale(2.0f, 0.0f);
+
+		lava3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		lava3.getComponent<VisualComponent>()->setTexture("Lava");
+		lava3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava3.getTransform()->setPos(6.0f, 1.0f);
+		lava3.getTransform()->setScale(0.0f, 2.0f);
+
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
@@ -1884,10 +1896,30 @@ namespace golf {
 		lava.getTransform()->getScale().first += 0.4 * deltaT;
 		lava.getTransform()->getPos().first += 0.2 * deltaT;
 		}
+		
+		if (down) {
+			lava2.getTransform()->getScale().second += 0.4 * deltaT;
+			lava2.getTransform()->getPos().second -= 0.2 * deltaT;
+			
+		}
 		if (lava.getTransform()->getPos().first > 4.0f) {
 			right = false;
+			down = true;
 		}
 	
+		if (lava2.getTransform()->getPos().second < 3.0f) {
+			down = false;
+			left = true;
+		}
+		if (lava3.getTransform()->getPos().first < 3.0f) {
+			left = false;
+		}
+		if (left) {
+			lava3.getTransform()->getScale().first += 0.4 * deltaT;
+			lava3.getTransform()->getPos().first -= 0.2 * deltaT;
+
+		}
+		
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
