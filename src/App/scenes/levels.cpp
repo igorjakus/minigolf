@@ -1673,19 +1673,24 @@ namespace golf {
 		lava.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		lava.getTransform()->setPos(0.0f, 7.0f);
 		lava.getTransform()->setScale(0.0f, 2.0f);
-
+		lava.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
 
 		lava2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		lava2.getComponent<VisualComponent>()->setTexture("Lava");
 		lava2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		lava2.getTransform()->setPos(7.0f, 6.0f);
 		lava2.getTransform()->setScale(2.0f, 0.0f);
+		lava2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, false));
 
 		lava3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		lava3.getComponent<VisualComponent>()->setTexture("Lava");
 		lava3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		lava3.getTransform()->setPos(6.0f, 1.0f);
 		lava3.getTransform()->setScale(0.0f, 2.0f);
+		lava3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, false));
 
 		c1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		c1.getComponent<VisualComponent>()->setTexture("Lava");
@@ -1711,6 +1716,13 @@ namespace golf {
 		c3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		c3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
 
+		c4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c4.getComponent<VisualComponent>()->setTexture("Lava");
+		c4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c4.getTransform()->setPos(5.45f, 5.45f);
+		c4.getTransform()->setScale(1.0f, 1.0f);
+		c4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
 
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
@@ -1917,33 +1929,37 @@ namespace golf {
 			moveLeft = true;
 		}
 		//////////lawa/////////
-		
+	
+		lava2.getTransform()->x = 999.f;
+		lava3.getTransform()->y = 999.f;
 		if (right) {
-		lava.getTransform()->getScale().first += 0.4f * deltaT;
-		lava.getTransform()->getPos().first += 0.2f * deltaT;
+			lava.getTransform()->getScale().first += 0.4f * deltaT;
+			lava.getTransform()->getPos().first += 0.2f * deltaT;
 		}
 		
 		if (down) {
-			lava2.getTransform()->getScale().second += 0.4 * deltaT;
-			lava2.getTransform()->getPos().second -= 0.2 * deltaT;
+			lava2.getTransform()->getScale().second += 0.4f * deltaT;
+			lava2.getTransform()->getPos().second -= 0.2f * deltaT;
 			
 		}
 		if (lava.getTransform()->getPos().first > 4.0f) {
 			right = false;
 			down = true;
+			lava2.getTransform()->x = 7.f;
+			lava2.getComponent<HitboxComponent>()->m_spiky = true;
 		}
-	
 		if (lava2.getTransform()->getPos().second < 3.0f) {
 			down = false;
 			left = true;
+			lava3.getComponent<HitboxComponent>()->m_spiky = true;
+			lava3.getTransform()->y = 1.f;
 		}
 		if (lava3.getTransform()->getPos().first < 3.0f) {
 			left = false;
 		}
 		if (left) {
-			lava3.getTransform()->getScale().first += 0.4 * deltaT;
-			lava3.getTransform()->getPos().first -= 0.2 * deltaT;
-
+			lava3.getTransform()->getScale().first += 0.4f * deltaT;
+			lava3.getTransform()->getPos().first -= 0.2f * deltaT;
 		}
 		
 		// camera
@@ -1953,7 +1969,7 @@ namespace golf {
 			}
 		}
 		else {
-			cameraControls.lock(4.f, 3.f, 0.65f);
+			cameraControls.lock(4.f, 4.f, 0.65f);
 		}
 		cameraControls.update(deltaT);
 

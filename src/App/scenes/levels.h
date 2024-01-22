@@ -319,6 +319,7 @@ namespace golf {
 		Entity c1;
 		Entity c2;
 		Entity c3;
+		Entity c4;
 
 		Entity ball;
 
