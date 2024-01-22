@@ -191,7 +191,7 @@ namespace golf {
 		lvlOneButton.getTransform()->setScale(0.2f, 0.2f);
 		lvlOneButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
-		//mo¿e: sprawdza przy gwiazdkach czy zablokowany
+		//moÂ¿e: sprawdza przy gwiazdkach czy zablokowany
 		//==Level 1
 		lvlOneStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlOneStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, -0.4f, 0.2f, ModeType::RELATIVE);
@@ -321,16 +321,16 @@ namespace golf {
 		lvlSixStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		lvlSixStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.4f, -0.1f, ModeType::RELATIVE);
 		lvlSixStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		if (AppData::getSus().StarCount(2) == 3) {
+		if (AppData::getSus().StarCount(6) == 3) {
 			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_3");
 		}
-		if (AppData::getSus().StarCount(2) == 2) {
+		if (AppData::getSus().StarCount(6) == 2) {
 			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_2");
 		}
-		if (AppData::getSus().StarCount(2) == 1) {
+		if (AppData::getSus().StarCount(6) == 1) {
 			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_1");
 		}
-		if (AppData::getSus().StarCount(2) == 0) {
+		if (AppData::getSus().StarCount(6) == 0) {
 			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_0");
 		}
 		lvlSixStars.getTransform()->setScale(0.295f, 0.095f);
