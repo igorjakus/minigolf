@@ -150,7 +150,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if(ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
+		if(ball.getComponent<SlingshotComponent>()->didShoot()) {
 			score++;
 		}
 
@@ -268,6 +268,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -406,7 +407,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
+		if(ball.getComponent<SlingshotComponent>()->didShoot()) {
 			score++;
 		}
 
@@ -545,6 +546,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 
 		
@@ -686,7 +688,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
+		if(ball.getComponent<SlingshotComponent>()->didShoot()) {
 			score++;
 		}
 
@@ -805,6 +807,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -988,7 +991,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
+		if(ball.getComponent<SlingshotComponent>()->didShoot()) {
 			score++;
 		}
 
@@ -1107,6 +1110,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -1343,7 +1347,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
+		if(ball.getComponent<SlingshotComponent>()->didShoot()) {
 			score++;
 		}
 
@@ -1463,6 +1467,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -1617,7 +1622,7 @@ namespace golf {
 
 		// ball
 		ball.getComponent<SlingshotComponent>()->update(deltaT);
-		if (ball.getComponent<SlingshotComponent>()->didShoot() && ball.getComponent<DynamicPhysicsComponent>()->m_velocity != GML::Vec2f(0.0f, 0.0f)) {
+		if(ball.getComponent<SlingshotComponent>()->didShoot()) {
 			score++;
 		}
 
@@ -1737,6 +1742,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
