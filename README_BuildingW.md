@@ -8,7 +8,7 @@ Szczegółowe instrukcje budowania projektu na systemie Windows.
 2. Wybrać odpowiednią konfigurację (domyślnie MSVC-Release) - konfiguracje clangcl wymagają zainstalowanego compilatora clang.
 3. Ctrl + Shift + B aby zbudować projekt (lub F5 aby zbudować i uruchomić projekt)
 
-## Przy użyciu termianal
+## Przy użyciu PowerShell
 
 TODO
 
