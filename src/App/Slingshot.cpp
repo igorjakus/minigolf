@@ -138,6 +138,7 @@ void SlingshotComponent::update(float deltaT) {
 			if(val.getLengthSquared() > 0 && std::isfinite(val.x) && std::isfinite(val.y) && !cancel) {
 				m_shot = true;
 				getOwner()->getComponent<DynamicPhysicsComponent>()->apply_impulse({ -val.x, -val.y, 0 }, { 0, 0, 0 });
+				AppData::getAudio().playSound("shot3");
 			}
 			m_aiming = false;
 		}
