@@ -52,5 +52,8 @@ Uwaga! Nie dajemy gwarancji, że projekt zostanie poprawnie zbudowany i uruchomi
 * [Igor Jakus](https://github.com/igorjakus)
 
 
+## Czego nie udało się zrobić?
+Istnieje błąd w którym na niektórych dystrybucjach podczas wyłączania audio z nieznanych przyczyn występuje segfault. 
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/igorjakus/minigolf?style=social)
 ![GitHub followers](https://img.shields.io/github/followers/minigolf?style=social)
