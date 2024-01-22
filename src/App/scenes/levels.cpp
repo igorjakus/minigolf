@@ -1593,61 +1593,99 @@ namespace golf {
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
 		cameraControls(m_camera, 0.f, 8.f, 6.f, 0.f)
 	{
-		AppData::getInput().attachCamera(&m_camera, 10.0f);
+		AppData::getInput().attachCamera(&m_camera, 15.0f);
 		m_camera.setPosition(1.f, 1.f);
 
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		grass.getComponent<VisualComponent>()->setTexture("Grass");
 		grass.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		grass.getTransform()->setScale(8.0f, 6.0f);
-		grass.getTransform()->setPos(4, 3);
+		grass.getTransform()->setScale(8.0f, 8.0f);
+		grass.getTransform()->setPos(4, 4);
 
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallA.getTransform()->setPos(2.0f, 2.0f);
-		wallA.getTransform()->setScale(3.0f, 0.2f);
+		wallA.getTransform()->setPos(3.0f, 6.0f);
+		wallA.getTransform()->setScale(6.0f, 0.2f);
 		wallA.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallA.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-		wallA.getTransform()->rot = 50;
+
 
 		wallB.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallB.getComponent<VisualComponent>()->setTexture("Wood");
 		wallB.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallB.getTransform()->setPos(5.0f, 4.0f);
-		wallB.getTransform()->setScale(2.0f, 0.2f);
+		wallB.getTransform()->setPos(6.0f, 4.0f);
+		wallB.getTransform()->setScale(4.2f, 0.2f);
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-		wallB.getTransform()->rot = 130;
+		wallB.getTransform()->rot = 90;
 
 		wallC.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallC.getComponent<VisualComponent>()->setTexture("Wood");
 		wallC.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wallC.getTransform()->setPos(4.0f, 1.0f);
-		wallC.getTransform()->setScale(2.0f, 0.2f);
+		wallC.getTransform()->setPos(4.0f, 2.0f);
+		wallC.getTransform()->setScale(4.0f, 0.2f);
 		wallC.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallC.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-		wallC.getTransform()->rot = 130;
+	
+
+
+		wallD.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		wallD.getComponent<VisualComponent>()->setTexture("Wood");
+		wallD.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallD.getTransform()->setPos(2.0f, 3.0f);
+		wallD.getTransform()->setScale(2.2f, 0.2f);
+		wallD.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallD.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		wallD.getTransform()->rot = 90;
+
+		wallE.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		wallE.getComponent<VisualComponent>()->setTexture("Wood");
+		wallE.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wallE.getTransform()->setPos(3.0f, 4.0f);
+		wallE.getTransform()->setScale(2.2f, 0.2f);
+		wallE.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wallE.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+	
+		gate1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate1.getComponent<VisualComponent>()->setTexture("Wood");
+		gate1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate1.getTransform()->setPos(4.0f, 7.0f);
+		gate1.getTransform()->setScale(2.0f, 0.2f);
+		gate1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		gate1.getTransform()->rot = 90;
+
+		gate2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate2.getComponent<VisualComponent>()->setTexture("Wood");
+		gate2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate2.getTransform()->setPos(6.0f, 7.0f);
+		gate2.getTransform()->setScale(2.0f, 0.2f);
+		gate2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		gate2.getTransform()->rot = 90;
+
+	
 
 
 		frame1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame1.getTransform()->setPos(0.0f, 3.0f);
-		frame1.getTransform()->setScale(0.2f, 6.19f);
+		frame1.getTransform()->setPos(0.0f, 4.0f);
+		frame1.getTransform()->setScale(0.2f, 8.19f);
 		frame1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame2.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame2.getTransform()->setPos(4.0f, 6.0f);
+		frame2.getTransform()->setPos(4.0f, 8.0f);
 		frame2.getTransform()->setScale(8.15f, 0.2f);
 		frame2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
 		frame3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		frame3.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
-		frame3.getTransform()->setPos(8.1f, 3.0f);
-		frame3.getTransform()->setScale(0.2f, 6.19f);
+		frame3.getTransform()->setPos(8.1f, 4.0f);
+		frame3.getTransform()->setScale(0.2f, 8.19f);
 		frame3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		frame3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 
