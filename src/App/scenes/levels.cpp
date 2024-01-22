@@ -268,6 +268,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -545,6 +546,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 
 		
@@ -805,6 +807,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -1107,6 +1110,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -1463,6 +1467,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
@@ -1737,6 +1742,7 @@ namespace golf {
 			AppData::getSceneManager().pushScene(transition);
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
+			score++;
 		}
 	}
 
