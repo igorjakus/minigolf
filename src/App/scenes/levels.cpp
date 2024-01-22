@@ -163,7 +163,7 @@ namespace golf {
 			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
 			uchar color = 255;
 			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
-				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, {0, 0, 0});
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(10 * dist, { 0, 0, 0 });
 				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
 				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
 				color = static_cast<uchar>(util::clamp(col, 0, 255));
@@ -474,7 +474,7 @@ namespace golf {
 			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
 			uchar color = 255;
 			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
-				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, { 0, 0, 0 });
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(10 * dist, { 0, 0, 0 });
 				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
 				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
 				color = static_cast<uchar>(util::clamp(col, 0, 255));
@@ -618,7 +618,7 @@ namespace golf {
 
 	LevelThreeScene::LevelThreeScene()
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
-		cameraControls(m_camera, 0.f, 8.f, 6.f, 0.f) {
+		cameraControls(m_camera, 0.f, 8.f, 7.f, -1.f) {
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
@@ -668,7 +668,7 @@ namespace golf {
 		wall4.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		wall4.getComponent<VisualComponent>()->setTexture("Wood");
 		wall4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
-		wall4.getTransform()->setPos(1.0f, 7.0f);
+		wall4.getTransform()->setPos(1.0f, 6.75f);
 		wall4.getTransform()->setScale(0.2f, 0.5f);
 		wall4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wall4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
@@ -802,7 +802,7 @@ namespace golf {
 			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
 			uchar color = 255;
 			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
-				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, { 0, 0, 0 });
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(10 * dist, { 0, 0, 0 });
 				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
 				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
 				color = static_cast<uchar>(util::clamp(col, 0, 255));
@@ -932,7 +932,7 @@ namespace golf {
 
 	LevelFourScene::LevelFourScene()
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
-		cameraControls(m_camera, -5.f, 5.f, 2.f, -10.f) {
+		cameraControls(m_camera, 0.f, 7.f, 2.f, -8.f) {
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
@@ -949,10 +949,19 @@ namespace golf {
 
 		ramp.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ramp.getComponent<VisualComponent>()->setTexture("carp");
-		ramp.getTransform()->setScale(2.7f, 4);
-		ramp.getTransform()->setPos(5.4f, -0.3f);
+		ramp.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		ramp.getTransform()->setScale(2.75f, 4);
+		ramp.getTransform()->setPos(5.47f, -0.34f);
 		ramp.getTransform()->rot =45.0f;
 		ramp.addComponent<SurfaceComponent>(physics.addSurfaceElement(1.5f, 0.4f));
+
+		lava.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		lava.getComponent<VisualComponent>()->setTexture("Lava");
+		lava.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava.getTransform()->setPos(7.6f, -6.4f);
+		lava.getTransform()->setScale(0.4f, 3.0f);
+		lava.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		lava.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
 		
 		frame1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
 		frame1.getComponent<VisualComponent>()->setColor(87, 34, 18, 255);
@@ -1111,7 +1120,7 @@ namespace golf {
 			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
 			uchar color = 255;
 			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
-				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, { 0, 0, 0 });
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(10 * dist, { 0, 0, 0 });
 				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
 				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
 				color = static_cast<uchar>(util::clamp(col, 0, 255));
@@ -1233,7 +1242,7 @@ namespace golf {
 
 	LevelFiveScene::LevelFiveScene()
 		: m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera),
-		cameraControls(m_camera, 2.f, 14.f, 10.f, 0.f) {
+		cameraControls(m_camera, 0.f, 16.f, 12.f, 0.f) {
 		AppData::getInput().attachCamera(&m_camera, 10.0f);
 
 		grass.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
@@ -1249,6 +1258,57 @@ namespace golf {
 		wallB.getTransform()->setScale(12.0f, 1.f);
 		wallB.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
 		wallB.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		wall1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
+		wall1.getComponent<VisualComponent>()->setTexture("Wood");
+		wall1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		wall1.getTransform()->setPos(15.13f, 0.92f);
+		wall1.getTransform()->setScale(2.7f, 0.2f);
+		wall1.getTransform()->rot = 45.f;
+		wall1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		wall1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+
+		ice1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ice1.getComponent<VisualComponent>()->setTexture("ice");
+		ice1.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		ice1.getTransform()->setScale(7.0f, 3.0f);
+		ice1.getTransform()->setPos(8.0f, 4.0f);
+		ice1.addComponent<SurfaceComponent>(physics.addSurfaceElement(0.09f, 0.01f));
+
+		sand1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		sand1.getComponent<VisualComponent>()->setTexture("carp");
+		sand1.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		sand1.getTransform()->setScale(7.0f, 2.5f);
+		sand1.getTransform()->setPos(8.0f, 1.25f);
+		sand1.addComponent<SurfaceComponent>(physics.addSurfaceElement(1.5f, 0.4f));
+
+		ice2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ice2.getComponent<VisualComponent>()->setTexture("ice");
+		ice2.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		ice2.getTransform()->setScale(3.5f, 2.75f);
+		ice2.getTransform()->setPos(5.5f, 10.625f);
+		ice2.addComponent<SurfaceComponent>(physics.addSurfaceElement(0.09f, 0.01f));
+
+		sand2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		sand2.getComponent<VisualComponent>()->setTexture("carp");
+		sand2.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		sand2.getTransform()->setScale(3.5f, 2.75f);
+		sand2.getTransform()->setPos(5.5f, 7.875f);
+		sand2.addComponent<SurfaceComponent>(physics.addSurfaceElement(1.5f, 0.4f));
+
+		ice3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		ice3.getComponent<VisualComponent>()->setTexture("ice");
+		ice3.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		ice3.getTransform()->setScale(3.5f, 2.75f);
+		ice3.getTransform()->setPos(10.0f, 7.875f);
+		ice3.addComponent<SurfaceComponent>(physics.addSurfaceElement(0.09f, 0.01f));
+
+		sand3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		sand3.getComponent<VisualComponent>()->setTexture("carp");
+		sand3.getComponent<VisualComponent>()->setTexRepeat(1.f);
+		sand3.getTransform()->setScale(3.5f, 2.75f);
+		sand3.getTransform()->setPos(10.0f, 10.625f);
+		sand3.addComponent<SurfaceComponent>(physics.addSurfaceElement(1.5f, 0.4f));
 
 		const float rotateSpeed = 1.5f;
 		w1.addComponent<VisualComponent>(std::make_shared<VisualComponent>(&m_graphicsLayer));
@@ -1467,7 +1527,7 @@ namespace golf {
 			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
 			uchar color = 255;
 			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
-				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, { 0, 0, 0 });
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(10 * dist, { 0, 0, 0 });
 				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
 				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
 				color = static_cast<uchar>(util::clamp(col, 0, 255));
@@ -1530,13 +1590,13 @@ namespace golf {
 
 
 
-		if (score > 9) {
+		if (score > 10) {
 			stars = 0;
 		}
-		else if (score > 6) {
+		else if (score > 7) {
 			stars = 1;
 		}
-		else if (score > 2) {
+		else if (score > 4) {
 			stars = 2;
 		}
 
@@ -1557,13 +1617,13 @@ namespace golf {
 
 		if (AppData::getInput().isKeyPressed("P") || won) {
 			score--;
-			if (score > 9) {
+			if (score > 10) {
 				stars = 0;
 			}
-			else if (score > 6) {
+			else if (score > 7) {
 				stars = 1;
 			}
-			else if (score > 2) {
+			else if (score > 4) {
 				stars = 2;
 			}
 			else {
@@ -1856,7 +1916,7 @@ namespace golf {
 			GML::Vec3f dist = { holeX - ballX, holeY - ballY, 0 };
 			uchar color = 255;
 			if (dist.getLengthSquared() < hole.getTransform()->xScale * hole.getTransform()->xScale / 3) {
-				ball.getComponent<DynamicPhysicsComponent>()->apply_force(5 * dist, { 0, 0, 0 });
+				ball.getComponent<DynamicPhysicsComponent>()->apply_force(10 * dist, { 0, 0, 0 });
 				ball.getComponent<DynamicPhysicsComponent>()->apply_force(-1 * static_cast<GML::Vec3f>(ball.getComponent<DynamicPhysicsComponent>()->m_velocity), { 0, 0, 0 });
 				float col = util::lerp(-50, 255, dist.getLength() / hole.getTransform()->xScale * 2);
 				color = static_cast<uchar>(util::clamp(col, 0, 255));

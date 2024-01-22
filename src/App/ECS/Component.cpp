@@ -19,7 +19,6 @@ void Component::kill() {
 	onKill();
 	if(m_owner != nullptr) {
 		m_owner->removeComponent(this);
-		m_owner = nullptr;
 	}
 }
 
