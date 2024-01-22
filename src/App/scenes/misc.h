@@ -4,6 +4,7 @@
 #include "Agl.h"
 #include "../GUI.h"
 #include "../ECS/Entity.h"
+#include "App/Background.h"
 
 namespace golf {
 	class MainMenu : public Scene {
@@ -16,8 +17,9 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
-
 		GUILayer guiLayer;
+		Background background;
+
 		Entity logo;
 		Entity playButton;
 		Entity howToGolfButton;
@@ -36,6 +38,7 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		Background background;
 
 		GUILayer guiLayer;
 		Entity lvlOneButton;
@@ -43,12 +46,14 @@ namespace golf {
 		Entity lvlThreeButton;
 		Entity lvlFourButton;
 		Entity lvlFiveButton;
+		Entity lvlSixButton;
 
 		Entity lvlOneStars;
 		Entity lvlTwoStars;
 		Entity lvlThreeStars;
 		Entity lvlFourStars;
 		Entity lvlFiveStars;
+		Entity lvlSixStars;
 
 		Entity mainMenuButton;
 	};
@@ -66,6 +71,7 @@ namespace golf {
 		[[maybe_unused]] int playerScore;
 		int nrOfStars;
 		int finishedLevelNumber;
+		Background background;
 
 		GUILayer guiLayer;
 		Entity menuButton;
@@ -84,6 +90,7 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		Background background;
 
 		GUILayer guiLayer;
 
@@ -101,6 +108,7 @@ namespace golf {
 	private:
 		agl::Camera m_camera;
 		agl::GraphicLayer m_graphicsLayer;
+		Background background;
 
 		GUILayer guiLayer;
 
@@ -120,5 +128,22 @@ namespace golf {
 		agl::GraphicLayer m_graphicsLayer;
 		
 		float m_timer = 1.f;
+	};
+
+	class EndScreen : public Scene {
+	public:
+		EndScreen();
+
+		void update(float deltaT) override;
+		void render() override;
+
+	private:
+		agl::Camera m_camera;
+		agl::GraphicLayer m_graphicsLayer;
+		Background background;
+
+		GUILayer guiLayer;
+		Entity menuButton;
+		Entity ThankYou;
 	};
 }

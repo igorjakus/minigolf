@@ -14,6 +14,7 @@ namespace golf  {
 
 		void lock();
 		void unlock();
+		[[nodiscard]] bool isLocked() const;
 	
 	private:
 		bool m_changeScene = false;

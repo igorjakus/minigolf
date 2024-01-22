@@ -23,10 +23,6 @@ private:
 	float m_camDownSpeed = 0;
 	float m_camRightSpeed = 0;
 	float m_camLeftSpeed = 0;
-	Entity m_camLeft;
-	Entity m_camRight;
-	Entity m_camUp;
-	Entity m_camDown;
 	float m_camMinX;
 	float m_camMaxX;
 	float m_camMaxY;

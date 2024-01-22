@@ -11,12 +11,14 @@
 
 namespace golf {
 
+
 	class HitboxComponent : public Component{
 	public:
 		enum Typ {Kula, Box};
 		Typ m_Typ_obiektu;
 		float m_radius;
-		HitboxComponent(Typ,float);
+		bool m_spiky;
+		HitboxComponent(Typ type, float radius = 0, bool spiky = false);
 	};
 
 	class SurfaceComponent : public Component{

@@ -53,7 +53,11 @@ void agl::Window::setFullscreen(bool fullscreen)
 		glfwGetWindowPos(m_ID, &m_winPosX, &m_winPosY);
 		glfwGetWindowSize(m_ID, &m_winSizeW, &m_winSizeH);
 		const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
-		glfwSetWindowMonitor(m_ID, m_monitor, 0, 0, mode->width, mode->height, 0);
+		if (m_isVSync) {
+			glfwSetWindowMonitor(m_ID, m_monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+		} else {
+			glfwSetWindowMonitor(m_ID, m_monitor, 0, 0, mode->width, mode->height, 0);
+		}
 	}
 	else
 	{ glfwSetWindowMonitor(m_ID, nullptr, m_winPosX, m_winPosY, m_winSizeW, m_winSizeH, 0); }
@@ -73,7 +77,13 @@ void agl::Window::setBorderless(bool borderless)
 }
 
 void agl::Window::setVSync(bool vsync)
-{ glfwSwapInterval(vsync); }
+{ 
+	glfwSwapInterval(vsync); 
+	if (isFullscreen()) {
+		const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
+		glfwSetWindowMonitor(m_ID, m_monitor, 0, 0, mode->width, mode->height, vsync ? mode->refreshRate : 0);
+	}
+}
 
 void agl::Window::setWindowSize(uint32_t width, uint32_t height)
 {

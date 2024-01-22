@@ -6,9 +6,8 @@
 
 namespace golf {
 
-
 	TransitionSceneHole::TransitionSceneHole(std::shared_ptr<Scene> current, std::shared_ptr<Scene> next)
-		:m_layer("HoleTransition.glsl"), m_duration(1.0f), m_pause(0.05f),
+		:m_layer("HoleTransition.glsl"), m_duration(0.7f), m_pause(0.05f),
 		 m_scene1(std::move(current)), m_scene2(std::move(next)) {
 
 		m_plane.addComponent<GUIComponent>(m_layer.createGUIComponent());
@@ -23,7 +22,9 @@ namespace golf {
 		m_time += deltaT;
 		AppData::getSceneManager().lock();
 
-		if (m_time > m_duration / 2 + m_pause / 2) {
+		if (m_time < m_duration / 2 - m_pause / 2) {
+			m_scene1->update(deltaT);
+		} else if (m_time > m_duration / 2 + m_pause / 2) {
 			m_scene2->update(deltaT);
 		}
 

@@ -12,10 +12,11 @@ namespace golf
 		:m_title(title), m_updatesPerSecond(c_defaultUPS) {
 	
 		AppData::init(width, height, title);
-		glClearColor(0.1f, 0.4f, 0.1f, 255); //temp
 
 		AppData::getSceneManager().pushScene(std::shared_ptr<Scene>(new BlackScene()));
 		AppData::getSceneManager().nextScene();
+
+		// AppData::getWindow().setFullscreen(true);
 	
 		DTL_INF("Application created: {0}", title);
 	
@@ -32,6 +33,10 @@ namespace golf
 		std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 		std::chrono::duration<double> timeBetweenFrames{};
 		double lag = 0.0;
+
+		const double fpsInterval = 1.;
+		double fpsTimer = 0.0;
+		uint fpsCount = 0;
 	
 		while (!shouldClose()) 
 		{
@@ -40,13 +45,21 @@ namespace golf
 			lastFrameTime = std::chrono::steady_clock::now();
 	
 			lag += timeBetweenFrames.count();
+			fpsTimer += timeBetweenFrames.count();
 	
 			while(lag >= timePerUpdate) {
 				update(deltaT);
 				lag -= timePerUpdate;
 			}
-	
+
 			render();
+
+			fpsCount++;
+			if (fpsTimer >= fpsInterval) {
+				fpsTimer = 0.;
+				DTL_ENT("FPS: {0}", static_cast<uint>(static_cast<double>(fpsCount) / fpsInterval));
+				fpsCount = 0;
+			}
 		}
 	
 		terminate();

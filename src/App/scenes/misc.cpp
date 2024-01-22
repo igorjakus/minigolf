@@ -51,6 +51,21 @@ namespace golf {
 			AppData::getSceneManager().pushScene(next);
 			AppData::getSceneManager().nextScene();
 		}
+
+		if (levelNumber == 6) {
+			auto next = std::shared_ptr<Scene>(new LevelSixScene());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (levelNumber == 7) {
+			auto next = std::shared_ptr<Scene>(new EndScreen());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(thisScene, next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
 	}
 	//================================
 	//MainMenu
@@ -60,12 +75,13 @@ namespace golf {
 	{
 		AppData::getInput().attachCamera(&m_camera, 1.0f);
 
+		
+
 		logo.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		logo.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.25f, ModeType::RELATIVE);
 		logo.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		logo.getComponent<VisualComponent>()->setTexture("golf_logo");
 		logo.getTransform()->setScale(0.82f, 0.41f);
-
 
 		playButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		playButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER,0.0f,-0.1f, ModeType::RELATIVE);
@@ -153,6 +169,7 @@ namespace golf {
 	}
 	void MainMenu::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -292,6 +309,30 @@ namespace golf {
 		}
 		lvlFiveStars.getTransform()->setScale(0.295f, 0.095f);
 
+		//==Level 6
+		lvlSixButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlSixButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.4f, 0.0f, ModeType::RELATIVE);
+		lvlSixButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		lvlSixButton.getComponent<VisualComponent>()->setTexture("2_not_pressed");
+		lvlSixButton.getTransform()->setScale(0.2f, 0.2f);
+		lvlSixButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		lvlSixStars.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		lvlSixStars.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.4f, -0.1f, ModeType::RELATIVE);
+		lvlSixStars.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		if (AppData::getSus().StarCount(2) == 3) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_3");
+		}
+		if (AppData::getSus().StarCount(2) == 2) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_2");
+		}
+		if (AppData::getSus().StarCount(2) == 1) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_1");
+		}
+		if (AppData::getSus().StarCount(2) == 0) {
+			lvlSixStars.getComponent<VisualComponent>()->setTexture("stars_0");
+		}
+		lvlSixStars.getTransform()->setScale(0.295f, 0.095f);
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		mainMenuButton.getComponent<GUIComponent>()->setPosition(PositionType::BOTTOMLEFT, 0.03f, 0.03f, ModeType::RELATIVE);
@@ -373,6 +414,23 @@ namespace golf {
 		}
 		else { lvlFiveButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
 
+
+		ptr = lvlSixButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (AppData::getSus().IsUnlocked(6)) {
+			if (ptr->isHovered()) {
+				lvlSixButton.getComponent<VisualComponent>()->setTexture("6_pressed");
+			}
+			else { lvlSixButton.getComponent<VisualComponent>()->setTexture("6_not_pressed"); }
+			if (ptr->isClicked()) {
+				startLevel(6, shared_from_this());
+				return;
+			}
+		}
+		else { lvlSixButton.getComponent<VisualComponent>()->setTexture("level_locked"); }
+
+
+
 		ptr = mainMenuButton.getComponent<ButtonComponent>();
 		ptr->update();
 
@@ -394,6 +452,7 @@ namespace golf {
 
 	void LevelSelectionScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -428,7 +487,7 @@ namespace golf {
 		nextLevelButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
 
 		starDisplay.addComponent<GUIComponent>(guiLayer.createGUIComponent());
-		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
+		starDisplay.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.1f, ModeType::RELATIVE);
 		starDisplay.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
 		starDisplay.getTransform()->setScale(1.02f, 0.38f);
 		if (stars == 3) {
@@ -498,6 +557,7 @@ namespace golf {
 
 	void ResultsScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -537,6 +597,7 @@ namespace golf {
 	}
 	void CreditsScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -548,8 +609,8 @@ namespace golf {
 		tutorialSheet.addComponent<GUIComponent>(guiLayer.createGUIComponent());
 		tutorialSheet.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.0f, ModeType::RELATIVE);
 		tutorialSheet.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
-		tutorialSheet.getComponent<VisualComponent>()->setTexture("popcat");
-		tutorialSheet.getTransform()->setScale(2.1f, 2.1f);
+		tutorialSheet.getComponent<VisualComponent>()->setTexture("HowToGolf");
+		tutorialSheet.getTransform()->setScale(1.08f*1.4f, 0.72f * 1.4f);
 
 		//===main Menu button:
 		mainMenuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
@@ -576,6 +637,7 @@ namespace golf {
 	}
 	void HowToGolfScene::render()
 	{
+		background.render();
 		m_graphicsLayer.draw();
 		guiLayer.render();
 	}
@@ -588,7 +650,7 @@ namespace golf {
 		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera) {
 	}
 	void BlackScene::update([[maybe_unused]] float deltaT) {
-		m_timer -= deltaT;
+		m_timer -= deltaT * 10.f;
 		if(m_timer < 0) {
 			auto next = std::shared_ptr<Scene>(new MainMenu());
 			auto transition = std::shared_ptr<Scene>(new TransitionSceneFade(shared_from_this(), next));
@@ -600,6 +662,53 @@ namespace golf {
 	}
 	void BlackScene::render() {
 		m_graphicsLayer.draw();
+	}
+
+	EndScreen::EndScreen()
+		:m_graphicsLayer(*AppData::getSus().GetShader("DefaultShader.glsl"), m_camera)
+	{
+
+		AppData::getInput().attachCamera(&m_camera, 1.0f);
+
+		menuButton.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		menuButton.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.f, -0.3f, ModeType::RELATIVE);
+		menuButton.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		menuButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed");
+		menuButton.getTransform()->setScale(0.2f, 0.2f);
+		menuButton.addComponent<ButtonComponent>(ButtonComponent::create(guiLayer));
+
+		ThankYou.addComponent<GUIComponent>(guiLayer.createGUIComponent());
+		ThankYou.getComponent<GUIComponent>()->setPosition(PositionType::CENTER, 0.0f, 0.1f, ModeType::RELATIVE);
+		ThankYou.addComponent<VisualComponent>(VisualComponent::create(guiLayer));
+		ThankYou.getComponent<VisualComponent>()->setTexture("thank_you");
+		ThankYou.getTransform()->setScale(1.2f, 0.14f);
+		
+	}
+
+	void EndScreen::update([[maybe_unused]] float deltaT)
+	{
+		//quit
+		auto ptr = menuButton.getComponent<ButtonComponent>();
+		ptr->update();
+		if (ptr->isClicked()) {
+			auto next = std::shared_ptr<Scene>(new MainMenu());
+			auto transition = std::shared_ptr<Scene>(new TransitionSceneHole(shared_from_this(), next));
+			AppData::getSceneManager().pushScene(transition);
+			AppData::getSceneManager().pushScene(next);
+			AppData::getSceneManager().nextScene();
+		}
+		if (ptr->isHovered()) {
+			menuButton.getComponent<VisualComponent>()->setTexture("menu_pressed");
+		}
+		else { menuButton.getComponent<VisualComponent>()->setTexture("menu_not_pressed"); }
+
+	}
+
+	void EndScreen::render()
+	{
+		background.render();
+		m_graphicsLayer.draw();
+		guiLayer.render();
 	}
 }
 

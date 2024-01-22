@@ -11,13 +11,11 @@
 namespace golf {
 
 
-	HitboxComponent::HitboxComponent(HitboxComponent::Typ tego_typu ,float radius = 0) 
-		: m_Typ_obiektu(tego_typu), m_radius(radius) {}
+	HitboxComponent::HitboxComponent(HitboxComponent::Typ type, float radius, bool spiky) 
+		: m_Typ_obiektu(type), m_radius(radius), m_spiky(spiky) {}
 
 	SurfaceComponent::SurfaceComponent(float a,float c)
 		: rollingResistance(a), spinningResistance(c) {}
-		
-	
 
 	//physics engine
 
@@ -84,9 +82,6 @@ namespace golf {
 		return Obj;
 	}
 
-
-
-
 	//Kula z kwadratem
 	void PhysicsEngine::check_collision(std::shared_ptr<HitboxComponent> A,std::shared_ptr<HitboxComponent> B){
 		//stworz siatke boxa
@@ -150,19 +145,16 @@ namespace golf {
 		if(Owner1->hasComponent<DynamicPhysicsComponent>()){
 
 			GML::Vec2f Wiemcoto = m_normalCollidePoint*m_penetrationDepth;
-			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius) {
-				DTL_ERR("kot wybuchł");
+			if(!std::isfinite(Wiemcoto.x) || !std::isfinite(Wiemcoto.y) || m_penetrationDepth > m_Obj1->m_radius || m_Obj2->m_spiky) {
 				auto ptr = Owner1->getComponent<DynamicPhysicsComponent>();
-				if(ptr) {
-					ptr->explode();
-				}
+				if(ptr) { ptr->m_exploded = true; }
 				return;
 			}
 			Owner1->getTransform()->x += Wiemcoto.x;
 			Owner1->getTransform()->y += Wiemcoto.y;
 
-			const float odbijability = 0.7f; //0 - 1 im wyzej tym odbijablej
-			const float tarcielity = 0.02f;
+			const float odbijability = 0.85f; //0 - 1 im wyzej tym odbijablej
+			const float tarcielity = 0.03f;
 
 			if(Owner2->hasComponent<KinematicPhysicsComponent>()){
 				auto CircleComp = Owner1->getComponent<DynamicPhysicsComponent>();
@@ -185,8 +177,6 @@ namespace golf {
 
 				GML::Vec3f tarcie = (GML::Vec3f(-m_normalCollidePoint.y, m_normalCollidePoint.x, 0)) * impulseStrenght * tarcielity * TangentRelVel;
 				CircleComp->apply_impulse(tarcie, static_cast<GML::Vec3f>(CirclePos - m_collidePoint));
-
-				DTL_ERR("Boing");
 			}
 
 			if(Owner2->hasComponent<StaticPhysicsComponent>()){
@@ -249,7 +239,7 @@ namespace golf {
 			radius = Hitbox->m_radius;
 		}
 
-		float rollingResistance = 0.2f;
+		float rollingResistance = 0.35f;
 		float spinningResistance = 0.05f;
 
 		for (auto& ref : Surfaces) {
