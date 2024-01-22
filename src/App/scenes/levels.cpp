@@ -1590,13 +1590,13 @@ namespace golf {
 
 
 
-		if (score > 9) {
+		if (score > 10) {
 			stars = 0;
 		}
-		else if (score > 6) {
+		else if (score > 7) {
 			stars = 1;
 		}
-		else if (score > 2) {
+		else if (score > 4) {
 			stars = 2;
 		}
 
@@ -1617,13 +1617,13 @@ namespace golf {
 
 		if (AppData::getInput().isKeyPressed("P") || won) {
 			score--;
-			if (score > 9) {
+			if (score > 10) {
 				stars = 0;
 			}
-			else if (score > 6) {
+			else if (score > 7) {
 				stars = 1;
 			}
-			else if (score > 2) {
+			else if (score > 4) {
 				stars = 2;
 			}
 			else {
