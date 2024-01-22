@@ -1674,6 +1674,30 @@ namespace golf {
 		lava.getTransform()->setPos(0.0f, 7.0f);
 		lava.getTransform()->setScale(0.0f, 2.0f);
 
+		c1.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c1.getComponent<VisualComponent>()->setTexture("Lava");
+		c1.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c1.getTransform()->setPos(6.0f, 0.5f);
+		c1.getTransform()->setScale(0.5f, 1.0f);
+		c1.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c1.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
+		c2.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c2.getComponent<VisualComponent>()->setTexture("Lava");
+		c2.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c2.getTransform()->setPos(4.0f, 1.5f);
+		c2.getTransform()->setScale(0.5f, 1.0f);
+		c2.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c2.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
+		c3.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		c3.getComponent<VisualComponent>()->setTexture("Lava");
+		c3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		c3.getTransform()->setPos(2.0f, 0.5f);
+		c3.getTransform()->setScale(0.5f, 1.0f);
+		c3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		c3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f, true));
+
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
@@ -1743,7 +1767,7 @@ namespace golf {
 		gate3.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		gate3.getTransform()->setPos(2.0f, 5.0f);
 		gate3.getTransform()->setScale(2.0f, 0.2f);
-		gate3.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate3.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
 		gate3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 		gate3.getTransform()->rot = 90;
 
@@ -1752,10 +1776,8 @@ namespace golf {
 		gate4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
 		gate4.getTransform()->setPos(1.0f, 2.0f);
 		gate4.getTransform()->setScale(2.0f, 0.2f);
-		gate4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate4.addComponent<KinematicPhysicsComponent>(physics.addKinematicElement());
 		gate4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
-		
-
 
 
 
@@ -1864,12 +1886,14 @@ namespace golf {
 		float moveSpeed = 1.0f;
 		static bool moveLeft = true;
 		if (moveLeft) {
-			gate3.getTransform()->setPos(gate3.getTransform()->getPos().first - moveSpeed * deltaT, gate3.getTransform()->getPos().second);
+			gate3.getComponent<KinematicPhysicsComponent>()->m_velocity = { -moveSpeed, 0 } ;
+			gate4.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, -moveSpeed } ;
 		}
 		else {
-			gate3.getTransform()->setPos(gate3.getTransform()->getPos().first + moveSpeed * deltaT, gate3.getTransform()->getPos().second);
+			gate3.getComponent<KinematicPhysicsComponent>()->m_velocity = { moveSpeed, 0 } ;
+			gate4.getComponent<KinematicPhysicsComponent>()->m_velocity = { 0, moveSpeed } ;
 		}
-		float leftLimit = 1.0f;
+		float leftLimit = 0.5f;
 		float rightLimit = 2.0f;
 
 		if (gate3.getTransform()->getPos().first <= leftLimit) {
