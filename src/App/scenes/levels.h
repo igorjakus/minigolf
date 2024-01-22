@@ -297,9 +297,9 @@ namespace golf {
 		Entity gate1;
 		Entity gate2;
 		Entity gate3;
-
+		Entity gate4;
 		Entity ice;
-
+		Entity lava;
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;
@@ -324,6 +324,7 @@ namespace golf {
 		int score = 0;
 		int stars = 3;
 		float time = 0;
-
+		float time2 = 0;
+		bool right = true;
 	};
 }

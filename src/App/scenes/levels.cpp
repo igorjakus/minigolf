@@ -1608,6 +1608,12 @@ namespace golf {
 		ice.getTransform()->setPos(1.0f, 3.0f);
 		ice.getTransform()->setScale(2.0f, 2.0f);
 
+		lava.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		lava.getComponent<VisualComponent>()->setTexture("Lava");
+		lava.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		lava.getTransform()->setPos(0.0f, 7.0f);
+		lava.getTransform()->setScale(0.0f, 2.0f);
+
 		wallA.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		wallA.getComponent<VisualComponent>()->setTexture("Wood");
 		wallA.getComponent<VisualComponent>()->setTexRepeat(1.0f);
@@ -1681,6 +1687,15 @@ namespace golf {
 		gate3.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
 		gate3.getTransform()->rot = 90;
 
+		gate4.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
+		gate4.getComponent<VisualComponent>()->setTexture("Wood");
+		gate4.getComponent<VisualComponent>()->setTexRepeat(1.0f);
+		gate4.getTransform()->setPos(1.0f, 2.0f);
+		gate4.getTransform()->setScale(2.0f, 0.2f);
+		gate4.addComponent<StaticPhysicsComponent>(physics.addStaticElement());
+		gate4.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Box, 0.f));
+		
+
 
 
 
@@ -1722,7 +1737,7 @@ namespace golf {
 
 		ball.addComponent<VisualComponent>(VisualComponent::create(m_graphicsLayer));
 		ball.getComponent<VisualComponent>()->setTexture("Ball");
-		ball.getTransform()->setPos(1.0f, 7.0f);
+		ball.getTransform()->setPos(3.0f, 7.0f);
 		ball.getTransform()->setScale(0.2f);
 		ball.addComponent<DynamicPhysicsComponent>(physics.addDynamicElement(0.1f, 0.001f));
 		ball.addComponent<HitboxComponent>(std::make_shared<HitboxComponent>(HitboxComponent::Typ::Kula, 0.1f));
@@ -1777,9 +1792,9 @@ namespace golf {
 			gate2.getTransform()->setPos(6.0f, 7.0f);
 			gate2.getTransform()->rot = 90;
 		}
-		if  (time >2) {
+		if (time > 2) {
 			gate1.getTransform()->setPos(4.0f, 7.0f);
-			
+
 			gate2.getTransform()->setPos(7.0f, 6.0f);
 			gate2.getTransform()->rot = 0;
 			time = 0;
@@ -1803,8 +1818,16 @@ namespace golf {
 		else if (gate3.getTransform()->getPos().first >= rightLimit) {
 			moveLeft = true;
 		}
-
+		//////////lawa/////////
 		
+		if (right) {
+		lava.getTransform()->getScale().first += 0.4 * deltaT;
+		lava.getTransform()->getPos().first += 0.2 * deltaT;
+		}
+		if (lava.getTransform()->getPos().first > 4.0f) {
+			right = false;
+		}
+	
 		// camera
 		if (!camLocked) {
 			if (ball.getComponent<DynamicPhysicsComponent>()->isMoving()) {
