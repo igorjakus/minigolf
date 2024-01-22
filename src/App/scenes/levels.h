@@ -230,6 +230,8 @@ namespace golf {
 		Entity wallA;
 		Entity wallB;
 
+		Entity wall1;
+
 		Entity frame1;
 		Entity frame2;
 		Entity frame3;
@@ -248,6 +250,13 @@ namespace golf {
 		Entity q4;
 		Entity q5;
 		Entity q6;
+
+		Entity ice1;
+		Entity sand1;
+		Entity ice2;
+		Entity ice3;
+		Entity sand2;
+		Entity sand3;
 
 
 		Entity ball;
